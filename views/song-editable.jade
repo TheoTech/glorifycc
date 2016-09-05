@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h1 #{song.title}
+    h3 by #{song.author}
+    h4 Copyright: #{song.copyright}
+    br
+    br
+    p !{song.lyric}
+    br
+    a#edit.btn.btn-default(href="/songlist-db/#{song.id}/edit") Edit

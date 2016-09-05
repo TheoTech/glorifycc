@@ -1,0 +1,24 @@
+.form-group
+    label(for="title") Title
+    input#title.form-control(name="title", type="text", value=song.title)
+.form-group
+    label(for="author") Author
+    input#singer.form-control(name="author", type="text", value=song.author)
+.form-group
+    label(for="year") Year Published
+    input#singer.form-control(name="year", type="text", value=song.year)
+.form-group
+    label(for="language") Language
+    select#language.form-control(name="language", value=song.language)
+        option English
+        option Mandarin
+        option Spanish
+        option Portuguese
+.form-group
+    label(for="copyright") Copyright
+    select#copyright.form-control(name="copyright", value=song.copyright)
+        option Public
+        option CC0
+.form-group
+    label(for="lyric") Lyric
+    textarea#lyric.form-control(name="lyric", rows='20') !{song.lyric}

@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    a.btn.btn-primary(href='/songlist' role='button') View All Song
+    a.btn.btn-default.pull-right(href='/user/signup' role='button' style="margin-left: 0.3em") Sign up
+    a.btn.btn-warning.pull-right(href='/user/login' role='button') Log In
+    header#header(style="text-align: center")
+        h1 SPF.IO Songbase
+        p Find Public Domain and CC0 Worship Song in Multiple Language
+
+        form#search-form(method="post" action="#")
+            input#search.form-control(type="text" name="search" placeholder="Title, Author or Lyric")
+            button.btn.btn-success(type="button") Search
+        br
+        br
+        br
+        table.table.table-striped.table-bordered(style="margin: auto; width: 30em;")
+            thead
+                tr
+                    th(style="text-align:center; font-size:1.2em") Latest Songs & Translations
+            tbody
+                each song in songs
+                    tr
+                        td
+                            a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
+                            |  by #{song.author}

@@ -1,0 +1,24 @@
+    body {
+        padding: 50px;
+        font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    }
+
+    a {
+        color: #00B7FF;
+    }
+
+    #search-form {
+        display: -moz-flex;
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: flex;
+        position: relative;
+        margin: auto;
+        width: 25em;
+    }
+
+    @media screen and (max-width: 480px) {
+        #search-form {
+            width: 20em;
+        }
+    }

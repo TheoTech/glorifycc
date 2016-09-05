@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    .row
+        .col-md-6
+            h1 Edit Song
+            form(role="form", method="post", action="")
+                include editform
+                button.btn.btn-primary(type="submit") Apply

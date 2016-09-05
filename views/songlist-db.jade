@@ -1,0 +1,33 @@
+extends layout
+
+block content
+    //- form(role="form", action="/contacts?_method=put", method="post")
+    //-     input(type="text", name="search", placeholder="Search..")
+    h1 Song List Database
+    p
+        a#delete.btn.btn-default(href="#") Delete
+        | 
+        a#add.btn.btn-default(href="/songlist-db/add") Add New
+        .container
+            .btn-toolbar
+                .btn-group.btn-group-sm
+    table.table
+        thead
+            tr
+                th
+                th Title
+                th Author
+                th Year Published
+                th Language
+                th Copyright
+        tbody
+            each song in songs
+                tr
+                    td
+                        input(type="checkbox", id=song.id)
+                    td 
+                        a(href='/songlist-db/#{song.id}', font-size="5em") #{song.title}
+                    td #{song.author}
+                    td #{song.year}
+                    td #{song.language}
+                    td #{song.copyright}
