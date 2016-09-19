@@ -9,6 +9,9 @@ block content
                     "#{error.msg}"
         form(role="form" method="post", action="/user/signup")
             .form-group
+                label(for="username") Username
+                input#username.form-control(name="username" type="text" placeholder="Username")
+            .form-group
                 label(for="email") Email
                 input#email.form-control(name="email" type="email" placeholder="Email")
             .form-group
@@ -18,3 +21,4 @@ block content
                 label(for="password2") Confirm Password
                 input#password.form-control(name="password2", type="password" placeholder="Password")
             button.btn.btn-primary(type="submit") Sign Up
+    button.btn.btn-primary(type="submit") Sign Up

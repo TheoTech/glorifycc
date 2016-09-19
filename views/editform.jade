@@ -1,6 +1,9 @@
 .form-group
-    label(for="title") Title
+    label(for="title") Translated Title
     input#title.form-control(name="title", type="text", value=song.title)
+.form-group
+    label(for="oriSong") Original Song
+    input#singer.form-control(name="oriSong", type="text", value=song.oriSong, placeholder='This is Original Song')
 .form-group
     label(for="author") Author
     input#singer.form-control(name="author", type="text", value=song.author)
@@ -8,12 +11,18 @@
     label(for="year") Year Published
     input#singer.form-control(name="year", type="text", value=song.year)
 .form-group
-    label(for="language") Language
-    select#language.form-control(name="language", value=song.language)
-        option English
-        option Mandarin
-        option Spanish
-        option Portuguese
+    label(for="lang") Language
+    select#language.form-control(name="lang", value=song.lang)
+        option(value="english") English
+        option(value="mandarin") Mandarin
+        option(value="spanish") Spanish
+        option(value="portuguese") Portuguese
+.form-group
+    label(for="translator") Contributor
+    input#singer.form-control(name="contributor", type="text", value=song.contributor)
+.form-group
+    label(for="v") Version
+    input#singer.form-control(name="v", type="text", value=song.v, placeholder='This is Original Song')
 .form-group
     label(for="copyright") Copyright
     select#copyright.form-control(name="copyright", value=song.copyright)

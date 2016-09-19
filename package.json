@@ -16,6 +16,8 @@
     "express": "~4.13.4",
     "express-session": "^1.14.1",
     "express-validator": "^2.20.8",
+    "file-system": "^2.2.1",
+    "html-pdf": "^2.1.0",
     "jade": "~1.11.0",
     "mongoose": "^4.5.10",
     "morgan": "~1.7.0",

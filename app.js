@@ -10,10 +10,11 @@ var passport = require('passport')
 var Song = require('./models/song');
 var flash = require('connect-flash');
 var validator = require('express-validator')
-var MongoStore = require('connect-mongo')(session)
+var MongoStore = require('connect-mongo')(session);
+var pdf = require('html-pdf');
+var fs = require('file-system');
 
-
-var app = express();
+var app = module.exports = express();
 
 
 var routes = require('./routes/index');
@@ -22,6 +23,8 @@ var songlistdb = require('./routes/songlist-db');
 var searchbyletter = require('./routes/search-by-letter');
 var searchbylang = require('./routes/search-by-lang');
 var user = require('./routes/user');
+var userlist = require('./routes/userlist')
+var songcart = require('./routes/songcart')
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -83,10 +86,15 @@ app.use(validator({
 //Global Variable
 app.use(function(req, res, next) {
     res.locals.session = req.session;
+    res.locals.login = req.isAuthenticated();
+    res.locals.user = req.user;
+    res.locals.isAdmin = false;
+    res.locals.isDownloadFinished = false;
     next();
 })
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/', routes);
 app.use('/user', user)
@@ -94,6 +102,22 @@ app.use('/songlist', songlist);
 app.use('/songlist-db', songlistdb)
 app.use('/search-by-letter', searchbyletter)
 app.use('/search-by-lang', searchbylang)
+app.use('/userlist', userlist)
+app.use('/songcart', songcart)
+
+app.get('/api', function(req, res) {
+    app.render('songs-in-pdf', function(err, html) {
+      pdf.create(html).toStream(function(err, stream){
+          stream.pipe(fs.createWriteStream('./foo.pdf'));
+        });
+      });
+      res.download('./foo.pdf')
+        // pdf.create(html).toBuffer(function(err, buffer){
+        //     console.log('This is a buffer:', Buffer.isBuffer(buffer));
+        //     res.download(buffer);
+        // });
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -125,6 +149,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-module.exports = app;

@@ -2,6 +2,7 @@ var passport = require('passport')
 var User = require('../models/user')
 var LocalStrategy = require('passport-local').Strategy
 
+var isAdmin = false;
 
 passport.serializeUser(function(user, done) {
     done(null, user.id)
@@ -14,13 +15,11 @@ passport.deserializeUser(function(id, done) {
 })
 
 passport.use('local.login', new LocalStrategy({
-    usernameField: 'email',
+    usernameField: 'usernameOrEmail',
     passwordField: 'password',
     passReqToCallback: true
-}, function(req, email, password, done) {
-    console.log(email)
-    console.log(password)
-    req.checkBody('email', 'Invalid email').notEmpty();
+}, function(req, usernameOrEmail, password, done) {
+    req.checkBody('usernameOrEmail', 'Invalid username or email').notEmpty();
     req.checkBody('password', 'Invalid password').notEmpty();
     var errors = req.validationErrors();
     console.log(errors)
@@ -33,7 +32,11 @@ passport.use('local.login', new LocalStrategy({
         return done(null, false, req.flash('error', messages));
     }
     User.findOne({
-        'email': email
+        $or: [{
+            username: usernameOrEmail
+        }, {
+            email: usernameOrEmail
+        }]
     }, function(err, user) {
         console.log('hehehe')
         if (err) {
@@ -47,8 +50,20 @@ passport.use('local.login', new LocalStrategy({
             return done(null, false, {
                 message: 'Wrong password.'
             });
-        } else {
+        } else if (user.username === "admin") {
+            isAdmin = true;
             return done(null, user);
+        } else {
+            return done(null, user)
         }
     });
 }));
+
+module.exports.isAdmin = function() {
+    return isAdmin
+}
+
+module.exports.adminLogout = function() {
+    isAdmin = false
+    return
+}

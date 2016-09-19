@@ -7,7 +7,7 @@
         color: #00B7FF;
     }
 
-    #search-form {
+    .search-form {
         display: -moz-flex;
         display: -webkit-flex;
         display: -ms-flex;
@@ -18,7 +18,34 @@
     }
 
     @media screen and (max-width: 480px) {
-        #search-form {
+        .search-form {
             width: 20em;
         }
     }
+
+    .modal-header, h4#songcart, .close {
+        background-color: #5cb85c;
+        color: white !important;
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .capitalize {
+        text-transform: capitalize;
+    }
+
+    .adminOption {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+    }
+    /*.borderless {
+        border-top-style: none;
+        border-left-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+    }*/
+
+    /*.hidden {
+        display: none;
+    }*/

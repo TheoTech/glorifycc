@@ -1,33 +1,75 @@
 extends layout
 
 block content
+    include topnav
     //- form(role="form", action="/contacts?_method=put", method="post")
     //-     input(type="text", name="search", placeholder="Search..")
     h1 Song List Database
+    //- - if(login && user.username == 'admin')
     p
         a#delete.btn.btn-default(href="#") Delete
         | 
         a#add.btn.btn-default(href="/songlist-db/add") Add New
-        .container
-            .btn-toolbar
-                .btn-group.btn-group-sm
+
+    p
+        a.btn.btn-default(href='/search-by-lang/english') English
+        a.btn.btn-default(href='/search-by-lang/mandarin') Mandarin
+        a.btn.btn-default(href='/search-by-lang/spanish') Spanish
+        a.btn.btn-default(href='/search-by-lang/portuguese') Portuguese
+    br
+    h4 Songs
     table.table
         thead
-            tr
-                th
-                th Title
-                th Author
-                th Year Published
-                th Language
-                th Copyright
+            //- - if(login && user.username == 'admin')
+            th
+            th Title
+            th Author
+            th Year Published
+            th Language
+            th Contributor
+            th Copyright
         tbody
             each song in songs
                 tr
+                    //- - if(login && user.username == 'admin')
                     td
                         input(type="checkbox", id=song.id)
                     td 
-                        a(href='/songlist-db/#{song.id}', font-size="5em") #{song.title}
+                        a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
                     td #{song.author}
                     td #{song.year}
-                    td #{song.language}
-                    td #{song.copyright}
+                    td 
+                        span.capitalize #{song.lang}
+                    td 
+                        span.capitalize #{song.contributor}
+                    td 
+                        span.capitalize #{song.copyright}
+                    //- - if(login && user.username == 'admin')
+                    td 
+                        a.btn.btn-default(href='/songlist-db/#{song.id}/edit') Edit
+    h4 Translations                      
+    table.table
+        thead
+            th
+            th Translated Title
+            th Version
+            th Original Song
+            th Language
+            th Contributor
+        tbody
+            each translation in translations
+                tr
+                    //- - if(login && user.username == 'admin')
+                    td
+                        input(type="checkbox", id=translation.id)
+                    td
+                        a(href='/songlist/#{translation.source}?lang=#{translation.lang}&v=#{translation.v}', font-size="5em") #{translation.title}
+                    td #{translation.v}
+                    td
+                        a(href='/songlist/#{translation.source}') #{translation.oriSong}
+                    td
+                        span.capitalize #{translation.lang}
+                    //- - if(login && user.username == 'admin')
+                    td 
+                        a.btn.btn-default(href='/songlist-db/#{translation.id}/edit') Edit
+    script(type="text/javascript", src="/javascripts/main.js")

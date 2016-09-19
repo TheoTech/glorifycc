@@ -1,52 +1,54 @@
 extends layout
 
 block content
+    include topnav
     //- form(role="form", action="/contacts?_method=put", method="post")
     //-     input(type="text", name="search", placeholder="Search..")
     h1 Song List
-    .container
-        .btn-toolbar
-            .btn-group.btn-group-sm
-                a.btn.btn-default(href='/search-by-letter/a') A
-                a.btn.btn-default(href='/search-by-letter/b') B
-                a.btn.btn-default(href='/search-by-letter/c') C
-                a.btn.btn-default(href='/search-by-letter/d') D
-                a.btn.btn-default(href='/search-by-letter/e') E
-                a.btn.btn-default(href='/search-by-letter/f') F
-                a.btn.btn-default(href='/search-by-letter/g') G
-                a.btn.btn-default(href='/search-by-letter/h') H
-                a.btn.btn-default(href='/search-by-letter/i') I
-                a.btn.btn-default(href='/search-by-letter/j') J
-                a.btn.btn-default(href='/search-by-letter/k') K
-                a.btn.btn-default(href='/search-by-letter/l') L
-                a.btn.btn-default(href='/search-by-letter/m') M
-                a.btn.btn-default(href='/search-by-letter/n') N
-                a.btn.btn-default(href='/search-by-letter/o') O
-                a.btn.btn-default(href='/search-by-letter/p') P
-                a.btn.btn-default(href='/search-by-letter/q') Q
-                a.btn.btn-default(href='/search-by-letter/r') R
-                a.btn.btn-default(href='/search-by-letter/s') S
-                a.btn.btn-default(href='/search-by-letter/t') T
-                a.btn.btn-default(href='/search-by-letter/u') U
-                a.btn.btn-default(href='/search-by-letter/v') V
-                a.btn.btn-default(href='/search-by-letter/w') W
-                a.btn.btn-default(href='/search-by-letter/x') X
-                a.btn.btn-default(href='/search-by-letter/y') Y
-                a.btn.btn-default(href='/search-by-letter/z') Z
-                a.btn.btn-defualt()
-        .btn-toolbar
-            .btn-group.btn-group-sm
-                a.btn.btn-default(href='/search-by-lang/english') English
-                a.btn.btn-default(href='/search-by-lang/mandarin') Mandarin
-                a.btn.btn-default(href='/search-by-lang/spanish') Spanish
-                a.btn.btn-default(href='/search-by-lang/portuguese') Portuguese
+    #search-option
+    //- p
+    //-     a.btn.btn-default(href='/search-by-lang/english') English
+    //-     a.btn.btn-default(href='/search-by-lang/mandarin') Mandarin
+    //-     a.btn.btn-default(href='/search-by-lang/spanish') Spanish
+    //-     a.btn.btn-default(href='/search-by-lang/portuguese') Portuguese
     br
+    h4 Songs
     table.table
+        thead
+            th Title
+            th Author
         tbody
             each song in songs
                 tr
-                    td
-                        input(type="checkbox", id=song.id)
                     td 
                         a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
-                        |  by #{song.author}
+                    td #{song.author}
+
+    script(type="text/javascript", src="/javascripts/mithril.min.js")
+    script(src='/javascripts/searchOption.js')
+
+    //- h4 Translations                      
+    //- table.table
+    //-     thead
+    //-         th
+    //-         th Translated Title
+    //-         th Version
+    //-         th Original Song
+    //-         th Language
+    //-         th Contributor
+    //-     tbody
+    //-         each translation in translations
+    //-             tr
+    //-                 //- - if(login && user.username == 'admin')
+    //-                 td
+    //-                     input(type="checkbox", id=translation.id)
+    //-                 td
+    //-                     a(href='/songlist/#{translation.source}?lang=#{translation.lang}&v=#{translation.v}', font-size="5em") #{translation.title}
+    //-                 td #{translation.v}
+    //-                 td
+    //-                     a(href='/songlist/#{translation.source}') #{translation.oriSong}
+    //-                 td
+    //-                     span.capitalize #{translation.lang}
+    //-                 //- - if(login && user.username == 'admin')
+    //-                 td 
+    //-                     a.btn.btn-default(href='/songlist-db/#{translation.id}/edit') Edit
