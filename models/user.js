@@ -6,7 +6,7 @@ var userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        require: ''
+        default: ''
     },
     email: {
         type: String,
@@ -17,7 +17,15 @@ var userSchema = new Schema({
         type: String,
         required: true,
         default: ''
-    }
+    },
+    library: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Song'
+    }],
+    playlistLibrary: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Playlist'
+    }]
 });
 
 userSchema.methods.generateHash = function(password) {
