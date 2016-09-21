@@ -2,15 +2,53 @@ extends layout
 
 block content
     include topnav
+    //- form(role="form", action="/contacts?_method=put", method="post")
+    //-     input(type="text", name="search", placeholder="Search..")
     h1 Song List
     #search-option
+    //- p
+    //-     a.btn.btn-default(href='/search-by-lang/english') English
+    //-     a.btn.btn-default(href='/search-by-lang/mandarin') Mandarin
+    //-     a.btn.btn-default(href='/search-by-lang/spanish') Spanish
+    //-     a.btn.btn-default(href='/search-by-lang/portuguese') Portuguese
     br
     h4 Songs
-    //- #info.alert.alert-success(style='display: none') Song added to the library
-    #song-table
-    script(type='text/javascript').
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-            
+    table.table
+        thead
+            th Title
+            th Author
+        tbody
+            each song in songs
+                tr
+                    td 
+                        a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
+                    td #{song.author}
+
     script(type="text/javascript", src="/javascripts/mithril.min.js")
     script(src='/javascripts/searchOption.js')
-    script(src='/javascripts/addToPlaylist.js')
+
+    //- h4 Translations                      
+    //- table.table
+    //-     thead
+    //-         th
+    //-         th Translated Title
+    //-         th Version
+    //-         th Original Song
+    //-         th Language
+    //-         th Contributor
+    //-     tbody
+    //-         each translation in translations
+    //-             tr
+    //-                 //- - if(login && user.username == 'admin')
+    //-                 td
+    //-                     input(type="checkbox", id=translation.id)
+    //-                 td
+    //-                     a(href='/songlist/#{translation.source}?lang=#{translation.lang}&v=#{translation.v}', font-size="5em") #{translation.title}
+    //-                 td #{translation.v}
+    //-                 td
+    //-                     a(href='/songlist/#{translation.source}') #{translation.oriSong}
+    //-                 td
+    //-                     span.capitalize #{translation.lang}
+    //-                 //- - if(login && user.username == 'admin')
+    //-                 td 
+    //-                     a.btn.btn-default(href='/songlist-db/#{translation.id}/edit') Edit

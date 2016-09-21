@@ -322,7 +322,7 @@ router.route('/:song_id/edit')
 
 module.exports = router;
 
-contains = function(needle) {
+var contains = function(needle) {
     // Per spec, the way to identify NaN is that it is not equal to itself
     var findNaN = needle !== needle;
     var indexOf;

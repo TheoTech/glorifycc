@@ -1,7 +1,6 @@
 var express = require('express'),
     router = express.Router(),
-    Song = require('../models/song'),
-    User = require('../models/user')
+    Song = require('../models/song')
 
 
 router.get('/', function(req, res) {
@@ -22,64 +21,6 @@ router.get('/', function(req, res) {
             timeAdded: -1
         })
 })
-
-router.post('/', function(req, res) {
-        // console.log(req.body.id)
-        var id = req.body.id
-        console.log(typeof(id))
-        if (req.isAuthenticated()) {
-            User.findOne({
-                username: req.user.username
-            }, function(err, user) {
-                if (err) return handleError(err)
-                User.findOne({
-                        library: id
-                    })
-                    .populate('library')
-                    .exec(function(err, song) {
-                        console.log(JSON.stringify(song))
-                        if (err) return handleError(err)
-                            // var ids
-                            // console.log(contains.call(user.library, ObjectId(id)))
-                        if (song) {
-                            console.log('hahhaa')
-                            res.send({
-                                msg: 'You already have this song',
-                                status: 'alert-danger'
-                            })
-                        } else {
-                            console.log('hehehe')
-                            user.library.push(id)
-                            user.save(function(err) {
-                                if (err) return handleError(err)
-                                console.log('save success')
-                                res.send({
-                                    msg: 'Song added to your library',
-                                    status: 'alert-success'
-                                })
-                            })
-                        }
-                    })
-            })
-        } else {
-            res.send({
-                url: '/user/signup'
-            })
-        }
-        // console.log(typeof(user.library[0]))
-        // console.log(id)
-    })
-    // if(req.user.username == '')
-    // if(login){
-    //   console.log(req.user.username)
-    // } else {
-    //   console.log('hehehe')
-    // }
-    // if (req.user.username){
-    //
-    // } else {
-    //       res.redirect('/user/signup')
-    // }
 
 
 // router.get('/', function(req, res) {
@@ -164,14 +105,14 @@ router.route('/:song_id')
                     }, function(err, theRestT) {
                         console.log(theRestT)
                         theRestT.forEach(function(trt) {
-                                if (trt.id !== song_id) {
-                                    translations.push(trt)
-                                }
-                            })
-                            // console.log(translations)
+                            if (trt.id !== song_id) {
+                                translations.push(trt)
+                            }
+                        })
+                        // console.log(translations)
                         var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
                         var isTranslationExisted = !isEmpty(rightTranslation)
-                            // console.log(rightTranslation)
+                        // console.log(rightTranslation)
                         res.render('song', {
                             song: song,
                             // langAndVers: langAndVers,

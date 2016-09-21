@@ -89,7 +89,7 @@ app.use(function(req, res, next) {
     res.locals.login = req.isAuthenticated();
     res.locals.user = req.user;
     res.locals.isAdmin = false;
-    // res.locals.isDownloadFinished = false;
+    res.locals.isDownloadFinished = false;
     next();
 })
 
@@ -149,8 +149,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-isObjEmpty = function(obj){
-  return Object.keys(obj).length === 0 && obj.constructor === Object
-}
