@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    script(type='text/javascript').
+        var data = !{JSON.stringify(songss).replace(/<\//g, "<\\/")}
+    //- - script.local_data = songss
+    include topnav
+    #step1
+    //- #step1
+    //-     //- a.btn.btn-primary.pull-right(href='/songcart/export-2') Next >
+    //- #demo
+    //-     #0.opt
+    //-         p 0
+    //-     #1.opt
+    //-         p 1
+    //-     #2.opt
+    //-         p 2
+    //-     #3.opt
+    //-         p 3
+    //-     #4.opt
+    //-         p 4
+    //- //- div(id='export-1')
+    //-     each songs in songss
+    //-         div
+    //-             .panel.panel-default
+    //-                 .panel-body
+    //-                     each song in songs
+    //-                         p #{song.title}
+
+    //- script(src="http://rubaxa.github.io/Sortable/Sortable.js")
+    include importJS
+    //- script(type='text/javascript')                                                   
+    //-   var local_data =!{JSON.stringify(songss)}
+    script(src='/javascripts/mithril.min.js')
+    script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    script(src="/javascripts/sortable.js")
+    
