@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    include topnav
+    h1 User List Database
+    p
+        a#delete.btn.btn-default(href="#") Delete
+        //- | 
+        //- a#add.btn.btn-default(href="/songlist-db/add") Add New
+        //- .container
+        //-     .btn-toolbar
+        //-         .btn-group.btn-group-sm
+    table.table
+        thead
+            tr
+                th
+                th Username
+                th Email
+                th
+        tbody
+            each user in users
+                tr
+                    td
+                        input(type="checkbox", id=user.id)
+                    td 
+                        a(href="/userlist/user") #{user.username}
+                    td 
+                        a(href="mailto:#{user.email}") #{user.email}
+                    td
+                        a.btn.btn-default View User Contributed Songs

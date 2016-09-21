@@ -1,0 +1,49 @@
+extends layout
+//- <div class="container">
+//-   <h2>Simple Collapsible</h2>
+//-   <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>
+//-   <div id="demo" class="collapse">
+//-     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+//-     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+//-     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+//-   </div>
+//- </div>
+block content
+    h1 Your Songcart
+        -if (songss != undefined && songss[0])
+                a.btn.btn-primary.pull-right(href='/songcart/export-1') Ready to Export >
+                button#edit.btn.btn-default.pull-right(data-toggle='collapse' data-target='.deleteCheckbox') Edit
+    - if (songss != undefined && songss[0])
+            each songs in songss
+                -if (songs != undefined && songs[0])
+                    #songcartPanel
+                    .panel.panel-default
+                        .panel-body
+                            table.table
+                                thead
+                                    th
+                                        .deleteCheckbox.collapse
+                                    th Title
+                                    th Language
+                                tbody
+                                    each song in songs
+                                        tr
+                                            td
+                                                .deleteCheckbox.collapse
+                                                    input(type="checkbox" id='#{song._id}')
+                                            td #{song.title}
+                                            td.capitalize #{song.lang}
+    -else
+        p Your cart is empty
+    a.deleteCheckbox.collapse.btn.btn-success.pull-right(href='/songcart') Done
+    a#delete.deleteCheckbox.collapse.btn.btn-default.pull-right Delete
+    
+    script(type="text/javascript" src="/javascripts/deleteSongcart.js")
+    //- #demo
+    //- script(src='/javascripts/mithril.js')
+    //- script(src='/javascripts/mithril.min.js')
+    //- 
+    //- script(src='/javascripts/mithril-bootstrap.js')
+            //- td 
+            //-     each lang in song.lang
+            //-         span.capitalize #{lang}

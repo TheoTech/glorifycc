@@ -1,0 +1,12 @@
+nav.navbar.transparent
+    .container-fluid
+        .navbar-header
+        a.navbar-brand(href="/" style="color: black") SPF.IO Songbase
+        .collapse.navbar-collapse
+            form.search-form.navbar-form.navbar-left(method="post" action="#")
+                input#search.form-control(type="text" name="search" placeholder="Title, Author or Lyric")
+                button.btn.btn-success(type="button")
+                    i(class="glyphicon glyphicon-search")
+            include topnav-user
+                <a href="/songcart" class="btn btn-default" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Songcart</a>

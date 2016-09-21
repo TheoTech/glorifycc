@@ -11,6 +11,15 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
     res.render('profile');
 });
 
+router.get('/library', isLoggedIn, function(req, res, next){
+  User.findOne({username: req.user.username})
+  .populate('library')
+  .exec(function(err, user){
+    if (err) return handleError(err)
+    res.render('library', {songs: user.library})
+  })
+})
+
 router.get('/logout', isLoggedIn, function(req, res, next) {
     helperFunc.adminLogout()
         // console.log(helperFunc.isAdmin())
