@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 // })
 
 var playlistSchema = new Schema({
+  name: String,
   songs: [{
       Schema.Types.ObjectId,
       ref: 'Song'
