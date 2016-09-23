@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    include topnav
+    h1 Your Playlist
+    br
+    #playlist
+
+
+    
+    script(type='text/javascript').
+        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+    script(src='/bower_components/mithril/mithril.min.js')
+    script(src='/javascripts/playlistTable.js')

@@ -35,7 +35,7 @@ var hideButton = function(elem) {
 var info = m.prop()
 var infoStatus = m.prop('')
 
-var addToPlaylist = {
+var songlistTable = {
     // info: m.prop('testtest'),
     view: function() {
         return [
@@ -73,4 +73,4 @@ var addToPlaylist = {
     }
 }
 
-m.mount(document.getElementById('song-table'), addToPlaylist)
+m.mount(document.getElementById('song-table'), songlistTable)

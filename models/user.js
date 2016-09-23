@@ -21,12 +21,8 @@ var userSchema = new Schema({
     library: [{
         type: Schema.Types.ObjectId,
         ref: 'Song'
-    }],
-    playlistLibrary: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Playlist'
     }]
-});
+})
 
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);

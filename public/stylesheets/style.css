@@ -39,6 +39,11 @@
         bottom: 0;
         right: 0;
     }
+
+
+    a#playlist{
+        cursor: pointer
+    }
     /*.borderless {
         border-top-style: none;
         border-left-style: none;
