@@ -51,7 +51,9 @@ var songlistTable = {
                     songs.map((s) => {
                         // console.log(JSON.stringify(s))
                         return m('tr', [
-                            m('td', s.title),
+                            m('td', [
+                              m('a', {href: '/songlist/' + s._id}, s.title)
+                            ]),
                             m('td', s.author),
                             m('td', [
                                 m('button.btn.btn-success', {
