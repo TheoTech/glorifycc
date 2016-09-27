@@ -24,7 +24,6 @@ var searchbyletter = require('./routes/search-by-letter');
 var searchbylang = require('./routes/search-by-lang');
 var user = require('./routes/user');
 var userlist = require('./routes/userlist')
-var songcart = require('./routes/songcart')
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -104,7 +103,6 @@ app.use('/songlist-db', songlistdb)
 app.use('/search-by-letter', searchbyletter)
 app.use('/search-by-lang', searchbylang)
 app.use('/userlist', userlist)
-app.use('/songcart', songcart)
 
 app.get('/api', function(req, res) {
     app.render('songs-in-pdf', function(err, html) {
