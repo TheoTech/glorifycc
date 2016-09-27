@@ -58,44 +58,14 @@ block content
                     - else
                         !{line}
                         br
-                </p>     
+                </p>    
+                #translation 
+            br    
             a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
-            //- if isTranslationExisted
-            //-     h4.capitalize #{rightTranslation.lang}
-            //-         - if (rightTranslation.v > 1) 
-            //-             span  (Ver.#{rightTranslation.v})
-            //-     <p> 
-            //-     each line in rightTranslation.lyric
-            //-         - if (line === '')
-            //-             br
-            //-         - else
-            //-             !{line}
-            //-             br
-            //-     </p>     
-            //- a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
-        //- .col-md-6
-        //-     for translation in translations
-        //-         p(id='#{translation.lang}' hidden) #{translation.lyric}
-
+            
     br
-    button#myBtn.btn.btn-success.btn-block(data-toggle="modal" data-target="#myModal") Add to Song Chart
-    #myModal.modal.fade(role="dialog")
-        .modal-dialog
-            .modal-content
-                .modal-header(style="padding: 35px 50px")
-                    button.close(type="button" data-dismiss="modal") &times;
-                    h4#songcart Add to Songcart
-                .modal-body(style="padding: 40px 50px")
-                    p Select Translations to add
-                    form(role="form" method="post" action="")
-                        .form-group
-                            .checkbox
-                                label
-                                    input(name='song' type='checkbox' value='#{song.id}')
-                                    span.capitalize #{song.lang} 
-                            for t in translations
-                                .checkbox
-                                    label
-                                        input(name="song" type='checkbox' value='#{t.id}')
-                                        span.capitalize #{t.lang}
-                            button.btn.btn-success(type="submit") Done
+    #song
+    script.
+        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
+        var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
+    script(src='/javascripts/songButton.js')

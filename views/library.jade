@@ -2,12 +2,12 @@ extends layout
 
 block content
     include topnav
-    h1 Your Song Library
+    h1 My Library
     br
     #library
 
     script(type='text/javascript').
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var s = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlistLibrary).replace(/<\//g, "<\\/")}
     script(src='/bower_components/mithril/mithril.min.js')
     script(src='/javascripts/libraryTable.js')

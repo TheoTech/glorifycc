@@ -7,6 +7,16 @@
         color: #00B7FF;
     }
 
+    #header.parent{
+      position: relative;
+    }
+
+    #header.child {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
     .search-form {
         display: -moz-flex;
         display: -webkit-flex;

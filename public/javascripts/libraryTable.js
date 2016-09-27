@@ -1,5 +1,6 @@
 var songID = m.prop()
 var playlistName = m.prop()
+var songs = m.prop(s)
 
 var addToPlaylist = function(name, id) {
     console.log(id)
@@ -18,21 +19,37 @@ var addToPlaylist = function(name, id) {
         })
 }
 
+var deleteSong = function(id){
+  m.request({
+    method: 'DELETE',
+    url: '/user/library',
+    data: {
+      id: id
+    }
+  })
+  .then(function(data) {
+      console.log(data.msg)
+      console.log(JSON.stringify(data.songs))
+      songs(data.songs)
+  })
+
+}
+
 var libraryTable = {
     view: function() {
-        return [  m('table.table', [
+        return [m('table.table', [
                 m('thead', [
                     m('th', 'Title'),
                     m('th', 'Author'),
                     m('th')
                 ]),
                 m('tbody', [
-                    songs.map((s) => {
+                    songs().map((s) => {
                         // console.log(JSON.stringify(s))
                         return m('tr', [
                             m('td', s.title),
                             m('td', s.author),
-                            m('td', [
+                            m('td.pull-right', [
                                 m('button.btn.btn-warning', {
                                     onclick: function() {
                                         songID(s._id)
@@ -40,7 +57,13 @@ var libraryTable = {
                                     'data-toggle': 'modal',
                                     'data-target': '#existingPlaylist'
 
-                                }, 'Add to Playlist')
+                                }, 'Add to Playlist'),
+                                m('span', '  '),
+                                m('button.btn.btn-danger', {
+                                    onclick: function() {
+                                        deleteSong(s._id)
+                                    }
+                                }, 'Delete')
                             ])
                         ])
                     })
@@ -67,7 +90,7 @@ var libraryTable = {
                                             addToPlaylist(playlist.name, songID())
                                         }
                                     }, [
-                                      m('a#playlist', playlist.name)
+                                        m('a#playlist', playlist.name)
                                     ])
                                 })
                             ])

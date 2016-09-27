@@ -16,7 +16,7 @@ var setSong = function(id) {
     })
 }
 
-var hideButton = function(elem) {
+var showInfo = function(elem) {
     $(elem).click(function(){
         console.log(infoStatus())
         $('#info').show()
@@ -52,7 +52,7 @@ var songlistTable = {
                                 m('button.btn.btn-success', {
                                     config: function(elem, isInit, context) {
                                         if (!isInit) {
-                                            hideButton(elem);
+                                            showInfo(elem);
                                         }
                                     },
                                     onclick: function() {

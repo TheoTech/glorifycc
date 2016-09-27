@@ -82,6 +82,35 @@ router.post('/library', function(req, res, next) {
         })
 })
 
+router.delete('/library', function(req, res, next) {
+    // var name = req.body.name
+    var song_id = req.body.id
+    User.findOne({
+        _id: req.user._id
+    }, function(err, u) {
+        if (err) return handleError(err)
+        var index = u.library.indexOf(song_id)
+        if (index > -1) {
+            u.library.splice(index, 1)
+        }
+        u.save(function(err) {
+            if (err) {
+                res.status(400).send('error deleting song ' + err)
+            } else {
+                User.findOne({_id: req.user._id})
+                .populate('library')
+                .exec(function(err, user){
+                  res.send({
+                      songs: user.library,
+                      msg: 'deleting done'
+                  })
+                })
+
+            }
+        })
+    })
+})
+
 router.get('/playlist', function(req, res, next) {
     Playlist.find({
             owner: req.user._id
@@ -142,10 +171,10 @@ router.get('/playlist/:playlist_name/export1', function(req, res, next) {
                             if (err) return handleError(err)
                         })
                     } else {
-                      es.translations = []
-                      es.save(function(err){
-                        if (err) return handleError(err)
-                      })
+                        es.translations = []
+                        es.save(function(err) {
+                            if (err) return handleError(err)
+                        })
                     }
                 })
                 Song.find({

@@ -132,60 +132,12 @@ router.route('/:song_id')
                 console.log(rightTranslation)
                 res.render('song', {
                     song: song,
-                    // langAndVers: langAndVers,
                     rightTranslation: rightTranslation,
                     isTranslationExisted: isTranslationExisted,
                     translations: translations
                 })
             }
-            // console.log(translations)
 
-        })
-    })
-
-// console.log(translations)
-
-// console.log('hahahha')
-//   } else {
-//
-//   }
-//   console.log(translations)
-//   // var langAndVers = getLangAndVer(t) || {}
-//   var rightTranslation = translations.find((translation) => translation.lang === lang && translation.v == v) || {}
-//   var isTranslationExisted = !(Object.keys(rightTranslation).length === 0 && rightTranslation.constructor === Object);
-// //   if (t){
-// //   Song.find({_id: song.source}, function(err, parentSong){
-// //     rightTranslation.push(parentSong)
-// //   })
-// // }
-//   // song.lyric = song.lyric.replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
-//   // if (isTranslationExisted) {
-//   //     //if there is the rightTranslation
-//   //     // console.log(rightTranslation)
-//   //     rightTranslation.lyric = rightTranslation.lyric.replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
-//   // }
-//   // console.log(translations)
-
-
-.post(function(req, res) {
-        var songsPicked = req.body.song
-        var songcart = req.session.songcart ? req.session.songcart : [];
-
-        Song.find({
-            _id: {
-                $in: songsPicked
-            }
-        }, function(err, songs) {
-            if (err) {
-                res.status(400).send('error adding songs to the songcart ' + error)
-            }
-            // console.log(songs)
-            // songs.forEach((song) => songcart.push(song))
-            songcart.push(songs)
-            req.session.songcart = songcart
-                // req.session.songcart.push(songs)
-            console.log(req.session.songcart)
-            res.redirect('/songlist')
         })
     })
 
