@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    include topnav
+    h1 Step 1: Select Translations
+    #export1Table
+
+    a.btn.btn-primary(href='/user/playlist/#{playlistName}/export2') Next
+
+    script(type='text/javascript').
+        var playlistID = !{JSON.stringify(playlistID).replace(/<\//g, "<\\/")}
+        var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
+        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var translationss = !{JSON.stringify(translationss).replace(/<\//g, "<\\/")}
+    script(src='/javascripts/export1Table.js')
+    
+    
+    
+    
+    //- script(src="http://rubaxa.github.io/Sortable/Sortable.js")
+    //- table.table
+    //-     thead
+    //-         th Title
+    //-         th Translations Available
+    //-     tbody
+    //-         -for(var i = 0; i < songs.length; i++)
+    //-             tr
+    //-                 td #{songs[i].title}
+    //-                     each lang in langss[i]
+    //-                         td #{lang}

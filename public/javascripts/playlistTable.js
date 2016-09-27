@@ -1,13 +1,6 @@
 var songs = m.prop([])
 var playlistName = m.prop()
 
-// var temp = function(){
-//   if (playlists[0]){
-//     songs(playlists[0].songs)
-//   } else {
-//     songs([])
-//   }
-// }()
 var pickPlaylist = function(name) {
     // console.log(id)
     m.request({
@@ -18,8 +11,9 @@ var pickPlaylist = function(name) {
             }
         })
         .then(function(res) {
-            // console.log(JSON.stringify(res.titles))
+            console.log(JSON.stringify(res))
             songs(res.songs)
+            playlistName(res.name)
         })
 }
 
@@ -77,7 +71,8 @@ var playlistTable = {
                         ])
                     ])
 
-                ])
+                ]),
+                m('a.btn.btn-primary', {href: '/user/playlist/' + playlistName() + '/export1'}, 'Export Playlist')
             ]
         }
     }

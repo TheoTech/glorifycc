@@ -3,6 +3,12 @@ var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
 var Playlist = require('../models/playlist')
+var app = require('../app')
+var pdf = require('html-pdf')
+var fs = require('file-system')
+var Song = require('../models/song')
+var ExportSong = require('../models/exportSong')
+var _und = require('../bower_components/underscore/underscore-min')
 
 var helperFunc = require('../config/passport')
 
@@ -76,28 +82,260 @@ router.post('/library', function(req, res, next) {
         })
 })
 
-router.get('/playlist', function(req, res, next){
-  Playlist.find({owner: req.user._id})
-  .populate('songs')
-  .exec(function(err, playlists){
-      if (err) return handleError(err)
-      // console.log(playlists)
-      res.render('playlist', {playlists: playlists})
-  })
+router.get('/playlist', function(req, res, next) {
+    Playlist.find({
+            owner: req.user._id
+        })
+        .populate('songs')
+        .exec(function(err, playlists) {
+            if (err) return handleError(err)
+            res.render('playlist', {
+                playlists: playlists
+            })
+        })
 })
 
-router.post('/playlist', function(req, res, next){
-  var name = req.body.name
-  Playlist.findOne({owner: req.user._id, name: name})
-  .populate('songs')
-  .exec(function(err, playlist){
-    // console.log(JSON.stringify(playlist)
-    if (err) return handleError(err)
-    // var titles = playlist.songs.map((s) => s.title)
-    // var songs = playlist.map((s) => s.songs)
-    // console.log(songsTitle)
-    res.send({songs: playlist.songs})
-  })
+router.post('/playlist', function(req, res, next) {
+    var name = req.body.name
+    Playlist.findOne({
+            owner: req.user._id,
+            name: name
+        })
+        .populate('songs')
+        .exec(function(err, playlist) {
+            // console.log(JSON.stringify(playlist)
+            if (err) return handleError(err)
+                // var titles = playlist.songs.map((s) => s.title)
+                // var songs = playlist.map((s) => s.songs)
+                // console.log(songsTitle)
+            res.send({
+                songs: playlist.songs,
+                name: playlist.name
+            })
+        })
+})
+
+router.get('/playlist/:playlist_name/export1', function(req, res, next) {
+    var playlistName = req.params.playlist_name
+    var translationss = []
+    Playlist.findOne({
+            owner: req.user._id,
+            name: playlistName
+        })
+        .populate('songs')
+        .exec(function(err, playlist) {
+            if (err) return handleError(err)
+                // console.log(playlist.songs)
+            playlist.songs.forEach((s, i, arr) => {
+                ExportSong.findOne({
+                    owner: playlist._id,
+                    song: s._id
+                }, function(err, es) {
+                    if (err) return handleError(err)
+                    if (!es) {
+                        newExportSong = new ExportSong({
+                            owner: playlist._id,
+                            song: s._id,
+                            translations: []
+                        })
+                        newExportSong.save(function(err) {
+                            if (err) return handleError(err)
+                        })
+                    } else {
+                      es.translations = []
+                      es.save(function(err){
+                        if (err) return handleError(err)
+                      })
+                    }
+                })
+                Song.find({
+                        $or: [{
+                            $and: [{
+                                source: s.source
+                            }, {
+                                source: {
+                                    $exists: true
+                                }
+                            }, {
+                                lang: {
+                                    $ne: s.lang
+                                }
+                            }]
+                        }, {
+                            _id: s.source
+                        }, {
+                            source: s._id
+                        }]
+                    },
+                    function(err, songs) {
+                        if (err) return handleError(err)
+                        translationss.push(songs.map((s) => s))
+                        if (i == arr.length - 1) {
+                            res.render('export1', {
+                                playlistID: playlist._id,
+                                playlistName: playlist.name,
+                                songs: playlist.songs,
+                                translationss: translationss
+                            })
+                        }
+                    })
+            })
+        })
+})
+
+router.post('/playlist/:playlist_name/export1', function(req, res, next) {
+    // console.log(req.body)
+    var playlistID = req.body.playlistID
+    var songID = req.body.songID
+    var translationID = req.body.translationID
+        // console.log(songID)
+        // res.send({msg: 'saving'})
+    ExportSong.findOne({
+        owner: playlistID,
+        song: songID
+    }, function(err, es) {
+        if (err) return handleError(err)
+        console.log(es)
+        es.translations.push(translationID)
+        es.save(function(err) {
+            if (err) {
+                res.status(400).send('error ' + err)
+            } else {
+                res.send({
+                    msg: 'saving done'
+                })
+            }
+        })
+    })
+})
+
+router.delete('/playlist/:playlist_name/export1', function(req, res) {
+    // var playlistID = ObjectId(req.body.playlistID)
+    // var songID = ObjectId(req.body.songID)
+    // var translationID = ObjectId(req.body.translationID)
+    var playlistID = req.body.playlistID
+    var songID = req.body.songID
+    var translationID = req.body.translationID
+    console.log(req.body)
+    ExportSong.findOne({
+            owner: playlistID,
+            song: songID
+        }, function(err, es) {
+            if (err) return handleError(err)
+            var index = es.translations.indexOf(translationID)
+            if (index > -1) {
+                es.translations.splice(index, 1)
+            }
+            es.save(function(err) {
+                if (err) {
+                    res.status(400).send('error ' + err)
+                } else {
+                    res.send({
+                        msg: 'deleting done'
+                    })
+                }
+            })
+        })
+        // ExportSong.update({_id: playlistID}, {
+        //     $pull: {
+        //         translations: translationID
+        //     }
+        // }, {
+        //     multi: true
+        // }, function(err) {
+        //     if (err) return handleError(err)
+        //     res.send({
+        //         msg: 'deleting done'
+        //     })
+        // })
+})
+
+router.get('/playlist/:playlist_name/export2', function(req, res) {
+    // var playlistName = req.params.playlist_name
+    // Playlist.find({owner: req.user._id, name: playlistName})
+    // // .populate(songs)
+    res.render('export2', {
+        playlistName: req.params.playlist_name
+    })
+})
+
+router.get('/playlist/:playlist_name/export3', function(req, res) {
+    var playlistName = req.params.playlist_name
+    var songss = []
+    var temp = []
+    Playlist.findOne({
+        owner: req.user._id,
+        name: playlistName
+    }, function(err, playlist) {
+        if (err) return handleError(err)
+        ExportSong.find({
+                owner: playlist._id
+            })
+            .populate('song translations')
+            .exec(function(err, songs) {
+                // console.log(songs)
+                if (err) return handleError(err)
+                songs.forEach((s, i, arr) => {
+                    temp = []
+                    temp.push(s.song)
+                    s.translations.forEach((t) => {
+                            temp.push(t)
+                        })
+                        // console.log(temp)
+                    songss.push(temp)
+                    if (i === arr.length - 1) {
+                        console.log(songss)
+                        res.render('export3', {
+                            songss: songss
+                        })
+                    }
+                })
+            })
+    })
+
+})
+
+router.post('/playlist/:playlist_name/export3', function(req, res) {
+    var playlistName = req.params.playlist_name
+    var songss = []
+    var temp = []
+    var filename = Date.now()
+    Playlist.findOne({
+        owner: req.user._id,
+        name: playlistName
+    }, function(err, playlist) {
+        if (err) return handleError(err)
+        ExportSong.find({
+                owner: playlist._id
+            })
+            .populate('song translations')
+            .exec(function(err, songs) {
+                // console.log(songs)
+                if (err) return handleError(err)
+                songs.forEach((s, i, arr) => {
+                    temp = []
+                    temp.push(s.song)
+                    s.translations.forEach((t, i) => {
+                        temp.push(t)
+                    })
+                    s.translations = []
+                    s.save()
+                    songss.push(temp)
+                    if (i === arr.length - 1) {
+                        console.log(songss)
+                        app.render('handout', {
+                            songss: songss
+                        }, function(err, html) {
+                            pdf.create(html).toStream(function(err, stream) {
+                                res.setHeader('Content-Type', 'application/pdf')
+                                res.setHeader('Content-Disposition', 'attachment; filename=' + filename + '.pdf')
+                                stream.pipe(res)
+                            })
+                        });
+                    }
+                })
+            })
+    })
 })
 
 router.get('/logout', isLoggedIn, function(req, res, next) {
@@ -205,6 +443,8 @@ function notLoggedIn(req, res, next) {
         res.redirect('/')
     }
 }
+
+function getParentAndChildren(s) {}
 // router.post('/login', passport.authenticate('local.login', {
 //     successRedirect: '/user/profile'
 //     failureRedirect: '/user/login'

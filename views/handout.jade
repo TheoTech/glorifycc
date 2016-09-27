@@ -1,5 +1,5 @@
 extends layout
-        
+
 block content
     each songs in songss
         table.table(style='text-align: center; page-break-after: always')
@@ -17,6 +17,7 @@ block content
                                 - else
                                     !{line}
                                     br
+    
 //-                 a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
 //-             td #{song.author}
 //- 
