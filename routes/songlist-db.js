@@ -5,9 +5,6 @@ var express = require('express'),
     helperFunc = require('../config/passport')
 
 
-// router.use('/', isAdminLoggedIn, function(req, res, next) {
-//     next()
-// })
 
 router.get('/', function(req, res) {
     Song.find({
@@ -47,7 +44,6 @@ router.get('/add', function(req, res) {
 router.post('/add', function(req, res) {
     var title = req.body.title
     var stringArr = req.body.lyric.split(/\r?\n|\//)
-    // var contributor = req.user.username || ''
     Song.findOne({
         title: title
     }, function(err, song) {
@@ -72,9 +68,6 @@ router.post('/add', function(req, res) {
             })
 
             console.log(stringArr)
-            // console.log(newSong.lyric)
-
-            // console.log(JSON.stringify(newSong))
             newSong.save(function(err) {
                 if (err) {
                     res.status(400).send('error saving new song ' + err)
@@ -86,67 +79,6 @@ router.post('/add', function(req, res) {
     })
 })
 
-// router.post('/add', function(req, res) {
-//     var title = req.body.title
-//     var lang = req.body.language
-//     var re = new RegExp(title, "i")
-//     var query = {};
-//     query[lang] = title;
-//     Song.findOne({
-//         title: {
-//             $elemMatch: query
-//         }
-//     }, function(err, song) {
-//         if (err) {
-//             res.status(400).send('error ' + err)
-//         }
-//         if (!song) {
-//             var newSong = new Song({
-//                 author: req.body.author,
-//                 year: req.body.year,
-//                 copyright: req.body.copyright,
-//             })
-//             var tempTitle = {}
-//             var tempLyric = {}
-//             tempTitle[lang] = req.body.title
-//             tempLyric[lang] = req.body.lyric
-//             newSong.lang.push(lang)
-//             newSong.title.push(tempTitle)
-//             newSong.lyric.push(tempLyric);
-//             console.log(JSON.stringify(newSong))
-//             newSong.save(function(err) {
-//                 if (err) {
-//                     res.status(400).send('error saving new song ' + err)
-//                 } else {
-//                     res.redirect('/songlist-db')
-//                 }
-//             })
-//         } else {
-//             res.render('add', {
-//                 msg: 'Song Exists',
-//                 song: song
-//             });
-//         }
-//         //var isExist = contains.call(song.lang, lang)
-//         // if (isExist){
-//
-//         // } else {
-//         //     //console.log('working')
-//         //     var temp = {}
-//         //     temp[lang] = req.body.lyric
-//         //     song.lang.push(lang)
-//         //     song.lyric.push(temp)
-//         //     song.save(function(err) {
-//         //         if (err) {
-//         //             res.status(400).send('error saving new language ' + err)
-//         //         } else {
-//         //             res.redirect('/songlist-db')
-//         //         }
-//         //     })
-//         // }
-//         console.log(JSON.stringify(song))
-//     })
-// })
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''

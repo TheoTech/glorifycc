@@ -2,7 +2,6 @@ var songs = m.prop([])
 var playlistName = m.prop()
 
 var pickPlaylist = function(name) {
-    // console.log(id)
     m.request({
             method: 'POST',
             url: '/user/playlist',
@@ -36,10 +35,7 @@ var active = ''
 var playlistTable = {
         view: function() {
             return [
-                // m('#info.alert[style=display:none]', {class: infoStatus()}, info()),
-                // m('#fail.alert.alert-danger[style=display:none]', info()),
                 m('ul.nav.nav-tabs[role=tablist]', [
-                    // m.component(onloadActiveTab)
                     playlists.map((playlist, i, arr) => {
                         active = i == 0 ? 'active' : ''
                         return m('li', {
@@ -76,30 +72,5 @@ var playlistTable = {
             ]
         }
     }
-    // m('table.table', [
-    //     m('thead', [
-    //         m('th', 'Title'),
-    //         m('th', 'Author'),
-    //         m('th')
-    //     ]),
-    //     m('tbody', [
-    //         songs.map((s) => {
-    //             // console.log(JSON.stringify(s))
-    //             return m('tr', [
-    //                 m('td', s.title),
-    //                 m('td', s.author),
-    //                 m('td', [
-    //                     m('button.btn.btn-warning', {
-    //                         onclick: function() {
-    //                             songID(s._id)
-    //                         },
-    //                         'data-toggle': 'modal',
-    //                         'data-target': '#existingPlaylist'
-    //
-    //                     }, 'Add to Playlist')
-    //                 ])
-    //             ])
-    //         })
-    //     ])
-    // ])
+
 m.mount(document.getElementById('playlist'), playlistTable)

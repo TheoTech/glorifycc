@@ -26,18 +26,6 @@ router.route('/:user_id')
             next();
         })
     })
-    // .get(function(req, res) {
-    //     //console.log(user.lang)
-    //     user.lang.forEach(function(lang) {
-    //             console.log(lang)
-    //             user.lyric[lang] = user.lyric[lang].replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
-    //         })
-    //         // console.log(user.lyric.english)
-    //         // console.log(user.lyric.mandarin)
-    //     res.render('user', {
-    //         user: user
-    //     })
-    // })
 
 
 

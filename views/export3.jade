@@ -17,19 +17,6 @@ block content
                             !{line}
                             br
                     </p>
-    //- each songs in songss
-    //-     .row
-    //-     each song in songs
-    //-         .col-md-6
-    //-             h3 #{song.title}
-    //-             <p> 
-    //-             each line in song.lyric
-    //-                 - if (line === '')
-    //-                     br
-    //-                 - else
-    //-                     !{line}
-    //-                     br
-    //-             </p>
     form(method='post', role='form', action='')
         button.btn.btn-primary.btn-lg Export
     a.btn.btn-success.btn-lg(href='/') Back to Home Page

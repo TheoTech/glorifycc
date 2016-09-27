@@ -1,23 +1,3 @@
-// script.songss = "#{songss}"
-// var local_data;
-
-// console.log(data)
-
-// var Sortable = {}
-// // var temp = document.getElementById('export-1')
-// // Sortable.create(temp)
-// //console.log(songcart)
-// Sortable.url = ''
-// for (var i = 0; i < length; i++) {
-//   Sortable.order.push(i)
-// }
-// // console.log(Sortable.order)
-// // console.log(order)
-
-// //console.log(Sortable.order)
-// // $("#sortable").disableSelection();
-// // console.log(order)
-// //console.log(order)
 
 function export_1(){
   var order = m.prop([]);

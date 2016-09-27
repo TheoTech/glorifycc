@@ -14,18 +14,13 @@ ul.nav.navbar-nav.navbar-right
                 li(role="separator" class="divider")
                 li
                     a(href='/user/logout') Log Out
-        //- <li>
-        //- <a href="/songcart" class="btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-        //- <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Songcart</a>
-        //- </li>
+      
     -else if(login && user.username == "admin")
         li(style="font-size: 1em; line-height: 50px; margin-right: 0.7em") Hi #{user.username}
         li(class="dropdown")
             <a href="#" class="btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Account</a>
             ul(class="dropdown-menu")
-                //- li
-                //-     a(href="/user/profile") User Account
                 li
                     a(href="/songlist-db") Song Database
                 li

@@ -24,7 +24,6 @@ router.get('/', function(req, res) {
 })
 
 router.post('/', function(req, res) {
-        // console.log(req.body.id)
         var id = req.body.id
         console.log(typeof(id))
         if (req.isAuthenticated()) {
@@ -39,9 +38,7 @@ router.post('/', function(req, res) {
                     .exec(function(err, song) {
                         console.log(JSON.stringify(song))
                         if (err) return handleError(err)
-                            // var ids
-                            // console.log(contains.call(user.library, ObjectId(id)))
-                        if (song) {
+                          if (song) {
                             console.log('hahhaa')
                             res.send({
                                 msg: 'You already have this song',
@@ -66,60 +63,7 @@ router.post('/', function(req, res) {
                 url: '/user/signup'
             })
         }
-        // console.log(typeof(user.library[0]))
-        // console.log(id)
     })
-    // if(req.user.username == '')
-    // if(login){
-    //   console.log(req.user.username)
-    // } else {
-    //   console.log('hehehe')
-    // }
-    // if (req.user.username){
-    //
-    // } else {
-    //       res.redirect('/user/signup')
-    // }
-
-
-// router.get('/', function(req, res) {
-//     Song.find({
-//         source: null
-//     }, function(err, songs, count) {
-//         if (err) {
-//             res.status(400).send('error getting song list ' + err)
-//         } else {
-//             Song.find({
-//                 source: {
-//                     $ne: null
-//                 }
-//             }, function(err, translations) {
-//                 if (err) {
-//                     res.status(400).send('error getting song translations ' + err)
-//                 }
-//                 songs = songs || [{}]
-//                 translations = translations || [{}]
-//                 // console.log(songs)
-//                 console.log(translations)
-//                 res.render('songlist', {
-//                     songs: songs,
-//                     translations: translations
-//                 })
-//             })
-//         }
-//     })
-// })
-
-// router.put('/', function(req, res) {
-//     Song.find(function(err, songs, count) {
-//         if (err) {
-//             res.status(400).send('error getting song list ' + err)
-//         } else {
-//             console.log(songs)
-//             res.json(songs);
-//         }
-//     })
-// })
 
 
 
@@ -244,23 +188,6 @@ router.route('/:song_id')
             res.redirect('/songlist')
         })
     })
-    // .post(function(req, res){
-    //   var song_id = req.params.song_id;
-    //   var songcart = new Songcart(req.session.songcart ? req.session.songcart : {
-    //       songs: {}
-    //   });
-    //
-    //   Song.findById(song_id, function(err, song) {
-    //       if (err) {
-    //           return res.redirect('/');
-    //       }
-    //       songcart.add(song, song_id);
-    //       req.session.songcart = songcart
-    //       console.log(req.session.songcart)
-    //       res.redirect('/songlist')
-    //   })
-    // })
-
 
 router.route('/:song_id/add-translation')
     .all(function(req, res, next) {
@@ -276,22 +203,18 @@ router.route('/:song_id/add-translation')
         song.lyric.forEach(function(s) {
                 temp += s + '\n'
             })
-            // song.lyric = song.lyric.replace(/<br\s*\/?>|\//mg, '\n')
         res.render('addTranslation', {
             song: song,
             stringLyric: temp
         })
     })
     .post(function(req, res) {
-        // console.log('hahhaa')
         var lang = req.body.lang_t
         var stringArr_t = req.body.lyric_t.split(/\r?\n|\//)
-            // console.log(lang)
         Song.findOne({
                 source: song.id,
                 lang: lang
             }, function(err, translation) {
-                // console.log('working')
                 if (err) {
                     res.status(400).send('error ' + err)
                 }
@@ -312,7 +235,6 @@ router.route('/:song_id/add-translation')
                 } else {
                     newSong.v = 1;
                 }
-                // console.log(JSON.stringify(newSong))
                 newSong.save(function(err) {
                     if (err) {
                         res.status(400).send('error saving new song ' + err)
@@ -336,12 +258,3 @@ function isEmpty(obj) {
 
     return true && JSON.stringify(obj) === JSON.stringify({});
 }
-
-// var getLangAndVer = function(obj) {
-//     return obj.map((t) => {
-//         return {
-//             lang: t.lang,
-//             v: t.v
-//         }
-//     })
-// }

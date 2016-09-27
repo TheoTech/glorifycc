@@ -2,7 +2,6 @@ var searchOption = {
     queryString: function() {
         var url = ''
         var lang = this.optionChecked() || []
-        // console.log(lang)
         if (lang[0]) {
             url += '?lang=' + lang[0];
         }

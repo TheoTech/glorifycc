@@ -1,24 +1,4 @@
-// var songs = m.prop([])
-// var playlistName = m.prop()
-
-// console.log(songs)
-// var temp = function(){
-//   if (playlists[0]){
-//     songs(playlists[0].songs)
-//   } else {
-//     songs([])
-//   }
-// }()
-
-
-
-// $(window).unload(function(){
-//     alert('Are you sure you want to leave? The translations you picked will be lost')
-//
-// });
-
 var pickTranslation = function(songID, translationID, checked) {
-    // console.log(id)
     if (checked) {
         m.request({
                 method: 'POST',
@@ -47,11 +27,6 @@ var pickTranslation = function(songID, translationID, checked) {
             })
     }
 
-    // .then(function(res) {
-    //     console.log(JSON.stringify(res))
-    //     songs(res.songs)
-    //     playlistName(res.name)
-    // })
 }
 
 var contains = function(needle) {
@@ -84,23 +59,6 @@ var contains = function(needle) {
 
 
 
-
-
-
-// var showtab = function(elem) {
-//     $(elem.click(function() {
-//         $(this).tab('show')
-//     }))
-// }
-
-
-// window.onload = function() {
-//     if (document.getElementById('0')) {
-//         document.getElementById('0').click();
-//     }
-// };
-
-
 var langLabelArr = function(translationss) {
     var lang = []
     translationss.forEach((tr) => {
@@ -116,7 +74,6 @@ var langLabelArr = function(translationss) {
 
 
 console.log(langLabelArr(translationss))
-    // console.log(contains.call(['english', 'spanish'], 'english'))
 
 var langOptions = langLabelArr(translationss)
 
@@ -156,9 +113,7 @@ var export1Table = {
                             return m('tr', [
                                 m('td', s.title),
                                 translationss[i].map((t) => {
-                                    // console.log('t.lang: ' + t.lang)
                                     return langOptions.map((l) => {
-                                        // console.log('lang: ' + l)
                                         return t.lang === l ? m('td', [
                                             m('input[type=checkbox]', {
                                                 class: t.lang,
@@ -177,32 +132,6 @@ var export1Table = {
             ]
         }
     }
-    // m('#info.alert[style=display:none]', {class: infoStatus()}, info()),
 
-// m('table.table', [
-//     m('thead', [
-//         m('th', 'Title'),
-//         m('th', 'Author'),
-//         m('th')
-//     ]),
-//     m('tbody', [
-//         songs.map((s) => {
-//             // console.log(JSON.stringify(s))
-//             return m('tr', [
-//                 m('td', s.title),
-//                 m('td', s.author),
-//                 m('td', [
-//                     m('button.btn.btn-warning', {
-//                         onclick: function() {
-//                             songID(s._id)
-//                         },
-//                         'data-toggle': 'modal',
-//                         'data-target': '#existingPlaylist'
-//
-//                     }, 'Add to Playlist')
-//                 ])
-//             ])
-//         })
-//     ])
-// ])
+
 m.mount(document.getElementById('export1Table'), export1Table)

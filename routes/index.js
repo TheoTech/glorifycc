@@ -4,7 +4,6 @@ var Song = require('../models/song');
 var app = require('../app')
 var pdf = require('html-pdf')
 var fs = require('file-system')
-// var Songcart = require('../models/songcart')
 
 
 /* GET home page. */
@@ -31,24 +30,6 @@ router.post('/', function(req, res, next) {
     })
 })
 
-
-
-// router.get('/songcart/:song_id', function(req, res) {
-//     var song_id = req.params.song_id;
-//     var songcart = new Songcart(req.session.songcart ? req.session.songcart : {
-//         songs: {}
-//     });
-//
-//     Song.findById(song_id, function(err, song) {
-//         if (err) {
-//             return res.redirect('/');
-//         }
-//         songcart.add(song, song_id);
-//         req.session.songcart = songcart
-//         console.log(req.session.songcart)
-//         res.redirect('/songlist')
-//     })
-// })
 
 
 

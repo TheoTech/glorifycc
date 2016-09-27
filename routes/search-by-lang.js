@@ -6,7 +6,6 @@ var Song = require('../models/song');
 router.route('/:lang')
     .all(function(req, res, next) {
         lang = req.params.lang;
-        //console.log(song_id)
         songs = {}
         var re = new RegExp(lang, "i")
         Song.find({

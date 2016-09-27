@@ -2,50 +2,10 @@ extends layout
 
 block content
     include topnav
-    //- form(role="form", action="/contacts?_method=put", method="post")
-    //-     input(type="text", name="search", placeholder="Search..")
     h1 Your Song Library
     br
     #library
-    //- table.table.table-inverse
-    //-     thead
-    //-         th Title
-    //-         th Author
-    //-     tbody
-    //-         each song in songs
-    //-             tr
-    //-                 td 
-    //-                     a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
-    //-                 td #{song.author}
-    //-                 td
-    //-                     button.btn.btn-warning(id='#{song.id}' data-toggle='modal' data-target='#existingPlaylist') Add to Playlist
-    //- 
-    //-     //- button#myBtn.btn.btn-success.btn-block(data-toggle="modal" data-target="#myModal") Add to Song Chart
-    //-     #existingPlaylist.modal.fade(role="dialog")
-    //-         .modal-dialog.modal-sm
-    //-             .modal-content
-    //-                 .modal-header
-    //-                     h4(style='text-align: center') Your Playlist
-    //-                         button.btn.btn-default.pull-right(data-toggle='modal' data-target='#newPlaylist')
-    //-                             span.glyphicon.glyphicon-plus
-    //-                             //- " aria-hidden="true"></span>
-    //-                             //- </button>
-    //-                 .modal-body(style="padding: 40px 50px")
-    //-                     ul(style='list-style-type:none')
-    //-                         li Christmas Song
-    //-                         li Hymn Song
-    //-                         
-    //-     #newPlaylist.modal.fade(role="dialog")
-    //-         .modal-dialog.modal-sm
-    //-             .modal-content
-    //-                 .modal-header
-    //-                     h4(style='text-align: center') New Playlist
-    //-                 .modal-body(style="padding: 40px 50px")
-    //-                     form(role="form" method="post" action="")
-    //-                         .form-group
-    //-                             label Enter Playlist Name
-    //-                             input(name='playlist' type='text')
-    //-                         button.btn.btn-success Create
+
     script(type='text/javascript').
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlistLibrary).replace(/<\//g, "<\\/")}

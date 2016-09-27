@@ -3,8 +3,6 @@ var playlistName = m.prop()
 
 var addToPlaylist = function(name, id) {
     console.log(id)
-        // button.style.visibility = "hidden";
-        // console.log(JSON.stringify(id))
     m.request({
             method: 'POST',
             url: '/user/library',
@@ -21,12 +19,8 @@ var addToPlaylist = function(name, id) {
 }
 
 var libraryTable = {
-    // info: m.prop('testtest'),
     view: function() {
-        return [
-            // m('#info.alert[style=display:none]', {class: infoStatus()}, info()),
-            // m('#fail.alert.alert-danger[style=display:none]', info()),
-            m('table.table', [
+        return [  m('table.table', [
                 m('thead', [
                     m('th', 'Title'),
                     m('th', 'Author'),

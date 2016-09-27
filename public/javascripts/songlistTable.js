@@ -1,9 +1,4 @@
-// console.log(JSON.stringify(songs))
-
-
 var setSong = function(id) {
-    // button.style.visibility = "hidden";
-    // console.log(JSON.stringify(id))
     m.request({
         method: 'POST',
         url: '/songlist',
@@ -36,11 +31,10 @@ var info = m.prop()
 var infoStatus = m.prop('')
 
 var songlistTable = {
-    // info: m.prop('testtest'),
     view: function() {
         return [
           m('#info.alert[style=display:none]', {class: infoStatus()}, info()),
-          // m('#fail.alert.alert-danger[style=display:none]', info()),
+
         m('table.table', [
                 m('thead', [
                     m('th', 'Title'),
@@ -49,7 +43,6 @@ var songlistTable = {
                 ]),
                 m('tbody', [
                     songs.map((s) => {
-                        // console.log(JSON.stringify(s))
                         return m('tr', [
                             m('td', [
                               m('a', {href: '/songlist/' + s._id}, s.title)
