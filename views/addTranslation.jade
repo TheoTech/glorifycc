@@ -6,7 +6,15 @@ block content
         .row
             .col-md-6
                 h1 Original Song
-                //- form
+            .col-md-6
+                h1 Translation
+                -console.log(hasErrors)
+                if hasErrors
+                    .alert.alert-danger 
+                        each msg in messages
+                            p #{msg}      
+        .row
+            .col-md-6
                 .form-group
                     label(for="lang") Language
                     input#language.form-control(name="lang", value=langCapitalized, readonly)         
@@ -17,8 +25,6 @@ block content
                     label.capitalize(for="copyright") Copyright
                     input.capitalize.form-control(name="copyright", value=song.copyright, readonly)
             .col-md-6
-                h1 Translation
-                //- form(role='form', method='post', action="")
                 .form-group
                     label(for="lang_t") Language
                     select#language.form-control(name="lang_t")

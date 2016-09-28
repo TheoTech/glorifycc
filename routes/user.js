@@ -159,20 +159,23 @@ router.delete('/playlist', function(req, res) {
         if (index > -1) {
             pl.songs.splice(index, 1)
         }
-        pl.save(function(err) {
-            if (err) return handleError(err)
-            Playlist.findOne({
-                    owner: req.user._id,
-                    name: playlistName
-                })
-                .populate('songs')
-                .exec(function(err, afterDelete) {
-                    res.send({
-                        msg: 'deleting done',
-                        songs: afterDelete.songs
-                    })
-                })
+        ExportSong.remove({owner: pl._id, song: songID}, function(err){
+          pl.save(function(err) {
+              if (err) return handleError(err)
+              Playlist.findOne({
+                      owner: req.user._id,
+                      name: playlistName
+                  })
+                  .populate('songs')
+                  .exec(function(err, afterDelete) {
+                      res.send({
+                          msg: 'deleting done',
+                          songs: afterDelete.songs
+                      })
+                  })
+          })
         })
+
     })
 })
 
@@ -243,6 +246,7 @@ router.get('/playlist/:playlist_name/export1', function(req, res, next) {
                         }]
                     },
                     function(err, songs) {
+                        console.log(songs)
                         if (err) return handleError(err)
                         translationss.push(songs.map((s) => s))
                         if (i == arr.length - 1) {
@@ -402,6 +406,7 @@ router.post('/playlist/:playlist_name/export3', function(req, res) {
                         app.render('handout', {
                             songss: songss
                         }, function(err, html) {
+                            console.log(html)
                             pdf.create(html).toStream(function(err, stream) {
                                 res.setHeader('Content-Type', 'application/pdf')
                                 res.setHeader('Content-Disposition', 'attachment; filename=' + filename + '.pdf')
