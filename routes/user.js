@@ -97,14 +97,16 @@ router.delete('/library', function(req, res, next) {
             if (err) {
                 res.status(400).send('error deleting song ' + err)
             } else {
-                User.findOne({_id: req.user._id})
-                .populate('library')
-                .exec(function(err, user){
-                  res.send({
-                      songs: user.library,
-                      msg: 'deleting done'
-                  })
-                })
+                User.findOne({
+                        _id: req.user._id
+                    })
+                    .populate('library')
+                    .exec(function(err, user) {
+                        res.send({
+                            songs: user.library,
+                            msg: 'deleting done'
+                        })
+                    })
 
             }
         })
@@ -142,6 +144,50 @@ router.post('/playlist', function(req, res, next) {
                 name: playlist.name
             })
         })
+})
+
+router.delete('/playlist', function(req, res) {
+    var songID = req.body.id
+    console.log(songID)
+    var playlistName = req.body.name
+    Playlist.findOne({
+        owner: req.user._id,
+        name: playlistName
+    }, function(err, pl) {
+        if (err) return handleError(err)
+        var index = pl.songs.indexOf(songID)
+        if (index > -1) {
+            pl.songs.splice(index, 1)
+        }
+        pl.save(function(err) {
+            if (err) return handleError(err)
+            Playlist.findOne({
+                    owner: req.user._id,
+                    name: playlistName
+                })
+                .populate('songs')
+                .exec(function(err, afterDelete) {
+                    res.send({
+                        msg: 'deleting done',
+                        songs: afterDelete.songs
+                    })
+                })
+        })
+    })
+})
+
+router.put('/playlist', function(req, res) {
+    var playlistName = req.body.name
+    console.log(playlistName)
+    Playlist.remove({
+        owner: req.user._id,
+        name: playlistName
+    }, function(err) {
+        if (err) return handleError(err)
+        res.send({
+            url: '/user/playlist'
+        })
+    })
 })
 
 router.get('/playlist/:playlist_name/export1', function(req, res, next) {
@@ -211,6 +257,7 @@ router.get('/playlist/:playlist_name/export1', function(req, res, next) {
             })
         })
 })
+
 
 router.post('/playlist/:playlist_name/export1', function(req, res, next) {
     // console.log(req.body)
