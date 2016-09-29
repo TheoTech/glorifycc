@@ -17,10 +17,10 @@ var setSong = function(id) {
 }
 
 var showInfo = function(elem) {
-    $(elem).click(function(){
+    $(elem).click(function() {
         console.log(infoStatus())
         $('#info').show()
-        $("#info").fadeTo(1000, 500).slideUp(500, function(){
+        $("#info").fadeTo(1000, 500).slideUp(500, function() {
             $(this).slideUp(500);
         });
     })
@@ -33,9 +33,11 @@ var infoStatus = m.prop('')
 var songlistTable = {
     view: function() {
         return [
-          m('#info.alert[style=display:none]', {class: infoStatus()}, info()),
+            m('#info.alert[style=display:none]', {
+                class: infoStatus()
+            }, info()),
 
-        m('table.table', [
+            m('table.table', [
                 m('thead', [
                     m('th', 'Title'),
                     m('th', 'Author'),
@@ -45,7 +47,9 @@ var songlistTable = {
                     songs.map((s) => {
                         return m('tr', [
                             m('td', [
-                              m('a', {href: '/songlist/' + s._id}, s.title)
+                                m('a', {
+                                    href: '/songlist/' + s._id
+                                }, s.title)
                             ]),
                             m('td', s.author),
                             m('td', [
@@ -64,7 +68,7 @@ var songlistTable = {
                     })
                 ])
             ])
-          ]
+        ]
     }
 }
 
