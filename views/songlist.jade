@@ -3,8 +3,8 @@ extends layout
 block content
     include topnav
     h1 Song List
-    #search-option
-    a#add.btn.btn-default(href="/songlist-db/add") Add New Song
+    //- #search-option
+    //- a#add.btn.btn-default(href="/songlist-db/add") Add New Song
     br
     h4 Songs
     //- #info.alert.alert-success(style='display: none') Song added to the library
@@ -12,5 +12,5 @@ block content
     script(type='text/javascript').
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
             
-    script(src='/javascripts/searchOption.js')
+    //- script(src='/javascripts/searchOption.js')
     script(src='/javascripts/songlistTable.js')

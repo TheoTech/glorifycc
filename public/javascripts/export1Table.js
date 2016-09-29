@@ -30,51 +30,18 @@ var pickTranslation = function(songID, translationID, checked) {
 
 }
 
-var contains = function(needle) {
-    // Per spec, the way to identify NaN is that it is not equal to itself
-    var findNaN = needle !== needle;
-    var indexOf;
-
-    if (!findNaN && typeof Array.prototype.indexOf === 'function') {
-        indexOf = Array.prototype.indexOf;
-    } else {
-        indexOf = function(needle) {
-            var i = -1,
-                index = -1;
-
-            for (i = 0; i < this.length; i++) {
-                var item = this[i];
-
-                if ((findNaN && item !== item) || item === needle) {
-                    index = i;
-                    break;
-                }
-            }
-
-            return index;
-        };
-    }
-
-    return indexOf.call(this, needle) > -1;
-};
-
-
 
 var langLabelArr = function(translationss) {
     var lang = []
     translationss.forEach((tr) => {
         tr.forEach((t, i) => {
-            if (!contains.call(lang, t.lang)) {
+            if (!_.includes(lang, t.lang)) {
                 lang.push(t.lang)
             }
         })
     })
     return lang
 }
-
-
-
-// console.log(langLabelArr(translationss))
 
 var langOptions = langLabelArr(translationss)
 
@@ -84,6 +51,14 @@ var selectAll = function(elem, checkboxClass) {
         $('.' + checkboxClass).trigger('click')
     });
 }
+
+$(window).load(function() {
+    langsPicked.forEach((lp) =>
+        lp.forEach((l) => {
+            $('#' + l).prop('checked', true)
+        }))
+})
+
 
 var export1Table = {
     view: function() {
@@ -114,12 +89,11 @@ var export1Table = {
                         return m('tr', [
                             m('td', s.title),
                             langOptions.map((l) => {
-                                return contains.call(translationss[i].map((t) => t.lang), l) ? m('td', [
+                                return _.includes(translationss[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
                                         class: l,
-                                        id: getTranslation(i, l)._id,
+                                        id: getTranslation(i, l)[0]._id,
                                         onclick: m.withAttr('checked', function(checked) {
-                                            console.log(getTranslation(i, l)[0]._id)
                                             pickTranslation(s._id, getTranslation(i, l)[0]._id, checked)
                                         })
                                     })
@@ -133,8 +107,8 @@ var export1Table = {
     }
 }
 
-var getTranslation = function(idx, lang){
-  return translationss[idx].filter((t) => t.lang === lang)
+var getTranslation = function(idx, lang) {
+    return translationss[idx].filter((t) => t.lang === lang)
 }
 
 m.mount(document.getElementById('export1Table'), export1Table)

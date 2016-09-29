@@ -1,7 +1,8 @@
 var express = require('express'),
     router = express.Router(),
     Song = require('../models/song'),
-    User = require('../models/user')
+    User = require('../models/user'),
+    _ = require('lodash')
 
 
 router.get('/', function(req, res) {
@@ -114,7 +115,7 @@ router.route('/:song_id')
                             })
                             // console.log(translations)
                         var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                        var isTranslationExisted = !isEmpty(rightTranslation)
+                        var isTranslationExisted = !_.isEmpty(rightTranslation)
                             // console.log(rightTranslation)
                         res.render('song', {
                             song: song,
@@ -128,7 +129,7 @@ router.route('/:song_id')
             } else {
                 console.log('user picks ori song')
                 var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                var isTranslationExisted = !isEmpty(rightTranslation)
+                var isTranslationExisted = !_.isEmpty(rightTranslation)
                 console.log(rightTranslation)
                 res.render('song', {
                     song: song,
@@ -150,7 +151,7 @@ router.route('/:song_id/add-translation')
             next();
         })
     })
-    .get(function(req, res) {
+    .get(isLoggedIn, function(req, res) {
         var temp = '';
         song.lyric.forEach(function(s) {
             temp += s + '\n'
@@ -219,11 +220,10 @@ router.route('/:song_id/add-translation')
 
 module.exports = router;
 
-function isEmpty(obj) {
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop))
-            return false;
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        next()
+    } else {
+        res.redirect('/user/signup')
     }
-
-    return true && JSON.stringify(obj) === JSON.stringify({});
 }

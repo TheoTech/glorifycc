@@ -22,13 +22,11 @@ passport.use('local.login', new LocalStrategy({
     req.checkBody('usernameOrEmail', 'Invalid username or email').notEmpty();
     req.checkBody('password', 'Invalid password').notEmpty();
     var errors = req.validationErrors();
-    console.log(errors)
     if (errors) {
         var messages = [];
         errors.forEach(function(error) {
             messages.push(error.msg);
         });
-        console.log(messages)
         return done(null, false, req.flash('error', messages));
     }
     User.findOne({
@@ -38,11 +36,9 @@ passport.use('local.login', new LocalStrategy({
             email: usernameOrEmail
         }]
     }, function(err, user) {
-        console.log('hehehe')
         if (err) {
             return done(err);
         } else if (!user) {
-            console.log('usernotfound')
             return done(null, false, {
                 message: 'No user found.'
             });

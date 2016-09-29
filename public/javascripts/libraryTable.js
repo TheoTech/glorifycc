@@ -3,7 +3,6 @@ var playlistName = m.prop()
 var songs = m.prop(s)
 
 var addToPlaylist = function(name, id) {
-    console.log(id)
     m.request({
             method: 'POST',
             url: '/user/library',
@@ -28,8 +27,6 @@ var deleteSong = function(id){
     }
   })
   .then(function(data) {
-      console.log(data.msg)
-      console.log(JSON.stringify(data.songs))
       songs(data.songs)
   })
 
@@ -45,7 +42,6 @@ var libraryTable = {
                 ]),
                 m('tbody', [
                     songs().map((s) => {
-                        // console.log(JSON.stringify(s))
                         return m('tr', [
                             m('td', s.title),
                             m('td', s.author),

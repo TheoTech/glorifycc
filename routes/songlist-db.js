@@ -5,6 +5,9 @@ var express = require('express'),
     helperFunc = require('../config/passport')
 
 
+router.use('/', isAdminLoggedIn, function(req, res, next){
+  next()
+})
 
 router.get('/', function(req, res) {
     Song.find({
@@ -23,8 +26,8 @@ router.get('/', function(req, res) {
                 }
                 songs = songs || [{}]
                 translations = translations || [{}]
-                // console.log(songs)
-                console.log(translations)
+                    // console.log(songs)
+                // console.log(translations)
                 res.render('songlist-db', {
                     songs: songs,
                     translations: translations
@@ -101,10 +104,10 @@ router.route('/:song_id')
             var isTranslationExisted = !(Object.keys(rightTranslation).length === 0 && rightTranslation.constructor === Object);
 
             song.lyric = song.lyric.replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
-            if(isTranslationExisted){
-              //if there is the rightTranslation
-              console.log(rightTranslation)
-              rightTranslation.lyric = rightTranslation.lyric.replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
+            if (isTranslationExisted) {
+                //if there is the rightTranslation
+                console.log(rightTranslation)
+                rightTranslation.lyric = rightTranslation.lyric.replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
             }
             res.render('song', {
                 song: song,
@@ -124,40 +127,7 @@ router.route('/:song_id')
         })
     })
 
-// router.route('/:song_id')
-//     .all(function(req, res, next) {
-//       //var language = req.query.language || 'English';
-//         song_id = req.params.song_id;
-//         //console.log(song_id)
-//         song = {}
-//         //translations = {}
-//         Song.findById(song_id, function(err, s) {
-//             song = s;
-//             next();
-//         })
-//         // Song.find({
-//         //     source: song.id
-//         // }, function(err, t) {
-//         //     translations = t;
-//         //     next()
-//         // })
-//     })
-//     .get(function(req, res) {
-//         song.lyric = song.lyric.replace(/(?:\r\n|\r|\n|\/)/g, '<br>')
-//         res.render('song', {
-//             song: song
-//                 // translations: translations
-//         })
-//     })
-    // .delete(function(req, res) {
-    //     song.remove(function(err) {
-    //         if (err) {
-    //             res.status(400).send('Error')
-    //         } else {
-    //             res.send('remove the contact')
-    //         }
-    //     })
-    // })
+
 
 
 router.route('/:song_id/edit')
@@ -194,96 +164,69 @@ router.route('/:song_id/edit')
         })
     })
 
-    router.route('/:song_id/add-translation')
-        .all(function(req, res, next) {
-            song_id = req.params.song_id;
-            song = {}
-            Song.findById(song_id, function(err, s) {
-                song = s;
-                next();
-            })
+router.route('/:song_id/add-translation')
+    .all(function(req, res, next) {
+        song_id = req.params.song_id;
+        song = {}
+        Song.findById(song_id, function(err, s) {
+            song = s;
+            next();
         })
-        .get(function(req, res) {
-            song.lyric = song.lyric.replace(/<br\s*\/?>|\//mg, '\n')
-            res.render('addTranslation', {
-                song: song
-            })
+    })
+    .get(function(req, res) {
+        song.lyric = song.lyric.replace(/<br\s*\/?>|\//mg, '\n')
+        res.render('addTranslation', {
+            song: song
         })
-        .post(function(req, res) {
-            console.log('hahhaa')
-            var lang = req.body.lang_t
-            console.log(lang)
-            Song.findOne({
+    })
+    .post(function(req, res) {
+        console.log('hahhaa')
+        var lang = req.body.lang_t
+        console.log(lang)
+        Song.findOne({
+                source: song.id,
+                lang: lang
+            }, function(err, translation) {
+                console.log('working')
+                if (err) {
+                    res.status(400).send('error ' + err)
+                }
+                var newSong = new Song({
+                    title: req.body.title_t,
+                    author: song.author,
+                    year: song.year,
+                    lang: lang,
+                    contributor: req.user.username,
+                    copyright: req.body.copyright_t,
+                    lyric: req.body.lyric_t,
                     source: song.id,
-                    lang: lang
-                }, function(err, translation) {
-                    console.log('working')
-                    if (err) {
-                        res.status(400).send('error ' + err)
-                    }
-                    var newSong = new Song({
-                        title: req.body.title_t,
-                        author: song.author,
-                        year: song.year,
-                        lang: lang,
-                        contributor: req.user.username,
-                        copyright: req.body.copyright_t,
-                        lyric: req.body.lyric_t,
-                        source: song.id,
-                        oriSong: song.title
-                    })
-                    if (translation) {
-                        newSong.v = translation.v + 1
-                    } else {
-                        newSong.v = 1;
-                    }
-                    console.log(JSON.stringify(newSong))
-                    newSong.save(function(err) {
-                        if (err) {
-                            res.status(400).send('error saving new song ' + err)
-                        } else {
-                            res.redirect('/songlist/' + song_id)
-                        }
-                    })
+                    oriSong: song.title
                 })
-                .sort({
-                    _id: -1
-                }).limit(1)
-        })
+                if (translation) {
+                    newSong.v = translation.v + 1
+                } else {
+                    newSong.v = 1;
+                }
+                console.log(JSON.stringify(newSong))
+                newSong.save(function(err) {
+                    if (err) {
+                        res.status(400).send('error saving new song ' + err)
+                    } else {
+                        res.redirect('/songlist/' + song_id)
+                    }
+                })
+            })
+            .sort({
+                _id: -1
+            }).limit(1)
+    })
 
 
 module.exports = router;
 
-contains = function(needle) {
-    // Per spec, the way to identify NaN is that it is not equal to itself
-    var findNaN = needle !== needle;
-    var indexOf;
-
-    if (!findNaN && typeof Array.prototype.indexOf === 'function') {
-        indexOf = Array.prototype.indexOf;
-    } else {
-        indexOf = function(needle) {
-            var i = -1,
-                index = -1;
-
-            for (i = 0; i < this.length; i++) {
-                var item = this[i];
-
-                if ((findNaN && item !== item) || item === needle) {
-                    index = i;
-                    break;
-                }
-            }
-
-            return index;
-        };
-    }
-
-    return indexOf.call(this, needle) > -1;
-};
-
 function isAdminLoggedIn(req, res, next) {
     if (helperFunc.isAdmin()) {
+        console.log('hehhe')
         next()
     } else {
         res.redirect('/')

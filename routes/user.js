@@ -8,15 +8,9 @@ var pdf = require('html-pdf')
 var fs = require('file-system')
 var Song = require('../models/song')
 var ExportSong = require('../models/exportSong')
-var _und = require('../bower_components/underscore/underscore-min')
-
+var _ = require('lodash')
 var helperFunc = require('../config/passport')
 
-
-router.get('/profile', isLoggedIn, function(req, res, next) {
-    // console.log(helperFunc.isAdmin())
-    res.render('profile');
-});
 
 router.get('/library', isLoggedIn, function(req, res, next) {
     User.findOne({
@@ -159,21 +153,24 @@ router.delete('/playlist', function(req, res) {
         if (index > -1) {
             pl.songs.splice(index, 1)
         }
-        ExportSong.remove({owner: pl._id, song: songID}, function(err){
-          pl.save(function(err) {
-              if (err) return handleError(err)
-              Playlist.findOne({
-                      owner: req.user._id,
-                      name: playlistName
-                  })
-                  .populate('songs')
-                  .exec(function(err, afterDelete) {
-                      res.send({
-                          msg: 'deleting done',
-                          songs: afterDelete.songs
-                      })
-                  })
-          })
+        ExportSong.remove({
+            owner: pl._id,
+            song: songID
+        }, function(err) {
+            pl.save(function(err) {
+                if (err) return handleError(err)
+                Playlist.findOne({
+                        owner: req.user._id,
+                        name: playlistName
+                    })
+                    .populate('songs')
+                    .exec(function(err, afterDelete) {
+                        res.send({
+                            msg: 'deleting done',
+                            songs: afterDelete.songs
+                        })
+                    })
+            })
         })
 
     })
@@ -193,9 +190,12 @@ router.put('/playlist', function(req, res) {
     })
 })
 
+
+//this route is for step one of exporting playlist
 router.get('/playlist/:playlist_name/export1', function(req, res, next) {
     var playlistName = req.params.playlist_name
     var translationss = []
+    var langsPicked = []
     Playlist.findOne({
             owner: req.user._id,
             name: playlistName
@@ -220,10 +220,7 @@ router.get('/playlist/:playlist_name/export1', function(req, res, next) {
                             if (err) return handleError(err)
                         })
                     } else {
-                        es.translations = []
-                        es.save(function(err) {
-                            if (err) return handleError(err)
-                        })
+                        langsPicked.push(es.translations)
                     }
                 })
                 Song.find({
@@ -246,15 +243,16 @@ router.get('/playlist/:playlist_name/export1', function(req, res, next) {
                         }]
                     },
                     function(err, songs) {
-                        console.log(songs)
                         if (err) return handleError(err)
                         translationss.push(songs.map((s) => s))
                         if (i == arr.length - 1) {
+                            console.log(langsPicked)
                             res.render('export1', {
                                 playlistID: playlist._id,
                                 playlistName: playlist.name,
                                 songs: playlist.songs,
-                                translationss: translationss
+                                translationss: translationss,
+                                langsPicked: langsPicked
                             })
                         }
                     })
@@ -290,9 +288,6 @@ router.post('/playlist/:playlist_name/export1', function(req, res, next) {
 })
 
 router.delete('/playlist/:playlist_name/export1', function(req, res) {
-    // var playlistID = ObjectId(req.body.playlistID)
-    // var songID = ObjectId(req.body.songID)
-    // var translationID = ObjectId(req.body.translationID)
     var playlistID = req.body.playlistID
     var songID = req.body.songID
     var translationID = req.body.translationID
@@ -330,10 +325,9 @@ router.delete('/playlist/:playlist_name/export1', function(req, res) {
         // })
 })
 
+
+//this route is for step 2 of exporting playlist
 router.get('/playlist/:playlist_name/export2', function(req, res) {
-    // var playlistName = req.params.playlist_name
-    // Playlist.find({owner: req.user._id, name: playlistName})
-    // // .populate(songs)
     res.render('export2', {
         playlistName: req.params.playlist_name
     })
@@ -501,7 +495,7 @@ router.get('/login', function(req, res, next) {
 })
 
 router.post('/login', passport.authenticate('local.login', {
-    successRedirect: '/user/profile',
+    successRedirect: '/',
     failureRedirect: '/user/login',
     failureFlash: true //turn the flag to true to enable flash message
 }))
@@ -521,6 +515,6 @@ function notLoggedIn(req, res, next) {
     if (!req.isAuthenticated()) {
         next()
     } else {
-        res.redirect('/')
+        res.redirect('/user/signup')
     }
 }

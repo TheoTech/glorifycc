@@ -19,6 +19,7 @@
     "file-system": "^2.2.1",
     "html-pdf": "^2.1.0",
     "jade": "~1.11.0",
+    "lodash": "^4.16.2",
     "mongoose": "^4.5.10",
     "morgan": "~1.7.0",
     "passport": "^0.3.2",

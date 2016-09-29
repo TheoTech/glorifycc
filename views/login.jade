@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    include topnav
     .col-md-4.col-md-offset-4
         h1 Log In
         if hasErrors
@@ -15,3 +16,4 @@ block content
                 label(for="password") Password
                 input#password.form-control(name="password", type="password" placeholder="Password")
             button.btn.btn-success(type="submit") Log In
+        p Don't have an account? <a href='/user/signup'>Sign up</a>

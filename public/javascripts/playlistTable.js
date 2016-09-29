@@ -10,7 +10,6 @@ var pickPlaylist = function(name) {
             }
         })
         .then(function(res) {
-            console.log(JSON.stringify(res))
             songs(res.songs)
             playlistName(res.name)
         })
@@ -26,7 +25,6 @@ var deleteSong = function(id, name) {
             }
         })
         .then(function(res) {
-            console.log(res.msg)
             songs(res.songs)
         })
 };

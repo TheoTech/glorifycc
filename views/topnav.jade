@@ -1,10 +1,10 @@
 nav.navbar.transparent
     .container-fluid
         .navbar-header
-        a.navbar-brand(href="/" style="color: black") SPF.IO Songbase
+        <a class='navbar-brand' href="/" style="color: black"> <span class="glyphicon glyphicon-home" aria-hidden="true"></span> SPF.IO Songbase </a>
         .collapse.navbar-collapse
             form.search-form.navbar-form.navbar-left(method="post" action="#")
-                input#search.form-control(type="text" name="search" placeholder="Title, Author or Lyric")
+                input#search.form-control(type="text" name="search" placeholder="Language, Title, Author, Lyric")
                 button.btn.btn-success(type="button")
                     i(class="glyphicon glyphicon-search")
             include topnav-user
