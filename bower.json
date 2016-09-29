@@ -1,0 +1,24 @@
+{
+  "name": "bower.json",
+  "description": "dependencies",
+  "main": "",
+  "authors": [
+    "Jonathan Benhi <jonathanardewanta@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jonathanarde/spfio-songdatabase",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "^4.16.2",
+    "jquery": "^3.1.1",
+    "Sortable": "^1.4.2",
+    "underscore": "^1.8.3",
+    "mithril": "^0.2.5"
+  }
+}
