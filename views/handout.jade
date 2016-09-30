@@ -15,20 +15,20 @@ block content
                 tbody
                     tr
                         td
-                            each line in songs[j].lyric
-                                - if (line === '')
+                            -for(var x = 0; x < minLine; x++)
+                                - if (songs[j].lyric[x] === '')
                                     br
                                 - else
-                                    !{line}
+                                    !{songs[j].lyric[x]}
                                     br
                         -j++
                         -while(j % 3 !== 0 && j < songs.length)            
                             td
-                                each line in songs[j].lyric
-                                    - if (line === '')
+                                -for(var x = 0; x < minLine; x++)
+                                    - if (songs[j].lyric[x] === '')
                                         br
                                     - else
-                                        !{line}
+                                        !{songs[j].lyric[x]}
                                         br
                             -j++
     //- tr

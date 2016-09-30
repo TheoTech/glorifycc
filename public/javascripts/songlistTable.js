@@ -1,41 +1,61 @@
-var setSong = function(id) {
+var addOrDeleteSong = function(id) {
     m.request({
         method: 'POST',
         url: '/songlist',
         data: {
             id: id
         }
-    }).then(function(data) {
-        if (data.url) {
-            window.location.href = data.url
+    }).then(function(res) {
+        if (res.url) {
+            window.location.href = res.url
         } else {
-            info(data.msg)
-            console.log(data.status)
-            infoStatus(data.status)
+            inLibrary(res.inLibrary)
+            console.log(inLibrary())
         }
+
     })
 }
 
-var showInfo = function(elem) {
-    $(elem).click(function() {
-        console.log(infoStatus())
-        $('#info').show()
-        $("#info").fadeTo(1000, 500).slideUp(500, function() {
-            $(this).slideUp(500);
-        });
-    })
+// var buttonText = function(id){
+//   // console.log('hehehe')
+//   if (_.includes(inLibrary, id)){
+//     // console.log('exist')
+//     return m.prop('Delete from Library')
+//   } else {
+//     // console.log(id)
+//     // console.log('doesnt exist')
+//     return m.prop('Add to Library')
+//   }
+// }
 
-}
+var inLibrary = m.prop(currentInLibrary)
 
-var info = m.prop()
-var infoStatus = m.prop('')
+// var setID = m.prop()
+// var buttonText = m.prop(
+//   _.includes(inLibrary, setID()) ? 'Delete from Library' : 'Add to Library'
+// )
+// var buttonColor = m.prop(
+//   _.includes(inLibrary, setID()) ? 'btn-danger' : 'btn-success'
+// )
+
+
+
+
+
+// var buttonColor = function(id){
+//   if (){
+//     return m.prop('btn-danger')
+//   } else {
+//     return m.prop('btn-success')
+//   }
+// }
 
 var songlistTable = {
     view: function() {
         return [
-            m('#info.alert[style=display:none]', {
-                class: infoStatus()
-            }, info()),
+            // m('#info.alert[style=display:none]', {
+            //     class: infoStatus()
+            // }, info()),
 
             m('table.table', [
                 m('thead', [
@@ -53,16 +73,25 @@ var songlistTable = {
                             ]),
                             m('td', s.author),
                             m('td', [
-                                m('button.btn.btn-success', {
-                                    config: function(elem, isInit, context) {
-                                        if (!isInit) {
-                                            showInfo(elem);
-                                        }
-                                    },
+                                m('button.btn', {
+                                    class: function(){
+                                      if (_.includes(inLibrary(), s._id)){
+                                        return 'btn-danger'
+                                      } else {
+                                        return 'btn-success'
+                                      }
+                                    }(),
                                     onclick: function() {
-                                        setSong(s._id)
+                                        // setID(s._id)
+                                        addOrDeleteSong(s._id)
                                     }
-                                }, 'Add to Library')
+                                }, function(){
+                                  if (_.includes(inLibrary(), s._id)){
+                                    return 'Delete from Library'
+                                  } else {
+                                    return 'Add to Library'
+                                  }
+                                }())
                             ])
                         ])
                     })

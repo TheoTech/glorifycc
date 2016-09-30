@@ -7,7 +7,7 @@ block content
         -var i = 0
         -var j = 0
         -while (i < songs.length && j < songs.length)
-            table.table(style='text-align: center;')
+            table.table(style='text-align: center; page-break-after: always')
                 thead
                     th(style='text-align: center') #{songs[i].title}
                     -i++
@@ -17,36 +17,50 @@ block content
                 tbody
                     tr
                         td
-                            each line in songs[j].lyric
-                                - if (line === '')
+                            -for(var x = 0; x < minLine; x++)
+                                - if (songs[j].lyric[x] === '')
                                     br
                                 - else
-                                    !{line}
+                                    !{songs[j].lyric[x]}
                                     br
                         -j++
                         -while(j % 3 !== 0 && j < songs.length)            
                             td
-                                each line in songs[j].lyric
-                                    - if (line === '')
+                                -for(var x = 0; x < minLine; x++)
+                                    - if (songs[j].lyric[x] === '')
                                         br
                                     - else
-                                        !{line}
+                                        !{songs[j].lyric[x]}
                                         br
                             -j++
-    //- each songs in songss
-    //-     .row
-    //-     each song in songs
-    //-         .col-md-6
-    //-             div(style='text-align: center')
-    //-                 h3 #{song.title}
-    //-                 <p>
-    //-                 each line in song.lyric
-    //-                     - if (line === '')
-    //-                         br
-    //-                     - else
-    //-                         !{line}
-    //-                         br
-    //-                 </p>
+        //- -while (i < songs.length && j < songs.length)
+        //-     table.table(style='text-align: center;')
+        //-         thead
+        //-             th(style='text-align: center') #{songs[i].title}
+        //-             -i++
+        //-             - while(i % 3 !== 0 && i < songs.length)
+        //-                 th(style='text-align: center') #{songs[i].title}
+        //-                 -i++
+        //-         tbody
+        //-             tr
+        //-                 td
+        //-                     each line in songs[j].lyric
+        //-                         - if (line === '')
+        //-                             br
+        //-                         - else
+        //-                             !{line}
+        //-                             br
+        //-                 -j++
+        //-                 -while(j % 3 !== 0 && j < songs.length)            
+        //-                     td
+        //-                         each line in songs[j].lyric
+        //-                             - if (line === '')
+        //-                                 br
+        //-                             - else
+        //-                                 !{line}
+        //-                                 br
+        //-                     -j++
+    
     form(method='post', role='form', action='')
         <button class="btn btn-primary btn-lg" role="button" aria-haspopup="true" aria-expanded="false">
         <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Export </button>

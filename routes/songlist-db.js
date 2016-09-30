@@ -5,9 +5,9 @@ var express = require('express'),
     helperFunc = require('../config/passport')
 
 
-router.use('/', isAdminLoggedIn, function(req, res, next){
-  next()
-})
+// router.use('/', isAdminLoggedIn, function(req, res, next){
+//   next()
+// })
 
 router.get('/', function(req, res) {
     Song.find({
@@ -140,11 +140,18 @@ router.route('/:song_id/edit')
         })
     })
     .get(function(req, res) {
-        song.lang =
-            song.lyric = song.lyric.replace(/<br\s*\/?>|\//mg, '\n')
-        console.log(song.title)
+        var lyric = song.lyric.reduce((prev, curr, i) => {
+          if (i === 0){
+            return curr
+          } else {
+            return prev + '\n' + curr
+          }
+        }, '')
+        console.log(song.lyric)
+        // (/<br\s*\/?>|\//mg, '\n')
         res.render('edit', {
-            song: song
+            song: song,
+            lyric: lyric
         })
     })
     .post(function(req, res) {
@@ -153,8 +160,10 @@ router.route('/:song_id/edit')
         song.year = req.body.year
         song.lang = req.body.lang
         song.copyright = req.body.copyright
-        song.lyric = req.body.lyric
         song.contributor = req.body.contributor
+        var stringArr = req.body.lyric.split(/\r?\n|\//)
+        song.lyric = undefined
+        song.lyric = stringArr.slice(0)
         song.save(function(err) {
             if (err) {
                 res.status(400).send('Error editing the song: ' + error)

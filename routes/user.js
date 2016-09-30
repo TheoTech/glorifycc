@@ -360,7 +360,8 @@ router.get('/playlist/:playlist_name/export3', function(req, res) {
                     if (i === arr.length - 1) {
                         console.log(songss)
                         res.render('export3', {
-                            songss: songss
+                            songss: songss,
+                            minLine: _.min(songss.map((songs) => songs.map((s) => s.lyric.length)))
                         })
                     }
                 })
@@ -398,7 +399,8 @@ router.post('/playlist/:playlist_name/export3', function(req, res) {
                     if (i === arr.length - 1) {
                         console.log(songss)
                         app.render('handout', {
-                            songss: songss
+                            songss: songss,
+                            minLine: _.min(songss.map((songs) => songs.map((s) => s.lyric.length)))
                         }, function(err, html) {
                             console.log(html)
                             pdf.create(html).toStream(function(err, stream) {

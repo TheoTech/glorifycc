@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    include topnav
     - var langCapitalized = song.lang.charAt(0).toUpperCase() + song.lang.slice(1)
     form(role='form', method="post", action="")
         .row

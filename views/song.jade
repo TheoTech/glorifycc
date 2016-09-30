@@ -60,8 +60,9 @@ block content
                         br
                 </p>    
                 #translation 
-            br    
-            a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
+            br 
+            -if(login && user.username == "admin")
+                a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
             
     br
     #song

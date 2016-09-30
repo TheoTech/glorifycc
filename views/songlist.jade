@@ -10,6 +10,7 @@ block content
     #song-table
     script(type='text/javascript').
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
             
     //- script(src='/javascripts/searchOption.js')
     script(src='/javascripts/songlistTable.js')
