@@ -18,17 +18,17 @@ var addToPlaylist = function(name, id) {
         })
 }
 
-var deleteSong = function(id){
-  m.request({
-    method: 'DELETE',
-    url: '/user/library',
-    data: {
-      id: id
-    }
-  })
-  .then(function(data) {
-      songs(data.songs)
-  })
+var deleteSong = function(id) {
+    m.request({
+            method: 'DELETE',
+            url: '/user/library',
+            data: {
+                id: id
+            }
+        })
+        .then(function(data) {
+            songs(data.songs)
+        })
 
 }
 
@@ -43,23 +43,27 @@ var libraryTable = {
                 m('tbody', [
                     songs().map((s) => {
                         return m('tr', [
-                            m('td', s.title),
+                            m('td', [
+                                m('a', {
+                                    href: '/songlist/' + s._id
+                                }, s.title)
+                            ]),
                             m('td', s.author),
-                            m('td.pull-right', [
-                                m('button.btn.btn-warning', {
+                            m('td', [
+                              m('button.btn.btn-danger.pull-right', {
+                                  onclick: function() {
+                                      deleteSong(s._id)
+                                  }
+                              }, 'Delete'),
+                                m('button.btn.btn-warning.pull-right[style=margin-right: 0.3em]', {
                                     onclick: function() {
                                         songID(s._id)
                                     },
                                     'data-toggle': 'modal',
                                     'data-target': '#existingPlaylist'
 
-                                }, 'Add to Playlist'),
-                                m('span', '  '),
-                                m('button.btn.btn-danger', {
-                                    onclick: function() {
-                                        deleteSong(s._id)
-                                    }
-                                }, 'Delete')
+                                }, 'Add to Playlist')
+
                             ])
                         ])
                     })

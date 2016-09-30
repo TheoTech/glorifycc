@@ -61,7 +61,12 @@ var playlistTable = {
                     songs().map((s) => {
                         return [
                             m('tr', [
-                                m('td', s.title + ' by ' + s.author),
+                              m('td', [
+                                  m('a', {
+                                      href: '/songlist/' + s._id
+                                  }, s.title),
+                                  m('span', ' by ' + s.author)
+                              ]),
                                 m('td', [
                                   m('button.btn.btn-danger.pull-right', {
                                     onclick: function() {

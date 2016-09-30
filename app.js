@@ -13,6 +13,7 @@ var validator = require('express-validator')
 var MongoStore = require('connect-mongo')(session);
 var pdf = require('html-pdf');
 var fs = require('file-system');
+var nodemailer = require('nodemailer')
 
 var app = module.exports = express();
 
@@ -50,15 +51,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session({
-    secret: 'mysupersecret',
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({
-        mongooseConnection: mongoose.connection
-    }),
-    cookie: {
-        maxAge: 180 * 60 * 1000
-    }
+    secret: 'session secret key',
 }));
 app.use(flash())
 app.use(passport.initialize());

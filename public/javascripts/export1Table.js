@@ -87,7 +87,11 @@ var export1Table = {
                     ]),
                     songs.map((s, i) => {
                         return m('tr', [
-                            m('td', s.title),
+                            m('td', [
+                                m('a', {
+                                    href: '/songlist/' + s._id
+                                }, s.title)
+                            ]),
                             langOptions.map((l) => {
                                 return _.includes(translationss[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
