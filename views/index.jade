@@ -4,7 +4,8 @@ block content
     nav.navbar.transparent
         .container-fluid
             .collapse.navbar-collapse
-                a.btn.btn-primary(href='/songlist') View All Songs
+                -if(!(login && user.username == "admin"))
+                    a.btn.btn-primary(href='/songlist') View All Songs
                 include topnav-user
 
     header#header(style="text-align: center")

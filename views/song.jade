@@ -2,7 +2,6 @@ extends layout
 
 block content
     include topnav
-    <!-- Button trigger modal -->
     .row
         .col-md-6
             h1 #{song.title}
@@ -58,14 +57,16 @@ block content
                     - else
                         !{line}
                         br
-                </p>    
-                #translation 
+                </p>  
+                -if(!(login && user.username == "admin"))  
+                    #translation 
             br 
             -if(login && user.username == "admin")
                 a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
             
     br
-    #song
+    -if(!(login && user.username == "admin"))
+        #song
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
