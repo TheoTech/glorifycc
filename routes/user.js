@@ -479,7 +479,12 @@ router.post('/signup', function(req, res, next) {
                         if (err) {
                             res.status(400).send('error adding new user ' + err)
                         } else {
-                            res.redirect('/')
+                            req.login(user, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                return res.redirect('/');
+                            })
                         }
                     })
                 }

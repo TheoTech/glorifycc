@@ -1,8 +1,14 @@
 extends layout
 
 block content
-    include topnav
+    nav.navbar.navbar-transparent
+        .container-fluid
+            .navbar-header
+            <a class='navbar-brand' href="/" style="color: black"> <span class="glyphicon glyphicon-home" aria-hidden="true"></span> SPF.IO Songbase </a>
+            .collapse.navbar-collapse
+                include topnav-user
     h1 Songs
+    #searchBox
     //- #search-option
     //- a#add.btn.btn-default(href="/songlist-db/add") Add New Song
     br
@@ -14,3 +20,4 @@ block content
             
     //- script(src='/javascripts/searchOption.js')
     script(src='/javascripts/songlistTable.js')
+    //- script(src='/javascripts/searchBox.js')

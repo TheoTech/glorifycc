@@ -10,53 +10,16 @@ var addOrDeleteSong = function(id) {
             window.location.href = res.url
         } else {
             inLibrary(res.inLibrary)
-            console.log(inLibrary())
         }
 
     })
 }
 
-// var buttonText = function(id){
-//   // console.log('hehehe')
-//   if (_.includes(inLibrary, id)){
-//     // console.log('exist')
-//     return m.prop('Delete from Library')
-//   } else {
-//     // console.log(id)
-//     // console.log('doesnt exist')
-//     return m.prop('Add to Library')
-//   }
-// }
-
 var inLibrary = m.prop(currentInLibrary)
-
-// var setID = m.prop()
-// var buttonText = m.prop(
-//   _.includes(inLibrary, setID()) ? 'Delete from Library' : 'Add to Library'
-// )
-// var buttonColor = m.prop(
-//   _.includes(inLibrary, setID()) ? 'btn-danger' : 'btn-success'
-// )
-
-
-
-
-
-// var buttonColor = function(id){
-//   if (){
-//     return m.prop('btn-danger')
-//   } else {
-//     return m.prop('btn-success')
-//   }
-// }
 
 var songlistTable = {
     view: function() {
         return [
-            // m('#info.alert[style=display:none]', {
-            //     class: infoStatus()
-            // }, info()),
-
             m('table.table', [
                 m('thead', [
                     m('th', 'Title'),
@@ -64,7 +27,7 @@ var songlistTable = {
                     m('th')
                 ]),
                 m('tbody', [
-                    songs.map((s) => {
+                    songs().map((s) => {
                         return m('tr', [
                             m('td', [
                                 m('a', {
@@ -74,23 +37,22 @@ var songlistTable = {
                             m('td', s.author),
                             m('td', [
                                 m('button.btn', {
-                                    class: function(){
-                                      if (_.includes(inLibrary(), s._id)){
-                                        return 'btn-danger'
-                                      } else {
-                                        return 'btn-success'
-                                      }
+                                    class: function() {
+                                        if (_.includes(inLibrary(), s._id)) {
+                                            return 'btn-danger'
+                                        } else {
+                                            return 'btn-success'
+                                        }
                                     }(),
                                     onclick: function() {
-                                        // setID(s._id)
                                         addOrDeleteSong(s._id)
                                     }
-                                }, function(){
-                                  if (_.includes(inLibrary(), s._id)){
-                                    return 'Delete from Library'
-                                  } else {
-                                    return 'Add to Library'
-                                  }
+                                }, function() {
+                                    if (_.includes(inLibrary(), s._id)) {
+                                        return 'Delete from Library'
+                                    } else {
+                                        return 'Add to Library'
+                                    }
                                 }())
                             ])
                         ])
@@ -101,4 +63,58 @@ var songlistTable = {
     }
 }
 
+
+
+var filterSong = function(tag) {
+    m.request({
+            method: 'PUT',
+            url: '/songlist',
+            data: {
+                tag: tag
+            }
+        })
+        .then(function(res) {
+            songs(res.songs)
+            inLibrary(res.inLibrary)
+        })
+
+}
+
+var enter = function(elem, checkboxClass) {
+    $(elem).keyup(function(e) {
+        if (e.keyCode == 13) {
+            $("#search-button").click()
+        }
+    })
+}
+
+
+var tag = m.prop('')
+var songs = m.prop(songs)
+var searchBox = {
+    view: function() {
+        return m('.input-group[style=width: 30em]', [
+            m('input#search-input.form-control[type=text]', {
+                placeholder: 'Language, Title, Author or Lyric',
+                onchange: m.withAttr('value', tag),
+                config: function(elem, isInit, context) {
+                    if (!isInit) {
+                        enter(elem);
+                    }
+                }
+            }),
+            m('span.input-group-btn', [
+                m('button#search-button.btn.btn-success', {
+                    onclick: function() {
+                        filterSong(tag())
+                    }
+                }, [
+                    m('i.glyphicon.glyphicon-search')
+                ])
+            ])
+        ])
+    }
+}
+
+m.mount(document.getElementById('searchBox'), searchBox)
 m.mount(document.getElementById('song-table'), songlistTable)
