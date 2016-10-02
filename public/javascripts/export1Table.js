@@ -93,6 +93,7 @@ var export1Table = {
                                 }, s.title)
                             ]),
                             langOptions.map((l) => {
+                                console.log(langOptions)
                                 return _.includes(translationss[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
                                         class: l,
