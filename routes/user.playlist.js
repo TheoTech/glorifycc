@@ -5,7 +5,6 @@ var Playlist = require('../models/playlist')
 var mongoose = require('mongoose');
 var nev = require('email-verification')(mongoose);
 var bcrypt = require('bcrypt-nodejs');
-var config = require('config')
 var ExportSong = require('../models/exportSong')
 var Song = require('../models/song')
 var _ = require('lodash')

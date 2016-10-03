@@ -77,12 +77,12 @@ var myHasher = function(password, tempUserData, insertTempUser, callback) {
 nev.configure({
     persistentUserModel: User,
     expirationTime: 600, // 10 minutes
-    verificationURL: config.get('Nev.verificationURL'),
+    verificationURL: process.env.VERIFICATION_URL,
     transportOptions: {
         service: 'SendGrid',
         auth: {
-            user: config.get('Nev.user'),
-            pass: config.get('Nev.pass')
+            user: process.env.SENDGRID_USER,
+            pass: process.env.SENDGRID_PASS
         }
     },
     hashingFunction: myHasher,

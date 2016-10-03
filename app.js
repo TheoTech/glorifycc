@@ -54,7 +54,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session({
-    secret: config.get('Session.key'),
+    secret: process.env.SESSION_KEY,
 }));
 app.use(flash())
 app.use(passport.initialize());
