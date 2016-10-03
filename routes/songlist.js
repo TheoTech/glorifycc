@@ -4,37 +4,9 @@ var express = require('express'),
     User = require('../models/user'),
     _ = require('lodash')
 
-router.put('/', function(req, res) {
-    var tag = req.body.tag
-    Song.find({
-      $text: {
-          $search: "\"" + tag + "\""
-      }
-    }, function(err, songs) {
-        if (err) return handleError(err)
-        if (req.isAuthenticated()) {
-            console.log(songs)
-            User.findOne({
-                _id: req.user._id
-            }, function(err, user) {
-                if (err) return handleError(err)
-                res.send({
-                    songs: songs,
-                    inLibrary: user.library
-                })
-            })
-        } else {
-            res.send({
-                songs: songs,
-                inLibrary: []
-            })
-        }
-    })
-})
 
 router.get('/', function(req, res) {
-    Song.find({
-        }, function(err, songs, count) {
+    Song.find(function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
@@ -71,8 +43,8 @@ router.post('/', function(req, res) {
                 library: id
             }, function(err, song) {
                 if (err) return handleError(err)
+                    // console.log(song)
                 if (song) {
-                    //delete the song if the song already exist in the library
                     var index = user.library.indexOf(id)
                     if (index > -1) {
                         user.library.splice(index, 1)
@@ -106,6 +78,33 @@ router.post('/', function(req, res) {
     }
 })
 
+router.get('/search', function(req, res) {
+    var tag = req.query.q
+    Song.find({
+        $text: {
+            $search: "\"" + tag + "\""
+        }
+    }, function(err, songs) {
+        if (err) return handleError(err)
+        if (req.isAuthenticated()) {
+            console.log(songs)
+            User.findOne({
+                _id: req.user._id
+            }, function(err, user) {
+                if (err) return handleError(err)
+                res.render('songlist', {
+                    songs: songs,
+                    inLibrary: user.library
+                })
+            })
+        } else {
+            res.render('songlist', {
+                songs: songs,
+                inLibrary: []
+            })
+        }
+    })
+})
 
 
 router.route('/:song_id')
