@@ -12,6 +12,7 @@ var app = require('../app')
 var pdf = require('html-pdf')
 var fs = require('file-system')
 
+
 router.get('/', function(req, res, next) {
     Playlist.find({
             owner: req.user._id
@@ -109,59 +110,61 @@ router.get('/:playlist_name/export1', function(req, res, next) {
         .exec(function(err, playlist) {
             if (err) return handleError(err)
                 // console.log(playlist.songs)
-            playlist.songs.forEach((s, i, arr) => {
-                ExportSong.findOne({
-                    owner: playlist._id,
-                    song: s._id
-                }, function(err, es) {
-                    if (err) return handleError(err)
-                    if (!es) {
-                        newExportSong = new ExportSong({
-                            owner: playlist._id,
-                            song: s._id,
-                            translations: []
-                        })
-                        newExportSong.save(function(err) {
-                            if (err) return handleError(err)
-                        })
-                    } else {
-                        langsPicked.push(es.translations)
-                    }
-                })
-                Song.find({
-                        $or: [{
-                            $and: [{
-                                source: s.source
-                            }, {
-                                source: {
-                                    $exists: true
-                                }
-                            }, {
-                                lang: {
-                                    $ne: s.lang
-                                }
-                            }]
-                        }, {
-                            _id: s.source
-                        }, {
-                            source: s._id
-                        }]
-                    },
-                    function(err, songs) {
+            if (!_.isEmpty(playlist.songs)) {
+                playlist.songs.forEach((s, i, arr) => {
+                    ExportSong.findOne({
+                        owner: playlist._id,
+                        song: s._id
+                    }, function(err, es) {
                         if (err) return handleError(err)
-                        translationss.push(songs.map((s) => s))
-                        if (i == arr.length - 1) {
-                            console.log(translationss)
-                            res.render('export1', {
-                                playlistID: playlist._id,
-                                playlistName: playlist.name,
-                                songs: playlist.songs,
-                                translationss: translationss,
-                                langsPicked: langsPicked
+                        if (!es) {
+                            newExportSong = new ExportSong({
+                                owner: playlist._id,
+                                song: s._id,
+                                translations: []
                             })
+                            newExportSong.save(function(err) {
+                                if (err) return handleError(err)
+                            })
+                        } else {
+                            langsPicked.push(es.translations)
                         }
                     })
-            })
+                    Song.find({
+                            $or: [{
+                                $and: [{
+                                    source: s.source
+                                }, {
+                                    source: {
+                                        $exists: true
+                                    }
+                                }, {
+                                    lang: {
+                                        $ne: s.lang
+                                    }
+                                }]
+                            }, {
+                                _id: s.source
+                            }, {
+                                source: s._id
+                            }]
+                        },
+                        function(err, songs) {
+                            if (err) return handleError(err)
+                            translationss.push(songs.map((s) => s))
+                            if (i == arr.length - 1) {
+                                console.log(translationss)
+                                res.render('export1', {
+                                    playlistID: playlist._id,
+                                    playlistName: playlist.name,
+                                    songs: playlist.songs,
+                                    translationss: translationss,
+                                    langsPicked: langsPicked
+                                })
+                            }
+                        })
+                })
+            }
         })
 })
 

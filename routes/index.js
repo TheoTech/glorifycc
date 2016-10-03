@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Song = require('../models/song');
 var User = require('../models/user')
-var TempUser = require('../models/tempUser')
 var app = require('../app')
 var pdf = require('html-pdf')
 var fs = require('file-system')

@@ -6,9 +6,11 @@ var nev = require('email-verification')(mongoose);
 var bcrypt = require('bcrypt-nodejs');
 var config = require('config')
 
-router.get('/', function(req, res, next) {
-    res.render('signup', {})
-});
+var TempUser = mongoose.model('Tempuser',
+    new mongoose.Schema(),
+    'tempusers'); // collection name
+
+
 
 
 var myHasher = function(password, tempUserData, insertTempUser, callback) {
@@ -19,6 +21,7 @@ var myHasher = function(password, tempUserData, insertTempUser, callback) {
 // NEV configuration =====================
 nev.configure({
     persistentUserModel: User,
+    tempUserCollection: 'tempuser',
     expirationTime: 600, // 10 minutes
     verificationURL: process.env.VERIFICATION_URL || config.get('Nev.verificationURL'),
     transportOptions: {
@@ -47,6 +50,10 @@ nev.generateTempUserModel(User, function(err, tempUserModel) {
     console.log('generated temp user model: ' + (typeof tempUserModel === 'function'));
 });
 
+router.get('/', function(req, res, next) {
+    res.render('signup', {})
+})
+
 
 router.post('/', function(req, res) {
     //Validation Checks
@@ -65,71 +72,91 @@ router.post('/', function(req, res) {
     } else {
         var username = req.body.username
         var email = req.body.email;
-
-        // if (req.body.type === 'register') {
         var password = req.body.password;
         var newUser = new User({
             username: username,
             email: email,
             password: password
         });
-        console.log(newUser)
-        nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
-            if (err) {
-                return res.status(404).send('ERROR: creating temp user FAILED');
-            }
 
-            // user already exists in persistent collection
-            if (existingPersistentUser) {
+        TempUser.findOne({
+            username: username
+        }, function(err, tu) {
+            if (err) return handleError(err)
+            console.log(tu)
+            if (tu) {
                 res.render('signup', {
-                    messages: [{msg: 'You have already signed up and confirmed your account. Did you forget your password?'}],
-                    info: 'btn-danger'
+                    messages: [{
+                        msg: 'You have already signed up. Please check your email to verify your account.'
+                    }],
+                    info: 'btn-danger',
+                    resend: true
                 });
-            }
-
-            // new user created
-            if (newTempUser) {
-                var URL = newTempUser[nev.options.URLFieldName];
-
-                nev.sendVerificationEmail(email, URL, function(err, info) {
-                    if (err) {
-                        return res.status(404).send('ERROR: sending verification email FAILED');
-                    }
-                    res.render('signup', {
-                        messages: [{msg: 'An email has been sent to you. Please check it to verify your account.'}],
-                        info: 'btn-success'
-                    });
-                });
-
-                // user already exists in temporary collection!
             } else {
-                res.render('signup', {
-                    messages: [{msg: 'You have already signed up. Please check your email to verify your account.'}],
-                    info: 'btn-danger'
+                nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
+                    if (err) {
+                        return res.status(404).send('ERROR: creating temp user FAILED');
+                    }
+
+                    // user already exists in persistent collection
+                    if (existingPersistentUser) {
+                        res.render('signup', {
+                            messages: [{
+                                msg: 'You have already signed up and confirmed your account. Did you forget your password?'
+                            }],
+                            info: 'btn-danger',
+                            resend: false
+                        });
+                    } else if (newTempUser) {
+                        // new user created
+                        var URL = newTempUser[nev.options.URLFieldName];
+
+                        nev.sendVerificationEmail(email, URL, function(err, info) {
+                            if (err) {
+                                return res.status(404).send('ERROR: sending verification email FAILED');
+                            }
+                            res.render('signup', {
+                                messages: [{
+                                    msg: 'An email has been sent to you. Please check it to verify your account.'
+                                }],
+                                info: 'btn-success',
+                                resend: true
+                            });
+                        });
+                    } else {
+                        // user already exists in temporary collection!
+                        res.render('signup', {
+                            messages: [{
+                                msg: 'You have already signed up. Please check your email to verify your account.'
+                            }],
+                            info: 'btn-danger',
+                            resend: true
+                        });
+                    }
                 });
             }
-        });
-
-        // resend verification button was clicked
-        // } else {
-        //   nev.resendVerificationEmail(email, function(err, userFound) {
-        //     if (err) {
-        //       return res.status(404).send('ERROR: resending verification email FAILED');
-        //     }
-        //     if (userFound) {
-        //       res.json({
-        //         msg: 'An email has been sent to you, yet again. Please check it to verify your account.'
-        //       });
-        //     } else {
-        //       res.json({
-        //         msg: 'Your verification code has expired. Please sign up again.'
-        //       });
-        //     }
-        //   });
-        // }
+        })
     }
-
 })
+
+router.get('/resend', function(req, res){
+  var messages = req.flash()
+  res.render('resend', {messages: messages})
+})
+router.post('/resend', function(req, res) {
+    var email = req.body.email
+    nev.resendVerificationEmail(email, function(err, userFound) {
+        if (err) {
+            return res.status(404).send('ERROR: resending verification email FAILED');
+        }
+        if (userFound) {
+            req.flash('success', 'An email has been sent to you, yet again. Please check it to verify your account.')
+        } else {
+            req.flash('error', 'No account with that email address exists. You have to signup')
+        };
+        res.redirect('/user/signup/resend')
+    })
+});
 
 router.get('/email-verification/:URL', function(req, res) {
     var url = req.params.URL;

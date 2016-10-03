@@ -7,8 +7,12 @@ block content
         if messages
             .alert(class='#{info}')
                 -console.log(messages)
+                -console.log(info)
                 each msg in messages
                     p #{msg.msg}
+                if resend
+                    p
+                        a(href='/user/signup/resend') Resend Verification Link
         form(role="form" method="post", action="/user/signup")
             .form-group
                 label(for="username") Username
