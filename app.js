@@ -39,7 +39,7 @@ mongoose.connect(MongoURI, function(err, database) {
         console.log('MongoDB connected successfully to ' + MongoURI);
     }
 });
-require('./config/passport');
+require('./lib/passport');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
