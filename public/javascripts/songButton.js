@@ -19,7 +19,7 @@ var inLibrary = m.prop()
 var songButton = {
     view: function() {
         return m('button.btn', {
-            class: function() {
+            className: function() {
                 if (_.includes(inLibrary(), song._id)) {
                     return 'btn-danger'
                 } else {

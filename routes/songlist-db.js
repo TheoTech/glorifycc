@@ -161,9 +161,9 @@ router.route('/:song_id/edit')
         song.lang = req.body.lang
         song.copyright = req.body.copyright
         song.contributor = req.body.contributor
-        var stringArr = req.body.lyric.split(/\r?\n|\//)
+        var stringArr = (req.body.lyric || '').split(/\r?\n|\//)
         song.lyric = undefined
-        song.lyric = stringArr.slice(0)
+        song.lyric = stringArr
         song.save(function(err) {
             if (err) {
                 res.status(400).send('Error editing the song: ' + error)

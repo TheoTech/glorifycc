@@ -3,13 +3,14 @@ var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
 var Playlist = require('../models/playlist')
-var app = require('../app')
-var pdf = require('html-pdf')
-var fs = require('file-system')
 var Song = require('../models/song')
 var ExportSong = require('../models/exportSong')
 var _ = require('lodash')
 var helperFunc = require('../config/passport')
+var async = require('async')
+var crypto = require('crypto')
+var nodemailer = require('nodemailer')
+var config = require('config')
 
 
 router.get('/library', isLoggedIn, function(req, res, next) {
@@ -107,313 +108,6 @@ router.delete('/library', function(req, res, next) {
     })
 })
 
-router.get('/playlist', function(req, res, next) {
-    Playlist.find({
-            owner: req.user._id
-        })
-        .populate('songs')
-        .exec(function(err, playlists) {
-            if (err) return handleError(err)
-            res.render('playlist', {
-                playlists: playlists
-            })
-        })
-})
-
-router.post('/playlist', function(req, res, next) {
-    var name = req.body.name
-    Playlist.findOne({
-            owner: req.user._id,
-            name: name
-        })
-        .populate('songs')
-        .exec(function(err, playlist) {
-            // console.log(JSON.stringify(playlist)
-            if (err) return handleError(err)
-                // var titles = playlist.songs.map((s) => s.title)
-                // var songs = playlist.map((s) => s.songs)
-                // console.log(songsTitle)
-            res.send({
-                songs: playlist.songs,
-                name: playlist.name
-            })
-        })
-})
-
-router.delete('/playlist', function(req, res) {
-    var songID = req.body.id
-    console.log(songID)
-    var playlistName = req.body.name
-    Playlist.findOne({
-        owner: req.user._id,
-        name: playlistName
-    }, function(err, pl) {
-        if (err) return handleError(err)
-        var index = pl.songs.indexOf(songID)
-        if (index > -1) {
-            pl.songs.splice(index, 1)
-        }
-        ExportSong.remove({
-            owner: pl._id,
-            song: songID
-        }, function(err) {
-            pl.save(function(err) {
-                if (err) return handleError(err)
-                Playlist.findOne({
-                        owner: req.user._id,
-                        name: playlistName
-                    })
-                    .populate('songs')
-                    .exec(function(err, afterDelete) {
-                        res.send({
-                            msg: 'deleting done',
-                            songs: afterDelete.songs
-                        })
-                    })
-            })
-        })
-
-    })
-})
-
-router.put('/playlist', function(req, res) {
-    var playlistName = req.body.name
-    console.log(playlistName)
-    Playlist.remove({
-        owner: req.user._id,
-        name: playlistName
-    }, function(err) {
-        if (err) return handleError(err)
-        res.send({
-            url: '/user/playlist'
-        })
-    })
-})
-
-
-//this route is for step one of exporting playlist
-router.get('/playlist/:playlist_name/export1', function(req, res, next) {
-    var playlistName = req.params.playlist_name
-    var translationss = []
-    var langsPicked = []
-    Playlist.findOne({
-            owner: req.user._id,
-            name: playlistName
-        })
-        .populate('songs')
-        .exec(function(err, playlist) {
-            if (err) return handleError(err)
-                // console.log(playlist.songs)
-            playlist.songs.forEach((s, i, arr) => {
-                ExportSong.findOne({
-                    owner: playlist._id,
-                    song: s._id
-                }, function(err, es) {
-                    if (err) return handleError(err)
-                    if (!es) {
-                        newExportSong = new ExportSong({
-                            owner: playlist._id,
-                            song: s._id,
-                            translations: []
-                        })
-                        newExportSong.save(function(err) {
-                            if (err) return handleError(err)
-                        })
-                    } else {
-                        langsPicked.push(es.translations)
-                    }
-                })
-                Song.find({
-                        $or: [{
-                            $and: [{
-                                source: s.source
-                            }, {
-                                source: {
-                                    $exists: true
-                                }
-                            }, {
-                                lang: {
-                                    $ne: s.lang
-                                }
-                            }]
-                        }, {
-                            _id: s.source
-                        }, {
-                            source: s._id
-                        }]
-                    },
-                    function(err, songs) {
-                        if (err) return handleError(err)
-                        translationss.push(songs.map((s) => s))
-                        if (i == arr.length - 1) {
-                            console.log(langsPicked)
-                            res.render('export1', {
-                                playlistID: playlist._id,
-                                playlistName: playlist.name,
-                                songs: playlist.songs,
-                                translationss: translationss,
-                                langsPicked: langsPicked
-                            })
-                        }
-                    })
-            })
-        })
-})
-
-
-router.post('/playlist/:playlist_name/export1', function(req, res, next) {
-    // console.log(req.body)
-    var playlistID = req.body.playlistID
-    var songID = req.body.songID
-    var translationID = req.body.translationID
-        // console.log(songID)
-        // res.send({msg: 'saving'})
-    ExportSong.findOne({
-        owner: playlistID,
-        song: songID
-    }, function(err, es) {
-        if (err) return handleError(err)
-        console.log(es)
-        es.translations.push(translationID)
-        es.save(function(err) {
-            if (err) {
-                res.status(400).send('error ' + err)
-            } else {
-                res.send({
-                    msg: 'saving done'
-                })
-            }
-        })
-    })
-})
-
-router.delete('/playlist/:playlist_name/export1', function(req, res) {
-    var playlistID = req.body.playlistID
-    var songID = req.body.songID
-    var translationID = req.body.translationID
-    console.log(req.body)
-    ExportSong.findOne({
-            owner: playlistID,
-            song: songID
-        }, function(err, es) {
-            if (err) return handleError(err)
-            var index = es.translations.indexOf(translationID)
-            if (index > -1) {
-                es.translations.splice(index, 1)
-            }
-            es.save(function(err) {
-                if (err) {
-                    res.status(400).send('error ' + err)
-                } else {
-                    res.send({
-                        msg: 'deleting done'
-                    })
-                }
-            })
-        })
-        // ExportSong.update({_id: playlistID}, {
-        //     $pull: {
-        //         translations: translationID
-        //     }
-        // }, {
-        //     multi: true
-        // }, function(err) {
-        //     if (err) return handleError(err)
-        //     res.send({
-        //         msg: 'deleting done'
-        //     })
-        // })
-})
-
-
-//this route is for step 2 of exporting playlist
-router.get('/playlist/:playlist_name/export2', function(req, res) {
-    res.render('export2', {
-        playlistName: req.params.playlist_name
-    })
-})
-
-router.get('/playlist/:playlist_name/export3', function(req, res) {
-    var playlistName = req.params.playlist_name
-    var songss = []
-    var temp = []
-    Playlist.findOne({
-        owner: req.user._id,
-        name: playlistName
-    }, function(err, playlist) {
-        if (err) return handleError(err)
-        ExportSong.find({
-                owner: playlist._id
-            })
-            .populate('song translations')
-            .exec(function(err, songs) {
-                // console.log(songs)
-                if (err) return handleError(err)
-                songs.forEach((s, i, arr) => {
-                    temp = []
-                    temp.push(s.song)
-                    s.translations.forEach((t) => {
-                            temp.push(t)
-                        })
-                        // console.log(temp)
-                    songss.push(temp)
-                    if (i === arr.length - 1) {
-                        console.log(songss)
-                        res.render('export3', {
-                            songss: songss,
-                            minLine: _.min(songss.map((songs) => songs.map((s) => s.lyric.length)))
-                        })
-                    }
-                })
-            })
-    })
-
-})
-
-router.post('/playlist/:playlist_name/export3', function(req, res) {
-    var playlistName = req.params.playlist_name
-    var songss = []
-    var temp = []
-    var filename = Date.now()
-    Playlist.findOne({
-        owner: req.user._id,
-        name: playlistName
-    }, function(err, playlist) {
-        if (err) return handleError(err)
-        ExportSong.find({
-                owner: playlist._id
-            })
-            .populate('song translations')
-            .exec(function(err, songs) {
-                // console.log(songs)
-                if (err) return handleError(err)
-                songs.forEach((s, i, arr) => {
-                    temp = []
-                    temp.push(s.song)
-                    s.translations.forEach((t, i) => {
-                        temp.push(t)
-                    })
-                    s.translations = []
-                    s.save()
-                    songss.push(temp)
-                    if (i === arr.length - 1) {
-                        console.log(songss)
-                        app.render('handout', {
-                            songss: songss,
-                            minLine: _.min(songss.map((songs) => songs.map((s) => s.lyric.length)))
-                        }, function(err, html) {
-                            console.log(html)
-                            pdf.create(html).toStream(function(err, stream) {
-                                res.setHeader('Content-Type', 'application/pdf')
-                                res.setHeader('Content-Disposition', 'attachment; filename=' + filename + '.pdf')
-                                stream.pipe(res)
-                            })
-                        });
-                    }
-                })
-            })
-    })
-})
 
 router.get('/logout', isLoggedIn, function(req, res, next) {
     helperFunc.adminLogout()
@@ -422,76 +116,146 @@ router.get('/logout', isLoggedIn, function(req, res, next) {
     res.redirect('/')
 })
 
-router.use('/', notLoggedIn, function(req, res, next) {
-    next()
+router.get('/forgot', function(req, res){
+  var messages = req.flash()
+  console.log(messages)
+  res.render('forgot', {
+    user: req.user,
+    messages: messages
+  })
 })
 
-router.get('/signup', function(req, res, next) {
-    res.render('signup', {})
+
+router.post('/forgot', function(req, res, next) {
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      User.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+          req.flash('error', 'No account with that email address exists.');
+          return res.redirect('/user/forgot');
+        }
+
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+        user.save(function(err) {
+          done(err, token, user);
+        });
+      });
+    },
+    function(token, user, done) {
+      var smtpTransport = nodemailer.createTransport('SMTP', {
+        service: 'SendGrid',
+        auth: {
+          user: process.env.SENDGRID_USER || config.get('Nev.user'),
+          pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: 'passwordreset@donotreply',
+        subject: 'Reset Password',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/user/forgot');
+  });
 });
 
-router.post('/signup', function(req, res, next) {
-    //Validation Checks
-    req.checkBody('username', 'Username is required').notEmpty();
-    req.checkBody('email', 'Email is required').notEmpty();
-    req.checkBody('password', 'Password is required').notEmpty();
-    req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
-    var errors = req.validationErrors();
+router.get('/reset/:token', function(req, res) {
+    User.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: {
+            $gt: Date.now()
+        }
+    }, function(err, user) {
+        if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/user/forgot');
+        }
+        res.render('reset', {
+            user: req.user
+        });
+    });
+});
 
-    if (errors) {
-        //if there are errors in input
-        res.render('signup', {
-            errors: errors
-        })
-    } else {
-        User.findOne({
-            username: req.body.username
-        }, function(err, userbyusername) {
+router.post('/reset/:token', function(req, res) {
+    async.waterfall([
+        function(done) {
             User.findOne({
-                email: req.body.email
-            }, function(err, userbyemail) {
-                if (err) {
-                    //if there is error
-                    res.status(400).send('error adding new user ' + err)
-                } else if (userbyusername) {
-                    //console.log('user exists')
-                    //if the user exists, display the msg
-                    res.render('signup', {
-                        errors: [{
-                            msg: 'Username is already used'
-                        }]
-                    })
-                } else if (userbyemail) {
-                    res.render('signup', {
-                        errors: [{
-                            msg: 'Email is already used'
-                        }]
-                    })
-                } else {
-                    User.findOne()
-                        //if the user doesnt exist, create it
-                    var newUser = new User();
-                    newUser.username = req.body.username;
-                    newUser.email = req.body.email;
-                    newUser.password = newUser.generateHash(req.body.password);
-                    newUser.save(function(err, user, count) {
-                        if (err) {
-                            res.status(400).send('error adding new user ' + err)
-                        } else {
-                            req.login(user, function(err) {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                return res.redirect('/');
-                            })
-                        }
-                    })
+                resetPasswordToken: req.params.token,
+                resetPasswordExpires: {
+                    $gt: Date.now()
                 }
-            })
-        })
-    }
-})
+            }, function(err, user) {
+                if (!user) {
+                    req.flash('error', 'Password reset token is invalid or has expired.');
+                    return res.redirect('back');
+                }
+                // var newUser = new User();
+                // newUser.username = req.body.username;
+                // newUser.email = req.body.email;
+                // newUser.password = newUser.generateHash(req.body.password);
+
+                user.password = user.generateHash(req.body.password);
+                user.resetPasswordToken = undefined;
+                user.resetPasswordExpires = undefined;
+
+                user.save(function(err) {
+                    req.logIn(user, function(err) {
+                        done(err, user);
+                    });
+                });
+            });
+        },
+        function(user, done) {
+            var smtpTransport = nodemailer.createTransport('SMTP', {
+                service: 'SendGrid',
+                auth: {
+                    user: process.env.SENDGRID_USER || config.get('Nev.user'),
+                    pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                }
+            });
+            var mailOptions = {
+                to: user.email,
+                from: 'passwordreset@donotreply',
+                subject: 'Your password has been changed',
+                text: 'Hello,\n\n' +
+                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+            };
+            smtpTransport.sendMail(mailOptions, function(err) {
+                req.flash('success', 'Success! Your password has been changed.');
+                done(err);
+            });
+        }
+    ], function(err) {
+        res.redirect('/');
+    });
+});
+
+
+// router.use('/', notLoggedIn, function(req, res, next) {
+//     next()
+// })
+
+
+
 
 router.get('/login', function(req, res, next) {
     var messages = req.flash('error')
@@ -506,6 +270,11 @@ router.post('/login', passport.authenticate('local.login', {
     failureRedirect: '/user/login',
     failureFlash: true //turn the flag to true to enable flash message
 }))
+
+
+
+
+
 
 
 module.exports = router;

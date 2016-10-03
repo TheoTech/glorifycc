@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    include topnav
+    form(method='POST')
+        legend Forgot Password
+        if messages.error
+            .alert.alert-danger
+                div= messages.error
+        if messages.info
+            .alert.alert-info
+                div= messages.info
+        .form-group
+            label(for='email') Email
+            input.form-control(type='text', name='email', autofocus)
+        button.btn.btn-primary(type='submit') Reset Password

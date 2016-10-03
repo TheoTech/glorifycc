@@ -1,0 +1,10 @@
+{
+  "Nev": {
+    "user": "jbenhi",
+    "pass": "Phil4:13",
+    "verificationURL": "http://spfiosongbase.herokuapp.com/user/signup/email-verification/${URL}"
+  },
+  "Session": {
+    "key": "Phil4:13"
+  }
+}

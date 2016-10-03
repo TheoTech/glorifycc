@@ -1,6 +1,9 @@
 extends layout
 
 block content
+    if messages.success
+        .alert.alert-success
+            div= messages.success    
     nav.navbar.transparent
         .container-fluid
             .collapse.navbar-collapse

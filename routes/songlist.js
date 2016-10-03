@@ -33,11 +33,7 @@ router.put('/', function(req, res) {
 })
 
 router.get('/', function(req, res) {
-    // langDisplayed = req.query.lang || ['english', 'mandarin', 'spanish', 'portuguese']
     Song.find({
-            // lang: {
-            //     $in: langDisplayed
-            // }
         }, function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
@@ -75,9 +71,8 @@ router.post('/', function(req, res) {
                 library: id
             }, function(err, song) {
                 if (err) return handleError(err)
-                // console.log(song)
                 if (song) {
-                    // console.log('after ' + user.library)
+                    //delete the song if the song already exist in the library
                     var index = user.library.indexOf(id)
                     if (index > -1) {
                         user.library.splice(index, 1)
@@ -90,6 +85,7 @@ router.post('/', function(req, res) {
                         })
                     })
                 } else {
+                    //add the song if the song not yet exist in the library
                     console.log(id)
                     user.library.push(id)
                     console.log(user.library)
