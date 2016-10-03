@@ -9,6 +9,8 @@ var ExportSong = require('../models/exportSong')
 var Song = require('../models/song')
 var _ = require('lodash')
 var app = require('../app')
+var pdf = require('html-pdf')
+var fs = require('file-system')
 
 router.get('/', function(req, res, next) {
     Playlist.find({
