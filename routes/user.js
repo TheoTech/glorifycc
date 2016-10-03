@@ -3,7 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
 var Playlist = require('../models/playlist')
-var app = require('../app')
 var pdf = require('html-pdf')
 var fs = require('file-system')
 var Song = require('../models/song')
@@ -13,6 +12,7 @@ var helperFunc = require('../config/passport')
 var async = require('async')
 var crypto = require('crypto')
 var nodemailer = require('nodemailer')
+var config = require('config')
 
 
 router.get('/library', isLoggedIn, function(req, res, next) {
@@ -155,14 +155,14 @@ router.post('/forgot', function(req, res, next) {
       var smtpTransport = nodemailer.createTransport('SMTP', {
         service: 'SendGrid',
         auth: {
-          user: 'jbenhi',
-          pass: 'Phil4:13'
+          user: process.env.SENDGRID_USER || config.get('Nev.user'),
+          pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
         }
       });
       var mailOptions = {
         to: user.email,
-        from: 'passwordreset@demo.com',
-        subject: 'Node.js Password Reset',
+        from: 'passwordreset@donotreply',
+        subject: 'Reset Password',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
           'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
@@ -230,13 +230,13 @@ router.post('/reset/:token', function(req, res) {
             var smtpTransport = nodemailer.createTransport('SMTP', {
                 service: 'SendGrid',
                 auth: {
-                    user: 'jbenhi',
-                    pass: 'Phil4:13'
+                    user: process.env.SENDGRID_USER || config.get('Nev.user'),
+                    pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
                 }
             });
             var mailOptions = {
                 to: user.email,
-                from: 'passwordreset@demo.com',
+                from: 'passwordreset@donotreply',
                 subject: 'Your password has been changed',
                 text: 'Hello,\n\n' +
                     'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'

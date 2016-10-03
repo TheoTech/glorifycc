@@ -11,63 +11,6 @@ router.get('/', function(req, res, next) {
 });
 
 
-// router.post('/signup', function(req, res, next) {
-//Validation Checks
-//
-//     if (errors) {
-//         //if there are errors in input
-//         res.render('signup', {
-//             errors: errors
-//         })
-//     } else {
-//         User.findOne({
-//             username: req.body.username
-//         }, function(err, userbyusername) {
-//             User.findOne({
-//                 email: req.body.email
-//             }, function(err, userbyemail) {
-//                 if (err) {
-//                     //if there is error
-//                     res.status(400).send('error adding new user ' + err)
-//                 } else if (userbyusername) {
-//                     //console.log('user exists')
-//                     //if the user exists, display the msg
-//                     res.render('signup', {
-//                         errors: [{
-//                             msg: 'Username is already used'
-//                         }]
-//                     })
-//                 } else if (userbyemail) {
-//                     res.render('signup', {
-//                         errors: [{
-//                             msg: 'Email is already used'
-//                         }]
-//                     })
-//                 } else {
-//                     User.findOne()
-//                         //if the user doesnt exist, create it
-//                     var newUser = new User();
-//                     newUser.username = req.body.username;
-//                     newUser.email = req.body.email;
-//                     newUser.password = newUser.generateHash(req.body.password);
-//                     newUser.save(function(err, user, count) {
-//                         if (err) {
-//                             res.status(400).send('error adding new user ' + err)
-//                         } else {
-//                             req.login(user, function(err) {
-//                                 if (err) {
-//                                     console.log(err);
-//                                 }
-//                                 return res.redirect('/');
-//                             })
-//                         }
-//                     })
-//                 }
-//             })
-//         })
-//     }
-// })
-
 var myHasher = function(password, tempUserData, insertTempUser, callback) {
     var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
     return insertTempUser(hash, tempUserData, callback);
@@ -77,12 +20,12 @@ var myHasher = function(password, tempUserData, insertTempUser, callback) {
 nev.configure({
     persistentUserModel: User,
     expirationTime: 600, // 10 minutes
-    verificationURL: process.env.VERIFICATION_URL,
+    verificationURL: process.env.VERIFICATION_URL || config.get('Nev.verificationURL'),
     transportOptions: {
         service: 'SendGrid',
         auth: {
-            user: process.env.SENDGRID_USER,
-            pass: process.env.SENDGRID_PASS
+            user: process.env.SENDGRID_USER || config.get('Nev.user'),
+            pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
         }
     },
     hashingFunction: myHasher,

@@ -8,6 +8,7 @@ var bcrypt = require('bcrypt-nodejs');
 var ExportSong = require('../models/exportSong')
 var Song = require('../models/song')
 var _ = require('lodash')
+var app = require('../app')
 
 router.get('/', function(req, res, next) {
     Playlist.find({
