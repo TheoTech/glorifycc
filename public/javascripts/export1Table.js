@@ -93,9 +93,10 @@ var export1Table = {
                                 }, s.title)
                             ]),
                             langOptions.map((l) => {
+                                console.log(langOptions)
                                 return _.includes(translationss[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
-                                        class: l,
+                                        className: l,
                                         id: getTranslation(i, l)[0]._id,
                                         onclick: m.withAttr('checked', function(checked) {
                                             pickTranslation(s._id, getTranslation(i, l)[0]._id, checked)

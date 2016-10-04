@@ -4,10 +4,15 @@ block content
     include topnav
     .col-md-4.col-md-offset-4
         h1 Sign Up
-        if errors
-            .alert.alert-danger
-                each error in errors
-                    "#{error.msg}"
+        if messages
+            .alert(class='#{info}')
+                -console.log(messages)
+                -console.log(info)
+                each msg in messages
+                    p #{msg.msg}
+                if resend
+                    p
+                        a(href='/user/signup/resend') Resend Verification Link
         form(role="form" method="post", action="/user/signup")
             .form-group
                 label(for="username") Username

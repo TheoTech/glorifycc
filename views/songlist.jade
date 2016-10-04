@@ -13,11 +13,11 @@ block content
     //- a#add.btn.btn-default(href="/songlist-db/add") Add New Song
     br
     //- #info.alert.alert-success(style='display: none') Song added to the library
-    #song-table
+    #songTable
     script(type='text/javascript').
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
             
     //- script(src='/javascripts/searchOption.js')
     script(src='/javascripts/songlistTable.js')
-    //- script(src='/javascripts/searchBox.js')
+    script(src='/javascripts/searchBox.js')

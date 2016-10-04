@@ -1,6 +1,9 @@
 extends layout
 
 block content
+    if messages.success
+        .alert.alert-success
+            div= messages.success    
     nav.navbar.transparent
         .container-fluid
             .collapse.navbar-collapse
@@ -11,11 +14,7 @@ block content
     header#header(style="text-align: center")
         h1 SPF.IO Songbase
         p Find Public Domain and CC0 Worship Song in Multiple Language
-
-        form.search-form(method="post" action='')
-            input#search.form-control(type="text" name="search" placeholder="Language, Title, Author or Lyric")
-            button.btn.btn-success(type="button")
-                i(class="glyphicon glyphicon-search")
+        #searchBox(style='width: 30em; margin: auto')
         br
         br
         br
@@ -30,4 +29,5 @@ block content
                             a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
                             |  by #{song.author}
 
+      script(src='/javascripts/searchBox.js')
         
