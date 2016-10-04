@@ -1,3 +1,4 @@
+//this function enable 'enter' on the keyboard to click the submit button
 var enter = function(elem, checkboxClass) {
     $(elem).keyup(function(e) {
         if (e.keyCode == 13) {

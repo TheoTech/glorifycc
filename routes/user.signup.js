@@ -79,6 +79,9 @@ router.post('/', function(req, res) {
             password: password
         });
 
+        //this temp user will be used to check whether the username is already exist or not
+        //this has to be done because nev.createTempUser from email-verification api just handle the account
+        //with the same email
         TempUser.findOne({
             username: username
         }, function(err, tu) {

@@ -219,18 +219,6 @@ router.delete('/:playlist_name/export1', function(req, res) {
                 }
             })
         })
-        // ExportSong.update({_id: playlistID}, {
-        //     $pull: {
-        //         translations: translationID
-        //     }
-        // }, {
-        //     multi: true
-        // }, function(err) {
-        //     if (err) return handleError(err)
-        //     res.send({
-        //         msg: 'deleting done'
-        //     })
-        // })
 })
 
 
