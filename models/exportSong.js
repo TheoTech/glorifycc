@@ -1,3 +1,4 @@
+//this model is for storing the songs that are going to be exported
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema
 

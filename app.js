@@ -14,6 +14,7 @@ var MongoStore = require('connect-mongo')(session);
 var pdf = require('html-pdf');
 var fs = require('file-system');
 var nodemailer = require('nodemailer')
+var config = require('config')
 
 var app = module.exports = express();
 
@@ -24,6 +25,8 @@ var songlistdb = require('./routes/songlist-db');
 var searchbyletter = require('./routes/search-by-letter');
 var searchbylang = require('./routes/search-by-lang');
 var user = require('./routes/user');
+var usersignup = require('./routes/user.signup');
+var userplaylist = require('./routes/user.playlist');
 var userlist = require('./routes/userlist')
 
 
@@ -36,7 +39,7 @@ mongoose.connect(MongoURI, function(err, database) {
         console.log('MongoDB connected successfully to ' + MongoURI);
     }
 });
-require('./config/passport');
+require('./lib/passport');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,7 +54,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session({
-    secret: 'session secret key',
+    secret: process.env.SESSION_KEY || config.get('Session.key'),
 }));
 app.use(flash())
 app.use(passport.initialize());
@@ -96,6 +99,8 @@ app.use('/songlist-db', songlistdb)
 app.use('/search-by-letter', searchbyletter)
 app.use('/search-by-lang', searchbylang)
 app.use('/userlist', userlist)
+app.use('/user/signup', usersignup)
+app.use('/user/playlist', userplaylist)
 
 app.get('/api', function(req, res) {
     app.render('songs-in-pdf', function(err, html) {

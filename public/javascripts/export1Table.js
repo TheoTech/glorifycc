@@ -1,3 +1,4 @@
+//this function adds/deletes the song in the ExportSong collection
 var pickTranslation = function(songID, translationID, checked) {
     if (checked) {
         console.log(translationID)
@@ -30,10 +31,10 @@ var pickTranslation = function(songID, translationID, checked) {
 
 }
 
-
-var langLabelArr = function(translationss) {
+//this return the arr of languages to become table's headers
+var langLabelArr = function(translations2d) {
     var lang = []
-    translationss.forEach((tr) => {
+    translations2d.forEach((tr) => {
         tr.forEach((t, i) => {
             if (!_.includes(lang, t.lang)) {
                 lang.push(t.lang)
@@ -43,15 +44,17 @@ var langLabelArr = function(translationss) {
     return lang
 }
 
-var langOptions = langLabelArr(translationss)
+var langOptions = langLabelArr(translations2d)
 
 
+//select all checkbox
 var selectAll = function(elem, checkboxClass) {
     $(elem).click(function() {
         $('.' + checkboxClass).trigger('click')
     });
 }
 
+//this function will check all the last exported songs
 $(window).load(function() {
     langsPicked.forEach((lp) =>
         lp.forEach((l) => {
@@ -60,6 +63,7 @@ $(window).load(function() {
 })
 
 
+//creating virtual DOM
 var export1Table = {
     view: function() {
         return [
@@ -93,9 +97,10 @@ var export1Table = {
                                 }, s.title)
                             ]),
                             langOptions.map((l) => {
-                                return _.includes(translationss[i].map((t) => t.lang), l) ? m('td', [
+                                console.log(langOptions)
+                                return _.includes(translations2d[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
-                                        class: l,
+                                        className: l,
                                         id: getTranslation(i, l)[0]._id,
                                         onclick: m.withAttr('checked', function(checked) {
                                             pickTranslation(s._id, getTranslation(i, l)[0]._id, checked)
@@ -111,8 +116,9 @@ var export1Table = {
     }
 }
 
+
 var getTranslation = function(idx, lang) {
-    return translationss[idx].filter((t) => t.lang === lang)
+    return translations2d[idx].filter((t) => t.lang === lang)
 }
 
 m.mount(document.getElementById('export1Table'), export1Table)

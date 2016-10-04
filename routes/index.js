@@ -5,13 +5,19 @@ var User = require('../models/user')
 var app = require('../app')
 var pdf = require('html-pdf')
 var fs = require('file-system')
+var async = require('async')
+var nodemailer = require('nodemailer')
+var mongoose = require('mongoose');
+var nev = require('email-verification')(mongoose)
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    var messages = req.flash()
     Song.find(function(err, songs) {
             res.render('index', {
-                songs: songs
+                songs: songs,
+                messages: messages
             })
         })
         .sort({
@@ -44,7 +50,6 @@ router.post('/', function(req, res, next) {
         }
     })
 })
-
 
 
 

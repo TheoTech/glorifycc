@@ -37,7 +37,7 @@ var songlistTable = {
                             m('td', s.author),
                             m('td', [
                                 m('button.btn', {
-                                    class: function() {
+                                    className: function() {
                                         if (_.includes(inLibrary(), s._id)) {
                                             return 'btn-danger'
                                         } else {
@@ -117,4 +117,4 @@ var searchBox = {
 }
 
 m.mount(document.getElementById('searchBox'), searchBox)
-m.mount(document.getElementById('song-table'), songlistTable)
+m.mount(document.getElementById('songTable'), songlistTable)

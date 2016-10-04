@@ -21,7 +21,9 @@ var userSchema = new Schema({
     library: [{
         type: Schema.Types.ObjectId,
         ref: 'Song'
-    }]
+    }],
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 })
 
 userSchema.methods.generateHash = function(password) {
