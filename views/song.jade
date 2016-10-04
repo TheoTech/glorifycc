@@ -25,16 +25,6 @@ block content
                     option(selected) [Choose Translation]
                     for t in translations
                         option(value='?lang=' + t.lang) #{t.lang}
-
-                        //- option(value='?lang=' + t.lang + '&v=' + t.v) #{t.lang}
-                        //-     - if (t.v > 1) 
-                        //-         span (ver.#{t.v})
-
-                //- for translation in translations
-                //-     option.capitalize(value="#{translation.lang}") #{translation.lang}
-
-
-
     .row
         .col-md-6
             h4.capitalize=song.lang
@@ -63,7 +53,6 @@ block content
             br 
             -if(login && user.username == "admin")
                 a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
-            
     br
     -if(!(login && user.username == "admin"))
         #song
