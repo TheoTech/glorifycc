@@ -100,7 +100,7 @@ router.put('/', function(req, res) {
 //this route is for step one of exporting playlist
 router.get('/:playlist_name/export1', function(req, res, next) {
     var playlistName = req.params.playlist_name
-    var translationss = []
+    var translations2d = []
     var langsPicked = []
     Playlist.findOne({
             owner: req.user._id,
@@ -151,14 +151,14 @@ router.get('/:playlist_name/export1', function(req, res, next) {
                         },
                         function(err, songs) {
                             if (err) return handleError(err)
-                            translationss.push(songs.map((s) => s))
+                            translations2d.push(songs.map((s) => s))
                             if (i == arr.length - 1) {
-                                console.log(translationss)
+                                console.log(translations2d)
                                 res.render('export1', {
                                     playlistID: playlist._id,
                                     playlistName: playlist.name,
                                     songs: playlist.songs,
-                                    translationss: translationss,
+                                    translations2d: translations2d,
                                     langsPicked: langsPicked
                                 })
                             }
@@ -231,7 +231,7 @@ router.get('/:playlist_name/export2', function(req, res) {
 
 router.get('/:playlist_name/export3', function(req, res) {
     var playlistName = req.params.playlist_name
-    var songss = []
+    var songs2d = []
     var temp = []
     Playlist.findOne({
         owner: req.user._id,
@@ -252,12 +252,12 @@ router.get('/:playlist_name/export3', function(req, res) {
                             temp.push(t)
                         })
                         // console.log(temp)
-                    songss.push(temp)
+                    songs2d.push(temp)
                     if (i === arr.length - 1) {
-                        console.log(songss)
+                        console.log(songs2d)
                         res.render('export3', {
-                            songss: songss,
-                            minLine: _.min(songss.map((songs) => songs.map((s) => s.lyric.length)))
+                            songs2d: songs2d,
+                            minLine: _.min(songs2d.map((songs) => songs.map((s) => s.lyric.length)))
                         })
                     }
                 })
@@ -268,7 +268,7 @@ router.get('/:playlist_name/export3', function(req, res) {
 
 router.post('/:playlist_name/export3', function(req, res) {
     var playlistName = req.params.playlist_name
-    var songss = []
+    var songs2d = []
     var temp = []
     var filename = Date.now()
     Playlist.findOne({
@@ -291,12 +291,12 @@ router.post('/:playlist_name/export3', function(req, res) {
                     })
                     s.translations = []
                     s.save()
-                    songss.push(temp)
+                    songs2d.push(temp)
                     if (i === arr.length - 1) {
-                        console.log(songss)
+                        console.log(songs2d)
                         app.render('handout', {
-                            songss: songss,
-                            minLine: _.min(songss.map((songs) => songs.map((s) => s.lyric.length)))
+                            songs2d: songs2d,
+                            minLine: _.min(songs2d.map((songs) => songs.map((s) => s.lyric.length)))
                         }, function(err, html) {
                             console.log(html)
                             pdf.create(html).toStream(function(err, stream) {

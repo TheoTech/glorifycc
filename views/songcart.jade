@@ -2,11 +2,11 @@ extends layout
 
 block content
     h1 Your Songcart
-        -if (songss != undefined && songss[0])
+        -if (songs2d != undefined && songs2d[0])
                 a.btn.btn-primary.pull-right(href='/songcart/export-1') Ready to Export >
                 button#edit.btn.btn-default.pull-right(data-toggle='collapse' data-target='.deleteCheckbox') Edit
-    - if (songss != undefined && songss[0])
-            each songs in songss
+    - if (songs2d != undefined && songs2d[0])
+            each songs in songs2d
                 -if (songs != undefined && songs[0])
                     #songcartPanel
                     .panel.panel-default
