@@ -99,8 +99,6 @@ router.route('/:song_id/edit')
                 return prev + '\n' + curr
             }
         }, '')
-        console.log(song.lyric)
-            // (/<br\s*\/?>|\//mg, '\n')
         res.render('edit', {
             song: song,
             lyric: lyric
@@ -113,8 +111,7 @@ router.route('/:song_id/edit')
         song.lang = req.body.lang
         song.copyright = req.body.copyright
         song.contributor = req.body.contributor
-        var stringArr = (req.body.lyric || '').split(/\r?\n|\//)
-        song.lyric = stringArr
+        song.lyric = (req.body.lyric || '').split(/\r?\n|\//)
         song.save(function(err) {
             if (err) {
                 res.status(400).send('Error editing the song: ' + error)

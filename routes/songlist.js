@@ -131,13 +131,11 @@ router.route('/:song_id')
                 Song.find({
                     _id: song.source
                 }, function(err, parentSong) {
-                    // console.log(parentSong)
                     var parentId
                     parentSong.forEach(function(ps) {
                             translations.push(ps)
                             parentId = ps._id
                         })
-                        // console.log(t)
                     console.log(song.source)
                     console.log(parentId)
                     Song.find({
