@@ -7,6 +7,7 @@ var addSong = function(id) {
         }
     }).then(function(res) {
         res.url ? window.location.href = res.url : inLibrary(res.inLibrary)
+        console.log(res.inLibrary)
     })
 }
 
