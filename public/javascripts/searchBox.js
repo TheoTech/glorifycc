@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 var searchBoxComponent = (function() {
-=======
-var searchBoxComponent = (function(){
->>>>>>> origin/mithril
     var tag = m.prop()
     var enter = function(elem, checkboxClass) {
         $(elem).keyup(function(e) {
@@ -11,7 +7,7 @@ var searchBoxComponent = (function(){
             }
         })
     }
-
+    
     var searchBox = {
         view: function() {
             return m('.input-group[style=width: 30em]', [

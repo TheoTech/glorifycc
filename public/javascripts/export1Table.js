@@ -61,16 +61,6 @@ var export1TableComponent = (function() {
 
     var langOptions = langLabelArr(translations2d)
 
-<<<<<<< HEAD
-    //select all checkbox
-    var selectAll = function(elem, checkboxClass) {
-        $(elem).click(function() {
-            $('.' + checkboxClass).trigger('click')
-        });
-    }
-=======
->>>>>>> origin/mithril
-
     //select all checkbox
     var selectAll = function(elem, checkboxClass) {
         $(elem).click(function() {
@@ -83,6 +73,17 @@ var export1TableComponent = (function() {
         return translations2d[idx].filter((t) => t.lang === lang)
     }
 
+    var getCheckbox = function(translations2d, l, i, s) {
+        return _.includes(translations2d[i].map((t) => t.lang), l) ? m('td', [
+            m('input[type=checkbox]', {
+                className: l,
+                id: getTranslation(i, l)[0]._id,
+                onclick: m.withAttr('checked', function(checked) {
+                    pickTranslation(s._id, getTranslation(i, l)[0]._id, checked)
+                })
+            })
+        ]) : m('td')
+    }
 
     //creating virtual DOM
     var export1Table = {
@@ -118,15 +119,7 @@ var export1TableComponent = (function() {
                                     }, s.title)
                                 ]),
                                 langOptions.map((l) => {
-                                    return _.includes(translations2d[i].map((t) => t.lang), l) ? m('td', [
-                                        m('input[type=checkbox]', {
-                                            className: l,
-                                            id: getTranslation(i, l)[0]._id,
-                                            onclick: m.withAttr('checked', function(checked) {
-                                                pickTranslation(s._id, getTranslation(i, l)[0]._id, checked)
-                                            })
-                                        })
-                                    ]) : m('td')
+                                    return getCheckbox(translations2d, l, i, s)
                                 })
                             ])
                         })
