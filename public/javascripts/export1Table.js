@@ -61,13 +61,22 @@ var export1TableComponent = (function() {
 
     var langOptions = langLabelArr(translations2d)
 
+<<<<<<< HEAD
     //select all checkbox
     var selectAll = function(elem, checkboxClass) {
         $(elem).click(function() {
             $('.' + checkboxClass).trigger('click')
         });
     }
+=======
+>>>>>>> origin/mithril
 
+    //select all checkbox
+    var selectAll = function(elem, checkboxClass) {
+        $(elem).click(function() {
+            $('.' + checkboxClass).trigger('click')
+        });
+    }
 
 
     var getTranslation = function(idx, lang) {
