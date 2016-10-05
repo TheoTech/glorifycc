@@ -108,7 +108,6 @@ router.delete('/library', function(req, res, next) {
     })
 })
 
-
 router.get('/logout', isLoggedIn, function(req, res, next) {
     helperFunc.adminLogout()
         // console.log(helperFunc.isAdmin())
