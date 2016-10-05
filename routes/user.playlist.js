@@ -101,7 +101,7 @@ router.put('/', function(req, res) {
 router.get('/:playlist_name/export1', function(req, res, next) {
     var playlistName = req.params.playlist_name
     var translations2d = []
-    var langsPicked = []
+    var currentExportSongCollection = []
     Playlist.findOne({
             owner: req.user._id,
             name: playlistName
@@ -127,7 +127,7 @@ router.get('/:playlist_name/export1', function(req, res, next) {
                                 if (err) return handleError(err)
                             })
                         } else {
-                            langsPicked.push(es.translations)
+                            currentExportSongCollection.push(_.pick(es, ['song', 'translations']))
                         }
                     })
                     Song.find({
@@ -159,7 +159,7 @@ router.get('/:playlist_name/export1', function(req, res, next) {
                                     playlistName: playlist.name,
                                     songs: playlist.songs,
                                     translations2d: translations2d,
-                                    langsPicked: langsPicked
+                                    currentExportSongCollection: currentExportSongCollection
                                 })
                             }
                         })
@@ -170,56 +170,25 @@ router.get('/:playlist_name/export1', function(req, res, next) {
 
 
 router.post('/:playlist_name/export1', function(req, res, next) {
-    // console.log(req.body)
+    var exportSongCollection = req.body.obj
     var playlistID = req.body.playlistID
-    var songID = req.body.songID
-    var translationID = req.body.translationID
-        // console.log(songID)
-        // res.send({msg: 'saving'})
-    ExportSong.findOne({
-        owner: playlistID,
-        song: songID
-    }, function(err, es) {
-        if (err) return handleError(err)
-        console.log(es)
-        es.translations.push(translationID)
-        es.save(function(err) {
-            if (err) {
-                res.status(400).send('error ' + err)
-            } else {
-                res.send({
-                    msg: 'saving done'
-                })
-            }
+    exportSongCollection.forEach((o, i, arr) => {
+        ExportSong.findOne({
+            owner: playlistID,
+            song: o.song
+        }, function(err, es) {
+            if (err) return handleError(err)
+            es.translations = o.translations
+            es.save(function(err) {
+                if (err) return handleError(err)
+                if (i == arr.length - 1) {
+                    res.send()
+                }
+            })
         })
     })
 })
 
-router.delete('/:playlist_name/export1', function(req, res) {
-    var playlistID = req.body.playlistID
-    var songID = req.body.songID
-    var translationID = req.body.translationID
-    console.log(req.body)
-    ExportSong.findOne({
-            owner: playlistID,
-            song: songID
-        }, function(err, es) {
-            if (err) return handleError(err)
-            var index = es.translations.indexOf(translationID)
-            if (index > -1) {
-                es.translations.splice(index, 1)
-            }
-            es.save(function(err) {
-                if (err) {
-                    res.status(400).send('error ' + err)
-                } else {
-                    res.send({
-                        msg: 'deleting done'
-                    })
-                }
-            })
-        })
-})
 
 
 //this route is for step 2 of exporting playlist
@@ -250,14 +219,14 @@ router.get('/:playlist_name/export3', function(req, res) {
                     temp.push(s.song)
                     s.translations.forEach((t) => {
                             temp.push(t)
+                            // console.log(t.lyric)
                         })
                         // console.log(temp)
                     songs2d.push(temp)
                     if (i === arr.length - 1) {
-                        console.log(songs2d)
                         res.render('export3', {
                             songs2d: songs2d,
-                            minLine: _.min(songs2d.map((songs) => songs.map((s) => s.lyric.length)))
+                            minLine: _.min(songs2d.map((songs) => _.min(songs.map((s) => s.lyric.length))))
                         })
                     }
                 })

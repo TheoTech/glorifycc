@@ -1,10 +1,15 @@
-$.getScript('/javascripts/funcLib.js')
+$.getScript('/javascripts/functionLibrary.js')
 
-var inLibrary = m.prop(currentInLibrary)
-var songs = m.prop(songs)
 
-var songlistTable = {
-    view: function() {
+var songlistTableComponent = {
+    controller: function(){
+      return {
+        inLibrary: m.prop(currentInLibrary),
+        songs: m.prop(songs)
+      }
+    }
+    view: function(vm) {
+        console.log(vm.songs)
         return [
             m('table.table', [
                 m('thead', [
@@ -52,5 +57,13 @@ var songlistTable = {
         ]
     }
 }
+// var inLibrary =
+//     var songs = m.prop(songs)
+//
+// var songlistTable = {
+//     view: function() {
+//
+//     }
+// }
 
-m.mount(document.getElementById('songTable'), songlistTable)
+m.mount(document.getElementById('songTable'), songlistTableComponent)
