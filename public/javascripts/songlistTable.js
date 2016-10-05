@@ -1,23 +1,9 @@
-var addOrDeleteSong = function(id) {
-    m.request({
-        method: 'POST',
-        url: '/songlist',
-        data: {
-            id: id
-        }
-    }).then(function(res) {
-        if (res.url) {
-            window.location.href = res.url
-        } else {
-            inLibrary(res.inLibrary)
-        }
+$.getScript('/javascripts/functionLibrary.js')
 
-    })
-}
 
-var inLibrary = m.prop(currentInLibrary)
-
-var songlistTable = {
+var songlistTableComponent = {
+    inLibrary: m.prop(currentInLibrary),
+    songs: m.prop(songs),
     view: function() {
         return [
             m('table.table', [
@@ -45,7 +31,11 @@ var songlistTable = {
                                         }
                                     }(),
                                     onclick: function() {
-                                        addOrDeleteSong(s._id)
+                                        if (_.includes(inLibrary(), s._id)) {
+                                            deleteSong(s._id)
+                                        } else {
+                                            addSong(s._id)
+                                        }
                                     }
                                 }, function() {
                                     if (_.includes(inLibrary(), s._id)) {
@@ -62,59 +52,13 @@ var songlistTable = {
         ]
     }
 }
+var inLibrary =
+    var songs = m.prop(songs)
 
-
-
-var filterSong = function(tag) {
-    m.request({
-            method: 'PUT',
-            url: '/songlist',
-            data: {
-                tag: tag
-            }
-        })
-        .then(function(res) {
-            songs(res.songs)
-            inLibrary(res.inLibrary)
-        })
-
-}
-
-var enter = function(elem, checkboxClass) {
-    $(elem).keyup(function(e) {
-        if (e.keyCode == 13) {
-            $("#search-button").click()
-        }
-    })
-}
-
-
-var tag = m.prop('')
-var songs = m.prop(songs)
-var searchBox = {
+var songlistTable = {
     view: function() {
-        return m('.input-group[style=width: 30em]', [
-            m('input#search-input.form-control[type=text]', {
-                placeholder: 'Language, Title, Author or Lyric',
-                onchange: m.withAttr('value', tag),
-                config: function(elem, isInit, context) {
-                    if (!isInit) {
-                        enter(elem);
-                    }
-                }
-            }),
-            m('span.input-group-btn', [
-                m('button#search-button.btn.btn-success', {
-                    onclick: function() {
-                        filterSong(tag())
-                    }
-                }, [
-                    m('i.glyphicon.glyphicon-search')
-                ])
-            ])
-        ])
+
     }
 }
 
-m.mount(document.getElementById('searchBox'), searchBox)
 m.mount(document.getElementById('songTable'), songlistTable)
