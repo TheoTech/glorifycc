@@ -36,17 +36,3 @@ var searchBoxComponent = {
 }
 
 m.mount(document.getElementById('searchBox'), searchBoxComponent)
-//this function enable 'enter' on the keyboard to click the submit button
-// var enter = function(elem, checkboxClass) {
-//     $(elem).keyup(function(e) {
-//         if (e.keyCode == 13) {
-//             $("#search-button").click()
-//         }
-//     })
-// }
-//
-//
-//
-// var searchBox = {
-//
-// }

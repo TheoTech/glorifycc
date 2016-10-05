@@ -1,15 +1,10 @@
 $.getScript('/javascripts/functionLibrary.js')
 
+var inLibrary = m.prop(currentInLibrary)
+var songs = m.prop(songs)
 
-var songlistTableComponent = {
-    controller: function(){
-      return {
-        inLibrary: m.prop(currentInLibrary),
-        songs: m.prop(songs)
-      }
-    }
-    view: function(vm) {
-        console.log(vm.songs)
+var songlistTable = {
+    view: function() {
         return [
             m('table.table', [
                 m('thead', [
@@ -29,25 +24,13 @@ var songlistTableComponent = {
                             m('td', [
                                 m('button.btn', {
                                     className: function() {
-                                        if (_.includes(inLibrary(), s._id)) {
-                                            return 'btn-danger'
-                                        } else {
-                                            return 'btn-success'
-                                        }
+                                        return _.includes(inLibrary(), s._id) ? 'btn-danger' : 'btn-success'
                                     }(),
                                     onclick: function() {
-                                        if (_.includes(inLibrary(), s._id)) {
-                                            deleteSong(s._id)
-                                        } else {
-                                            addSong(s._id)
-                                        }
+                                        _.includes(inLibrary(), s._id) ? deleteSong(s._id) : addSong(s._id)
                                     }
                                 }, function() {
-                                    if (_.includes(inLibrary(), s._id)) {
-                                        return 'Delete from Library'
-                                    } else {
-                                        return 'Add to Library'
-                                    }
+                                    return _.includes(inLibrary(), s._id) ? 'Delete from Library' : 'Add to Library'
                                 }())
                             ])
                         ])
@@ -57,13 +40,5 @@ var songlistTableComponent = {
         ]
     }
 }
-// var inLibrary =
-//     var songs = m.prop(songs)
-//
-// var songlistTable = {
-//     view: function() {
-//
-//     }
-// }
 
-m.mount(document.getElementById('songTable'), songlistTableComponent)
+m.mount(document.getElementById('songTable'), songlistTable)
