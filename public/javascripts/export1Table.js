@@ -31,9 +31,6 @@ var pickTranslation = function(songID, translationID, checked) {
     console.log(exportSongCollection)
 }
 
-<<<<<<< HEAD
-=======
-
 var postExportSongCollection = function(exportSongCollection) {
     m.request({
             method: 'POST',
@@ -48,7 +45,6 @@ var postExportSongCollection = function(exportSongCollection) {
         })
 }
 
->>>>>>> master
 //this return the arr of languages to become table's headers
 var langLabelArr = function(translations2d) {
     var lang = []
@@ -61,10 +57,7 @@ var langLabelArr = function(translations2d) {
     })
     return lang
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 var langOptions = langLabelArr(translations2d)
 
 
@@ -75,20 +68,10 @@ var selectAll = function(elem, checkboxClass) {
     });
 }
 
-<<<<<<< HEAD
-//this function will check all the last exported songs
-$(window).load(function() {
-    langsPicked.forEach((lp) =>
-        lp.forEach((l) => {
-            $('#' + l).prop('checked', true)
-        }))
-})
-=======
+
 var getTranslation = function(idx, lang) {
     return translations2d[idx].filter((t) => t.lang === lang)
 }
->>>>>>> master
-
 
 //creating virtual DOM
 var export1Table = {
@@ -124,11 +107,6 @@ var export1Table = {
                                 }, s.title)
                             ]),
                             langOptions.map((l) => {
-<<<<<<< HEAD
-                                console.log(langOptions)
-=======
-                                // console.log(langOptions)
->>>>>>> master
                                 return _.includes(translations2d[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
                                         className: l,
@@ -151,14 +129,5 @@ var export1Table = {
         ]
     }
 }
-
-
-<<<<<<< HEAD
-var getTranslation = function(idx, lang) {
-    return translations2d[idx].filter((t) => t.lang === lang)
-}
-=======
-
->>>>>>> master
 
 m.mount(document.getElementById('export1Table'), export1Table)

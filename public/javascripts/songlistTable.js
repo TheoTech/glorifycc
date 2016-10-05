@@ -43,7 +43,5 @@ var songlistTableComponent = {
         ]
     }
 }
-var inLibrary =
-    var songs = m.prop(songs)
 
 m.mount(document.getElementById('songTable'), songlistTable)

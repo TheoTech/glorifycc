@@ -3,7 +3,7 @@ extends layout
 block content
     if messages.success
         .alert.alert-success
-            div= messages.success    
+            div = messages.success    
     nav.navbar.transparent
         .container-fluid
             .collapse.navbar-collapse
@@ -29,5 +29,5 @@ block content
                             a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
                             |  by #{song.author}
 
-      script(src='/javascripts/searchBox.js')
+      script(src='/dist/javascripts/searchBox.js')
         
