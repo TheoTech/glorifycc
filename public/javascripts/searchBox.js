@@ -1,4 +1,4 @@
-var searchBoxComponent = (function(){
+var searchBoxComponent = (function() {
     var tag = m.prop()
     var enter = function(elem, checkboxClass) {
         $(elem).keyup(function(e) {
@@ -34,11 +34,8 @@ var searchBoxComponent = (function(){
     }
 
     return {
-      init: function(dom){
-        m.mount(dom, searchBox)
-      }
+        init: function(dom) {
+            m.mount(dom, searchBox)
+        }
     }
 })()
-
-var searchBoxDOM = document.getElementById('searchBox')
-searchBoxComponent.init(searchBoxDOM)

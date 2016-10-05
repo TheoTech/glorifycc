@@ -99,6 +99,3 @@ var playlistTableComponent = (function(){
     }
   }
 })()
-
-var playlistTableDOM = document.getElementById('playlist')
-playlistTableComponent.init(playlistTableDOM)

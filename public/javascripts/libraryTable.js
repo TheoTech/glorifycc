@@ -129,6 +129,3 @@ var libraryTableComponent = (function() {
         }
     }
 })()
-
-var libraryTableDOM = document.getElementById('library')
-libraryTableComponent.init(libraryTableDOM)

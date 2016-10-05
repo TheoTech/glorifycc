@@ -7,10 +7,12 @@ block content
 
     //- a.btn.btn-primary(href='/user/playlist/#{playlistName}/export3') Next
 
-    script(type='text/javascript').
+    script.
         var playlistID = !{JSON.stringify(playlistID).replace(/<\//g, "<\\/")}
         var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var translations2d = !{JSON.stringify(translations2d).replace(/<\//g, "<\\/")}
         var exportSongCollection = !{JSON.stringify(currentExportSongCollection).replace(/<\//g, "<\\/")}
-    script(type="text/javascript", src='/dist/javascritps/export1Table.js')
+    script(src='/dist/javascritps/export1Table.js')
+    script.
+        export1TableComponent.init(document.getElementById('export1Table'))

@@ -59,11 +59,8 @@ var songlistTableComponent = (function() {
         }
     }
     return {
-      init: function(dom){
-        m.mount(songlistTableDOM, songlistTable)
-      }
+        init: function(dom) {
+            m.mount(dom, songlistTable)
+        }
     }
 })()
-
-var songlistTableDOM = document.getElementById('songlistTable')
-songlistTableComponent.init(songlistTableDOM)

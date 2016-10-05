@@ -138,6 +138,3 @@ var export1TableComponent = (function() {
         }
     }
 })()
-
-var export1TableDOM = document.getElementById('export1Table')
-export1TableComponent.init(export1TableDOM)
