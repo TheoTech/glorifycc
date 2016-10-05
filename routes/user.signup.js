@@ -79,6 +79,8 @@ router.post('/', function(req, res) {
             password: password
         });
 
+        //this part is for solving the issue when one user signs up with a username and he hasnt verified it,
+        //and there is another person who tries to sign up with the same username.
         TempUser.findOne({
             username: username
         }, function(err, tu) {
@@ -124,7 +126,7 @@ router.post('/', function(req, res) {
                             });
                         });
                     } else {
-                        // user already exists in temporary collection!
+                        // user already exists in temporary collection compared by email
                         res.render('signup', {
                             messages: [{
                                 msg: 'You have already signed up. Please check your email to verify your account.'

@@ -4,36 +4,9 @@ var express = require('express'),
     User = require('../models/user'),
     _ = require('lodash')
 
-router.put('/', function(req, res) {
-    var tag = req.body.tag
-    Song.find({
-        $text: {
-            $search: "\"" + tag + "\""
-        }
-    }, function(err, songs) {
-        if (err) return handleError(err)
-        if (req.isAuthenticated()) {
-            console.log(songs)
-            User.findOne({
-                _id: req.user._id
-            }, function(err, user) {
-                if (err) return handleError(err)
-                res.send({
-                    songs: songs,
-                    inLibrary: user.library
-                })
-            })
-        } else {
-            res.send({
-                songs: songs,
-                inLibrary: []
-            })
-        }
-    })
-})
 
 router.get('/', function(req, res) {
-    Song.find({}, function(err, songs, count) {
+    Song.find(function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
@@ -66,36 +39,13 @@ router.post('/', function(req, res) {
             _id: req.user._id
         }, function(err, user) {
             if (err) return handleError(err)
-            User.findOne({
-                library: id
-            }, function(err, song) {
+            user.library.push(id)
+            user.save(function(err) {
                 if (err) return handleError(err)
-                if (song) {
-                    //delete the song if the song already exist in the library
-                    var index = user.library.indexOf(id)
-                    if (index > -1) {
-                        user.library.splice(index, 1)
-                    }
-                    user.save(function(err) {
-                        if (err) return handleError(err)
-                        console.log('delete success')
-                        res.send({
-                            inLibrary: user.library
-                        })
-                    })
-                } else {
-                    //add the song if the song not yet exist in the library
-                    console.log(id)
-                    user.library.push(id)
-                    console.log(user.library)
-                    user.save(function(err) {
-                        if (err) return handleError(err)
-                        console.log('save success')
-                        res.send({
-                            inLibrary: user.library
-                        })
-                    })
-                }
+                console.log('save success')
+                res.send({
+                    inLibrary: user.library
+                })
             })
         })
     } else {
@@ -105,6 +55,53 @@ router.post('/', function(req, res) {
     }
 })
 
+router.delete('/', function(req, res) {
+    var id = req.body.id
+    User.findOne({
+        _id: req.user._id
+    }, function(err, user) {
+        if (err) return handleError(err)
+        var index = user.library.indexOf(id)
+        if (index > -1) {
+            user.library.splice(index, 1)
+        }
+        user.save(function(err) {
+            if (err) return handleError(err)
+            console.log('delete success')
+            res.send({
+                inLibrary: user.library
+            })
+        })
+    })
+})
+
+router.get('/search', function(req, res) {
+    var tag = req.query.q
+    Song.find({
+        $text: {
+            $search: "\"" + tag + "\""
+        }
+    }, function(err, songs) {
+        if (err) return handleError(err)
+        if (req.isAuthenticated()) {
+            console.log(songs)
+            User.findOne({
+                _id: req.user._id
+            }, function(err, user) {
+                if (err) return handleError(err)
+                res.render('songlist', {
+                    songs: songs,
+                    inLibrary: user.library
+                })
+            })
+        } else {
+            res.render('songlist', {
+                songs: songs,
+                inLibrary: []
+            })
+        }
+    })
+})
 
 
 router.route('/:song_id')
@@ -138,15 +135,56 @@ router.route('/:song_id')
                 source: song._id
             }]
         }, function(err, translations) {
-            var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-            var isTranslationExisted = !_.isEmpty(rightTranslation)
-                // console.log(rightTranslation)
-            res.render('song', {
-                song: song,
-                rightTranslation: rightTranslation,
-                isTranslationExisted: isTranslationExisted,
-                translations: translations
-            })
+            // console.log(t)
+            if (err) {
+                res.status(400).send('Error getting songs ' + err)
+            }
+            if (!translations[0]) {
+                console.log('user picks translation song')
+                console.log(song)
+                Song.find({
+                    _id: song.source
+                }, function(err, parentSong) {
+                    var parentId
+                    parentSong.forEach(function(ps) {
+                            translations.push(ps)
+                            parentId = ps._id
+                        })
+                    console.log(song.source)
+                    console.log(parentId)
+                    Song.find({
+                        source: parentId
+                    }, function(err, theRestT) {
+                        console.log(theRestT)
+                        theRestT.forEach(function(trt) {
+                                if (trt.id !== song_id) {
+                                    translations.push(trt)
+                                }
+                            })
+                            // console.log(translations)
+                        var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
+                        var isTranslationExisted = !_.isEmpty(rightTranslation)
+                            // console.log(rightTranslation)
+                        res.render('song', {
+                            song: song,
+                            rightTranslation: rightTranslation,
+                            isTranslationExisted: isTranslationExisted,
+                            translations: translations
+                        })
+                    })
+                })
+            } else {
+                console.log('user picks ori song')
+                var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
+                var isTranslationExisted = !_.isEmpty(rightTranslation)
+                console.log(rightTranslation)
+                res.render('song', {
+                    song: song,
+                    rightTranslation: rightTranslation,
+                    isTranslationExisted: isTranslationExisted,
+                    translations: translations
+                })
+            }
         })
     })
 
@@ -173,55 +211,65 @@ router.route('/:song_id/add-translation')
         })
     })
     .post(function(req, res) {
-        var lang = req.body.lang_t
-        var stringArr_t = req.body.lyric_t.split(/\r?\n|\//)
-            // if (stringArr_t.length != song.lyric.length) {
-            //     req.flash('error', 'The number of lines in translation lyric must match the number of lines in original song lyric')
-            //     if (req.body.title_t === ''){
-            //       req.flash('error', 'The title cannot be empty')
-            //     }
-            //     res.redirect('/songlist/' + song.id + '/add-translation')
-            // } else if (req.body.title_t === ''){
-            //   req.flash('error', 'The title cannot be empty')
-            //     if (stringArr_t.length != song.lyric.length) {
-            //       req.flash('error', 'The translation lyric must have the same line with the song lyric')
-            //     }
-            //     res.redirect('/songlist/' + song.id + '/add-translation')
-        Song.findOne({
-                source: song.id,
-                lang: lang
-            }, function(err, translation) {
-                if (err) {
-                    res.status(400).send('error ' + err)
-                }
-                var newSong = new Song({
-                    title: req.body.title_t,
-                    author: song.author,
-                    year: song.year,
-                    lang: lang,
-                    contributor: req.user.username,
-                    copyright: req.body.copyright_t,
-                    lyric: stringArr_t.slice(0),
-                    source: song.id,
-                    oriSong: song.title,
-                    timeAdded: Date.now()
-                })
-                if (translation) {
-                    newSong.v = translation.v + 1
-                } else {
-                    newSong.v = 1;
-                }
-                newSong.save(function(err) {
-                    if (err) {
-                        res.status(400).send('error saving new song ' + err)
-                    } else {
-                        res.redirect('/songlist/' + song_id)
-                    }
-                })
+        req.checkBody('title_t', 'Title is required').notEmpty()
+        req.checkBody('lyric_t', 'Lyric is required').notEmpty()
+        var messages = req.validationErrors()
+
+        if (messages) {
+            res.render('addTranslation', {
+                messages: messages
             })
-            .sort({
-                _id: -1
-            }).limit(1)
+        } else {
+            var lang = req.body.lang_t
+            var stringArr_t = req.body.lyric_t.split(/\r?\n|\//)
+            Song.findOne({
+                    source: song.id,
+                    lang: lang
+                }, function(err, translation) {
+                    if (err) {
+                        res.status(400).send('error ' + err)
+                    }
+                    var newSong = new Song({
+                        title: req.body.title_t,
+                        author: song.author,
+                        year: song.year,
+                        lang: lang,
+                        contributor: req.user.username,
+                        copyright: req.body.copyright_t,
+                        lyric: stringArr_t.slice(0),
+                        source: song.id,
+                        oriSong: song.title,
+                        timeAdded: Date.now()
+                    })
+                    if (translation) {
+                        newSong.v = translation.v + 1
+                    } else {
+                        newSong.v = 1;
+                    }
+                    newSong.save(function(err) {
+                        if (err) {
+                            res.status(400).send('error saving new song ' + err)
+                        } else {
+                            res.redirect('/songlist/' + song_id)
+                        }
+                    })
+                })
+                .sort({
+                    _id: -1
+                }).limit(1)
+        }
+        // if (stringArr_t.length != song.lyric.length) {
+        //     req.flash('error', 'The number of lines in translation lyric must match the number of lines in original song lyric')
+        //     if (req.body.title_t === ''){
+        //       req.flash('error', 'The title cannot be empty')
+        //     }
+        //     res.redirect('/songlist/' + song.id + '/add-translation')
+        // } else if (req.body.title_t === ''){
+        //   req.flash('error', 'The title cannot be empty')
+        //     if (stringArr_t.length != song.lyric.length) {
+        //       req.flash('error', 'The translation lyric must have the same line with the song lyric')
+        //     }
+        //     res.redirect('/songlist/' + song.id + '/add-translation')
     })
 
 module.exports = router;

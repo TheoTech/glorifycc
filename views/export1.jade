@@ -5,12 +5,12 @@ block content
     h1 Select Translations
     #export1Table
 
-    a.btn.btn-primary(href='/user/playlist/#{playlistName}/export3') Next
+    //- a.btn.btn-primary(href='/user/playlist/#{playlistName}/export3') Next
 
     script(type='text/javascript').
         var playlistID = !{JSON.stringify(playlistID).replace(/<\//g, "<\\/")}
         var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var translations2d = !{JSON.stringify(translations2d).replace(/<\//g, "<\\/")}
-        var langsPicked = !{JSON.stringify(langsPicked).replace(/<\//g, "<\\/")}
+        var exportSongCollection = !{JSON.stringify(currentExportSongCollection).replace(/<\//g, "<\\/")}
     script(src='/javascripts/export1Table.js')

@@ -1,36 +1,54 @@
-//this function adds/deletes the song in the ExportSong collection
-var pickTranslation = function(songID, translationID, checked) {
-    if (checked) {
-        console.log(translationID)
-        m.request({
-                method: 'POST',
-                url: '/user/playlist/' + playlistName + '/export1',
-                data: {
-                    playlistID: playlistID,
-                    songID: songID,
-                    translationID: translationID
-                }
-            })
-            .then(function(res) {
-                console.log(res.msg)
-            })
-    } else {
-        m.request({
-                method: 'DELETE',
-                url: '/user/playlist/' + playlistName + '/export1',
-                data: {
-                    playlistID: playlistID,
-                    songID: songID,
-                    translationID: translationID
-                }
-            })
-            .then(function(res) {
-                console.log(res.msg)
-            })
-    }
+//this function will check all the last exported songs
+$(window).load(function() {
+    exportSongCollection.map((es) => es.translations.map((t) => t))
+        .forEach((translationID) => {
+            $('#' + translationID).prop('checked', true)
+        })
+})
 
+var exportSong = function(songID, translationID) {
+    this.song = songID
+    this.translations = []
+    this.translations.push(translationID)
 }
 
+//this function adds/deletes the song in the ExportSong collection
+var pickTranslation = function(songID, translationID, checked) {
+    var idx = _.findIndex(exportSongCollection, (e) => e.song === songID)
+
+    if (checked) {
+        //add
+        exportSongCollection[idx].translations.push(translationID)
+    } else {
+        //delete
+        _.remove(exportSongCollection[idx].translations, (t) => t === translationID)
+
+        //remove the exportSong obj if the user doesnt pick any translation for a particular song
+        if (_.isEmpty(exportSongCollection[idx].translations)) {
+            exportSongCollection.splice(idx, 1)
+        }
+    }
+    console.log(exportSongCollection)
+}
+
+<<<<<<< HEAD
+=======
+
+var postExportSongCollection = function(exportSongCollection) {
+    m.request({
+            method: 'POST',
+            url: '/user/playlist/' + playlistName + '/export1',
+            data: {
+                obj: exportSongCollection,
+                playlistID: playlistID
+            }
+        })
+        .then(function(res) {
+            window.location.href = '/user/playlist/' + playlistName + '/export3'
+        })
+}
+
+>>>>>>> master
 //this return the arr of languages to become table's headers
 var langLabelArr = function(translations2d) {
     var lang = []
@@ -43,7 +61,10 @@ var langLabelArr = function(translations2d) {
     })
     return lang
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 var langOptions = langLabelArr(translations2d)
 
 
@@ -54,6 +75,7 @@ var selectAll = function(elem, checkboxClass) {
     });
 }
 
+<<<<<<< HEAD
 //this function will check all the last exported songs
 $(window).load(function() {
     langsPicked.forEach((lp) =>
@@ -61,6 +83,11 @@ $(window).load(function() {
             $('#' + l).prop('checked', true)
         }))
 })
+=======
+var getTranslation = function(idx, lang) {
+    return translations2d[idx].filter((t) => t.lang === lang)
+}
+>>>>>>> master
 
 
 //creating virtual DOM
@@ -97,7 +124,11 @@ var export1Table = {
                                 }, s.title)
                             ]),
                             langOptions.map((l) => {
+<<<<<<< HEAD
                                 console.log(langOptions)
+=======
+                                // console.log(langOptions)
+>>>>>>> master
                                 return _.includes(translations2d[i].map((t) => t.lang), l) ? m('td', [
                                     m('input[type=checkbox]', {
                                         className: l,
@@ -111,14 +142,23 @@ var export1Table = {
                         ])
                     })
                 ])
-            ])
+            ]),
+            m('button.btn.btn-primary', {
+                onclick: function() {
+                    postExportSongCollection(exportSongCollection)
+                }
+            }, 'Next')
         ]
     }
 }
 
 
+<<<<<<< HEAD
 var getTranslation = function(idx, lang) {
     return translations2d[idx].filter((t) => t.lang === lang)
 }
+=======
+
+>>>>>>> master
 
 m.mount(document.getElementById('export1Table'), export1Table)

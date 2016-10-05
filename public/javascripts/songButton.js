@@ -1,69 +1,25 @@
-var addOrDeleteSong = function(id) {
-    m.request({
-        method: 'POST',
-        url: '/songlist',
-        data: {
-            id: id
-        }
-    }).then(function(res) {
-        if (res.url) {
-            window.location.href = res.url
-        } else {
-            inLibrary(res.inLibrary)
-        }
+$.getScript('/javascripts/functionLibrary.js')
 
-    })
+var getClassName = function(id) {
+    return _.includes(inLibrary(), id) ? 'btn-danger' : 'btn-success'
+}
+
+var getButtonText = function(id) {
+    return _.includes(inLibrary(), id) ? 'Delete from Library' : 'Add to Library'
 }
 
 var inLibrary = m.prop()
 
-//add/delete song button for the songlicked page
-var songButton = {
-    view: function() {
+var button = {
+    view: function(ctrl, args) {
         return m('button.btn', {
-            className: function() {
-                if (_.includes(inLibrary(), song._id)) {
-                    return 'btn-danger'
-                } else {
-                    return 'btn-success'
-                }
-            }(),
+            className: getClassName(args._id),
             onclick: function() {
-                addOrDeleteSong(song._id)
+                _.includes(inLibrary(), args._id) ? deleteSong(args._id) : addSong(args._id)
             }
-        }, function() {
-            if (_.includes(inLibrary(), song._id)) {
-                return 'Delete from Library'
-            } else {
-                return 'Add to Library'
-            }
-        }())
+        }, getButtonText(args._id))
     }
 }
 
-//add/delete translation button for the songclicked page
-var transButton = {
-    view: function() {
-        return m('button.btn', {
-            class: function() {
-                if (_.includes(inLibrary(), translation._id)) {
-                    return 'btn-danger'
-                } else {
-                    return 'btn-success'
-                }
-            }(),
-            onclick: function() {
-                addOrDeleteSong(translation._id)
-            }
-        }, function() {
-            if (_.includes(inLibrary(), translation._id)) {
-                return 'Delete from Library'
-            } else {
-                return 'Add to Library'
-            }
-        }())
-    }
-}
-
-m.mount(document.getElementById('song'), songButton)
-m.mount(document.getElementById('translation'), transButton)
+m.mount(document.getElementById('song'), m(button, song))
+m.mount(document.getElementById('translation'), m(button, translation))
