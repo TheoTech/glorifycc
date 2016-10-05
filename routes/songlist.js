@@ -2,7 +2,9 @@ var express = require('express'),
     router = express.Router(),
     Song = require('../models/song'),
     User = require('../models/user'),
-    _ = require('lodash')
+    _ = require('lodash'),
+    Playlist = require('../models/playlist')
+
 
 
 router.get('/', function(req, res) {
@@ -15,15 +17,21 @@ router.get('/', function(req, res) {
                     _id: req.user._id
                 }, function(err, user) {
                     if (err) return handleError(err)
-                    res.render('songlist', {
-                        songs: songs,
-                        inLibrary: user.library
+                    Playlist.find({owner: req.user._id}, function(err, playlists){
+                      if (err) return handleError(err)
+                      res.render('songlist', {
+                          songs: songs,
+                          inLibrary: user.library,
+                          playlists: playlists
+                      })
                     })
+
                 })
             } else {
                 res.render('songlist', {
                     songs: songs,
-                    inLibrary: []
+                    inLibrary: [],
+                    playlists: []
                 })
             }
         })

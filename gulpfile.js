@@ -8,8 +8,7 @@ var nodemon = require('gulp-nodemon');
 gulp.task('script', function() {
     return gulp.src('public/javascripts/*.js')
         .pipe(babel())
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'))
+        .on('error', onError)
         .pipe(gulp.dest('dist/javascripts'));
 });
 
@@ -18,9 +17,22 @@ gulp.task('watch', function() {
     gulp.watch('public/javascripts/*.js', ['script']);
 });
 
-//run the server
+// run the server
 gulp.task('start', function() {
-    nodemon()
+    nodemon({
+        ignore: ['public/', 'views/', 'dist/']
+    });
+});
+
+function onError(err) {
+    console.log(err)
+    this.emit('end')
+}
+
+gulp.task('lint', function() {
+    return gulp.src('public/javascripts/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
 // Default Task
