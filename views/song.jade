@@ -59,4 +59,8 @@ block content
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
+        var isTranslationExisted = !{JSON.stringify(isTranslationExisted).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songButton.js')
+    script.
+        buttonComponent.init(document.getElementById('song'), song)
+        if (isTranslationExisted) buttonComponent.init(document.getElementById('translation'), translation)

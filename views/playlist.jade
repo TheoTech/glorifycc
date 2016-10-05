@@ -7,7 +7,9 @@ block content
     br
     #playlist
 
-    script(type='text/javascript').
+    script.
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
     script(src='/bower_components/mithril/mithril.min.js')
     script(src='/dist/javascripts/playlistTable.js')
+    script.
+      playlistTableComponent.init(document.getElementById('playlist'))

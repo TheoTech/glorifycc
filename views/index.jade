@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    if messages.success
+    if messages
         .alert.alert-success
             div = messages.success    
     nav.navbar.transparent
@@ -29,5 +29,6 @@ block content
                             a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
                             |  by #{song.author}
 
-      script(src='/dist/javascripts/searchBox.js')
-        
+    script(src='/dist/javascripts/searchBox.js')
+    script.
+        searchBoxComponent.init(document.getElementById('searchBox')) 

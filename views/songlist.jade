@@ -9,15 +9,17 @@ block content
                 include topnav-user
     h1 Songs
     #searchBox
-    //- #search-option
-    //- a#add.btn.btn-default(href="/songlist-db/add") Add New Song
     br
-    //- #info.alert.alert-success(style='display: none') Song added to the library
-    #songTable
-    script(type='text/javascript').
+    #songlistTable
+    
+    
+    script.
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-            
-    //- script(src='/javascripts/searchOption.js')
-    script(type="text/javascript", src='/dist/javascripts/songlistTable.js')
-    script(type="text/javascript", src='/dist/javascripts/searchBox.js')
+    script(src='/dist/javascripts/songlistTable.js')
+    script(src='/dist/javascripts/searchBox.js')
+    script.
+        songlistTableComponent.init(document.getElementById('songlistTable'))
+        searchBoxComponent.init(document.getElementById('searchBox'))
+        
+    
