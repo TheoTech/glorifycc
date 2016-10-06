@@ -148,8 +148,6 @@ router.route('/:song_id')
                 res.status(400).send('Error getting songs ' + err)
             }
             if (!translations[0]) {
-                console.log('user picks translation song')
-                console.log(song)
                 Song.find({
                     _id: song.source
                 }, function(err, parentSong) {
@@ -158,21 +156,17 @@ router.route('/:song_id')
                             translations.push(ps)
                             parentId = ps._id
                         })
-                    console.log(song.source)
-                    console.log(parentId)
                     Song.find({
                         source: parentId
                     }, function(err, theRestT) {
-                        console.log(theRestT)
                         theRestT.forEach(function(trt) {
                                 if (trt.id !== song_id) {
                                     translations.push(trt)
                                 }
                             })
-                            // console.log(translations)
+                            console.log(translations)
                         var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
                         var isTranslationExisted = !_.isEmpty(rightTranslation)
-                            // console.log(rightTranslation)
                         res.render('song', {
                             song: song,
                             rightTranslation: rightTranslation,
@@ -182,10 +176,9 @@ router.route('/:song_id')
                     })
                 })
             } else {
-                console.log('user picks ori song')
                 var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
                 var isTranslationExisted = !_.isEmpty(rightTranslation)
-                console.log(rightTranslation)
+                console.log(translations)
                 res.render('song', {
                     song: song,
                     rightTranslation: rightTranslation,
