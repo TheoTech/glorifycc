@@ -25,8 +25,7 @@ gulp.task('start', function() {
 });
 
 function onError(err) {
-    console.log(err)
-    this.emit('end')
+    this.emit('end');
 }
 
 gulp.task('lint', function() {

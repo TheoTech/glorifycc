@@ -1,48 +1,8 @@
 var songlistTableComponent = (function() {
-
-  var songID = m.prop()
-    var addSong = function(id) {
-        m.request({
-            method: 'POST',
-            url: '/songlist',
-            data: {
-                id: id
-            }
-        }).then(function(res) {
-            res.url ? window.location.href = res.url : inLibrary(res.inLibrary)
-        })
-    }
-
-    var deleteSong = function(id) {
-        m.request({
-            method: 'DELETE',
-            url: '/songlist',
-            data: {
-                id: id
-            }
-        }).then(function(res) {
-            res.url ? window.location.href = res.url : inLibrary(res.inLibrary)
-        })
-    }
-
-    var addToPlaylist = function(name, id) {
-        m.request({
-                method: 'POST',
-                url: '/user/library',
-                data: {
-                    name: name,
-                    id: id
-                }
-            })
-            .then(function(data) {
-                if (data.url) {
-                    window.location.href = data.url
-                }
-            })
-    }
-
+    var songID = m.prop()
     var inLibrary = m.prop(currentInLibrary)
     var playlistName = m.prop()
+
     var songlistTable = {
         view: function() {
             return [
@@ -52,16 +12,9 @@ var songlistTableComponent = (function() {
                         m('th', 'Author'),
                         m('th'),
                         m('th', [
-                          m('select.selectpicker', {
-                              title: 'Choose Your Playlist',
-                              onchange: function() {
-                                  playlistName(this.value)
-                              }
-                          }, [
-                              playlists.map((pl) => {
-                                  return m('option', pl.name)
-                              })
-                          ])
+                            m(playlistDropdownComponent.playlistDropdown, {
+                                playlistName: playlistName
+                            })
                         ])
                     ]),
                     m('tbody', [
@@ -74,17 +27,18 @@ var songlistTableComponent = (function() {
                                 ]),
                                 m('td', s.author),
                                 m('td', [
-                                    m('button.btn', {
-                                        className: _.includes(inLibrary(), s._id) ? 'btn-danger' : 'btn-success',
-                                        onclick: function() {
-                                            _.includes(inLibrary(), s._id) ? deleteSong(s._id) : addSong(s._id)
-                                        }
-                                    }, _.includes(inLibrary(), s._id) ? 'Delete from Library' : 'Add to Library')
+                                    m(addOrDeleteButtonComponent.addOrDeleteButton, {
+                                        songID: s._id,
+                                        text: 'Library',
+                                        url: '/songlist',
+                                        inLibrary: inLibrary,
+                                    })
                                 ]),
                                 m('td', [
-                                  m('button.btn.btn-default', {onclick: function(){
-                                    addToPlaylist(playlistName(), s._id)
-                                  }}, 'Add to Playlist')
+                                    m(addToPlaylistButtonComponent.addToPlaylistButton, {
+                                        playlistName: playlistName,
+                                        songID: s._id
+                                    })
                                 ])
                             ])
                         })
@@ -93,6 +47,7 @@ var songlistTableComponent = (function() {
             ]
         }
     }
+
     return {
         init: function(dom) {
             m.mount(dom, songlistTable)

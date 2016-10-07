@@ -7,7 +7,7 @@ var searchBoxComponent = (function() {
             }
         })
     }
-    
+
     var searchBox = {
         view: function() {
             return m('.input-group[style=width: 30em]', [
