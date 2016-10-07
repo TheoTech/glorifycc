@@ -14,6 +14,7 @@ var config = require('config')
 
 
 router.get('/library', isLoggedIn, function(req, res, next) {
+    var messages = req.flash()
     User.findOne({
             username: req.user.username
         })
@@ -26,10 +27,39 @@ router.get('/library', isLoggedIn, function(req, res, next) {
                 if (err) return handleError(err)
                 res.render('library', {
                     songs: user.library,
-                    playlistLibrary: playlist
+                    playlistLibrary: playlist,
+                    messages: messages
                 })
             })
         })
+})
+
+router.put('/library', function(req, res) {
+    var name = req.body.name
+    var owner = req.user._id
+    Playlist.findOne({
+        owner: owner,
+        name: name
+    }, function(err, playlist) {
+        if (err) return handleError(err)
+        if (playlist) {
+            req.flash('error', 'Playlist exists. Choose different name')
+            res.send({
+                url: '/user/library'
+            })
+        } else {
+            var newPlaylist = new Playlist({
+                owner: owner,
+                name: name
+            })
+            newPlaylist.save(function(err) {
+                if (err) return handleError(err)
+                res.send({
+                    url: '/user/library'
+                })
+            })
+        }
+    })
 })
 
 router.post('/library', function(req, res, next) {
@@ -44,34 +74,18 @@ router.post('/library', function(req, res, next) {
             var newPlaylist
             if (err) return handleErro(err)
             if (playlist) {
-                console.log('playlist exist')
-                    // var pl = return userHasThePlaylist.map((a) => a.playlistLibrary.map((b) => b.filter((c) => c.playlistName == name)))
-                    // console.log(pl)
                 playlist.songs.push(song_id)
                 playlist.save(function(err) {
                     if (err) {
                         res.status(400).send('failed ' + err)
                     } else {
-                        res.send({
-                            url: '/user/library'
-                        })
+                        res.send({})
                     }
                 })
             } else {
-                console.log(playlist)
-                var newPlaylist = new Playlist({
-                    owner: req.user._id,
-                    name: name
-                })
-                newPlaylist.songs.push(song_id)
-                newPlaylist.save(function(err) {
-                    if (err) {
-                        res.status(400).send('failed ' + err)
-                    } else {
-                        res.send({
-                            url: '/user/library'
-                        })
-                    }
+                req.flash('error', 'Choose Playlist')
+                res.send({
+                    url: '/user/library'
                 })
             }
         })
@@ -115,65 +129,67 @@ router.get('/logout', isLoggedIn, function(req, res, next) {
     res.redirect('/')
 })
 
-router.get('/forgot', function(req, res){
-  var messages = req.flash()
-  console.log(messages)
-  res.render('forgot', {
-    user: req.user,
-    messages: messages
-  })
+router.get('/forgot', function(req, res) {
+    var messages = req.flash()
+    console.log(messages)
+    res.render('forgot', {
+        user: req.user,
+        messages: messages
+    })
 })
 
 
 router.post('/forgot', function(req, res, next) {
-  async.waterfall([
-    function(done) {
-      crypto.randomBytes(20, function(err, buf) {
-        var token = buf.toString('hex');
-        done(err, token);
-      });
-    },
-    function(token, done) {
-      User.findOne({ email: req.body.email }, function(err, user) {
-        if (!user) {
-          req.flash('error', 'No account with that email address exists.');
-          return res.redirect('/user/forgot');
-        }
+    async.waterfall([
+        function(done) {
+            crypto.randomBytes(20, function(err, buf) {
+                var token = buf.toString('hex');
+                done(err, token);
+            });
+        },
+        function(token, done) {
+            User.findOne({
+                email: req.body.email
+            }, function(err, user) {
+                if (!user) {
+                    req.flash('error', 'No account with that email address exists.');
+                    return res.redirect('/user/forgot');
+                }
 
-        user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-        user.save(function(err) {
-          done(err, token, user);
-        });
-      });
-    },
-    function(token, user, done) {
-      var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
-        auth: {
-          user: process.env.SENDGRID_USER || config.get('Nev.user'),
-          pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                user.save(function(err) {
+                    done(err, token, user);
+                });
+            });
+        },
+        function(token, user, done) {
+            var smtpTransport = nodemailer.createTransport('SMTP', {
+                service: 'SendGrid',
+                auth: {
+                    user: process.env.SENDGRID_USER || config.get('Nev.user'),
+                    pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                }
+            });
+            var mailOptions = {
+                to: user.email,
+                from: 'passwordreset@donotreply',
+                subject: 'Reset Password',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
+                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            };
+            smtpTransport.sendMail(mailOptions, function(err) {
+                req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+                done(err, 'done');
+            });
         }
-      });
-      var mailOptions = {
-        to: user.email,
-        from: 'passwordreset@donotreply',
-        subject: 'Reset Password',
-        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-      };
-      smtpTransport.sendMail(mailOptions, function(err) {
-        req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-        done(err, 'done');
-      });
-    }
-  ], function(err) {
-    if (err) return next(err);
-    res.redirect('/user/forgot');
-  });
+    ], function(err) {
+        if (err) return next(err);
+        res.redirect('/user/forgot');
+    });
 });
 
 

@@ -29,7 +29,7 @@ var export1TableComponent = (function() {
                 exportSongCollection.splice(idx, 1)
             }
         }
-        console.log(exportSongCollection)
+        // console.log(exportSongCollection)
     }
 
     var postExportSongCollection = function(exportSongCollection) {
@@ -60,6 +60,7 @@ var export1TableComponent = (function() {
     }
 
     var langOptions = langLabelArr(translations2d)
+    console.log(langOptions)
 
     //select all checkbox
     var selectAll = function(elem, checkboxClass) {
@@ -97,20 +98,24 @@ var export1TableComponent = (function() {
                         })
                     ]),
                     m('tbody', [
-                        m('tr', [
-                            m('td'),
-                            langOptions.map((l) => {
-                                return m('td', [
-                                    m('button.btn.btn-default.btn-sm', {
-                                        config: function(elem, isInit, context) {
-                                            if (!isInit) {
-                                                selectAll(elem, l);
-                                            }
-                                        }
-                                    }, 'Select/Deselect All')
-                                ])
-                            })
-                        ]),
+                        function() {
+                            if(!_.isEmpty(langOptions)) {
+                              return m('tr', [
+                                  m('td'),
+                                  langOptions.map((l) => {
+                                      return m('td', [
+                                          m('button.btn.btn-default.btn-sm', {
+                                              config: function(elem, isInit, context) {
+                                                  if (!isInit) {
+                                                      selectAll(elem, l);
+                                                  }
+                                              }
+                                          }, 'Select/Deselect All')
+                                      ])
+                                  })
+                              ])
+                            }
+                        }(),
                         songs.map((s, i) => {
                             return m('tr', [
                                 m('td', [

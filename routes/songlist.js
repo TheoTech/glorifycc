@@ -17,13 +17,15 @@ router.get('/', function(req, res) {
                     _id: req.user._id
                 }, function(err, user) {
                     if (err) return handleError(err)
-                    Playlist.find({owner: req.user._id}, function(err, playlists){
-                      if (err) return handleError(err)
-                      res.render('songlist', {
-                          songs: songs,
-                          inLibrary: user.library,
-                          playlists: playlists
-                      })
+                    Playlist.find({
+                        owner: req.user._id
+                    }, function(err, playlists) {
+                        if (err) return handleError(err)
+                        res.render('songlist', {
+                            songs: songs,
+                            inLibrary: user.library,
+                            playlists: playlists
+                        })
                     })
 
                 })
@@ -50,7 +52,7 @@ router.post('/', function(req, res) {
             user.library.push(id)
             user.save(function(err) {
                 if (err) return handleError(err)
-                console.log('save success')
+                // console.log('save success')
                 res.send({
                     inLibrary: user.library
                 })
@@ -124,6 +126,7 @@ router.route('/:song_id')
         })
     })
     .get(function(req, res) {
+        console.log(song._id)
         Song.find({
             $or: [{
                 $and: [{
@@ -143,56 +146,17 @@ router.route('/:song_id')
                 source: song._id
             }]
         }, function(err, translations) {
-            // console.log(t)
             if (err) {
                 res.status(400).send('Error getting songs ' + err)
             }
-            if (!translations[0]) {
-                console.log('user picks translation song')
-                console.log(song)
-                Song.find({
-                    _id: song.source
-                }, function(err, parentSong) {
-                    var parentId
-                    parentSong.forEach(function(ps) {
-                            translations.push(ps)
-                            parentId = ps._id
-                        })
-                    console.log(song.source)
-                    console.log(parentId)
-                    Song.find({
-                        source: parentId
-                    }, function(err, theRestT) {
-                        console.log(theRestT)
-                        theRestT.forEach(function(trt) {
-                                if (trt.id !== song_id) {
-                                    translations.push(trt)
-                                }
-                            })
-                            // console.log(translations)
-                        var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                        var isTranslationExisted = !_.isEmpty(rightTranslation)
-                            // console.log(rightTranslation)
-                        res.render('song', {
-                            song: song,
-                            rightTranslation: rightTranslation,
-                            isTranslationExisted: isTranslationExisted,
-                            translations: translations
-                        })
-                    })
-                })
-            } else {
-                console.log('user picks ori song')
-                var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                var isTranslationExisted = !_.isEmpty(rightTranslation)
-                console.log(rightTranslation)
-                res.render('song', {
-                    song: song,
-                    rightTranslation: rightTranslation,
-                    isTranslationExisted: isTranslationExisted,
-                    translations: translations
-                })
-            }
+            var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
+            var isTranslationExisted = !_.isEmpty(rightTranslation)
+            res.render('song', {
+                song: song,
+                rightTranslation: rightTranslation,
+                isTranslationExisted: isTranslationExisted,
+                translations: translations
+            })
         })
     })
 

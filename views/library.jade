@@ -4,13 +4,20 @@ block content
     include topnav
     a.btn.btn-success(href='/songlist') Browse Songs
     h1 My Library
+    if messages.error
+        .alert.alert-danger
+            p #{messages.error}
     br
     #library
+    #demo
 
     script.
         var s = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlistLibrary).replace(/<\//g, "<\\/")}
     script(src='/bower_components/mithril/mithril.min.js')
+    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/addToPlaylistButton.js')
+    script(src='/dist/javascripts/deleteButton.js')
     script(src='/dist/javascripts/libraryTable.js')
     script.
         libraryTableComponent.init(document.getElementById('library'))

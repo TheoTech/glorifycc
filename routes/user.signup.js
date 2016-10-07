@@ -10,9 +10,6 @@ var TempUser = mongoose.model('Tempuser',
     new mongoose.Schema(),
     'tempusers'); // collection name
 
-
-
-
 var myHasher = function(password, tempUserData, insertTempUser, callback) {
     var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
     return insertTempUser(hash, tempUserData, callback);

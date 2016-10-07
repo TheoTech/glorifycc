@@ -17,6 +17,9 @@ block content
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/addOrDeleteButton.js')
+    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/songlistTable.js')
     script(src='/dist/javascripts/searchBox.js')
     script.

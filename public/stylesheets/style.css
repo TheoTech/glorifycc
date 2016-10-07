@@ -33,12 +33,12 @@
         }
     }
 
-    .modal-header, h4#songcart, .close {
+    /*.modal-header, h4#songcart, .close {
         background-color: #5cb85c;
         color: white !important;
         text-align: center;
         font-size: 30px;
-    }
+    }*/
 
     .capitalize {
         text-transform: capitalize;

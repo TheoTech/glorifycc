@@ -10,6 +10,13 @@ var fs = require('file-system')
 /* GET home page. */
 router.get('/', function(req, res, next) {
     Song.find(function(err, songs) {
+            Song.find({
+                source: {
+                    $ne: undefined
+                }
+            }, function(err, demo) {
+                console.log(demo)
+            })
             res.render('index', {
                 songs: songs
             })
@@ -44,8 +51,5 @@ router.post('/', function(req, res, next) {
         }
     })
 })
-
-
-
 
 module.exports = router;
