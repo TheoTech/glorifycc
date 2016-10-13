@@ -13,12 +13,15 @@ var libraryTableComponent = (function() {
                         m('th', 'Author'),
                         m('th', [
                             m(playlistDropdownComponent.playlistDropdown, {
-                                playlistName: playlistName
+                                playlistName: playlistName,
+                                url: '/user/library'
                             })
                         ])
                     ]),
                     m('tbody', [
                         songs().map((s) => {
+                            s.label = s.label || m.prop('Add to Playlist')
+                            s.disabled = s.disabled || m.prop(false)
                             return m('tr', [
                                 m('td', [
                                     m(deleteButtonComponent.deleteButton, {
@@ -35,9 +38,13 @@ var libraryTableComponent = (function() {
                                 ]),
                                 m('td', s.author),
                                 m('td', [
-                                    m(addToPlaylistButtonComponent.addToPlaylistButton, {
+                                    m(addToPlaylistButton, {
                                         playlistName: playlistName,
-                                        songID: s._id
+                                        songID: s._id,
+                                        url: '/user/library',
+                                        key: s._id,
+                                        label: s.label,
+                                        disabled: s.disabled
                                     })
                                 ])
                             ])

@@ -1,34 +1,46 @@
 extends layout
 
 block content
-    if messages
-        .alert.alert-success
-            div = messages.success    
-    nav.navbar.transparent
-        .container-fluid
-            .collapse.navbar-collapse
-                -if(!(login && user.username == "admin"))
-                    a.btn.btn-primary(href='/songlist') View All Songs
-                include topnav-user
-
+    include topnav
     header#header(style="text-align: center")
         h1 SPF.IO Songbase
         p Find Public Domain and CC0 Worship Song in Multiple Language
         #searchBox(style='width: 30em; margin: auto')
         br
-        br
-        br
-        table.table.table-striped.table-bordered(style="margin: auto; width: 30em;")
-            thead
-                tr
-                    th(style="text-align:center; font-size:1.2em") Latest Songs & Translations
-            tbody
-                each song in songs
-                    tr
-                        td
-                            a(href='/songlist/#{song.id}', font-size="5em") #{song.title}
-                            |  by #{song.author}
 
+    #filterOption
+    //-     <!-- Example split danger button -->
+    //- .btn-group
+    //-     button(type="button" class="btn btn-default") Action
+    //-     button(type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+    //-         span(class="sr-only") Toggle Dropdown
+    //-     .dropdown-menu
+    //-         a.dropdown-item(href="#") Action
+    //-         a.dropdown-item(href="#") Another action</a>
+    //-         a.dropdown-item(href="#") Something else here</a>
+    //- .btn
+    //- .dropdown-menu
+    //-     a.dropdown-item(href="#") Action
+    //-     a.dropdown-item(href="#") Another action
+    //-     a.dropdown-item(href="#") Something else here
+    if messages.error
+        .alert.alert-danger
+            p #{messages.error}
+    #songlistTable
+
+    script.
+        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/addOrDeleteButton.js')
+    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/addToPlaylistButton.js')
+    script(src='/dist/javascripts/languageFilter.js')
+    script(src='/dist/javascripts/songlistTable.js')
     script(src='/dist/javascripts/searchBox.js')
     script.
-        searchBoxComponent.init(document.getElementById('searchBox')) 
+        songlistTableComponent.init(document.getElementById('songlistTable'))
+        m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: ''}))
+        //- m.mount(document.getElementById('filterOption'), m(languageFilterComponent.languageFilter))
+        //- songs = languageFilterComponent.songs
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js")

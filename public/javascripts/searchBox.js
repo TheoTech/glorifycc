@@ -9,10 +9,10 @@ var searchBoxComponent = (function() {
     }
 
     var searchBox = {
-        view: function() {
-            return m('.input-group[style=width: 30em]', [
-                m('input#search-input.form-control[type=text]', {
-                    placeholder: 'Language, Title, Author or Lyric',
+        view: function(ctrl, args) {
+            return m('#searchInput.input-group', [
+                m('input.form-control[type=text]', {
+                    placeholder: 'Language, Title, or Author',
                     onchange: m.withAttr('value', tag),
                     config: function(elem, isInit, context) {
                         if (!isInit) {
@@ -23,7 +23,8 @@ var searchBoxComponent = (function() {
                 m('span.input-group-btn', [
                     m('button#search-button.btn.btn-success', {
                         onclick: function() {
-                            window.location.href = '/songlist/search?q=' + tag()
+                            console.log(args.url)
+                            window.location.replace(args.url + '/search?q=' + tag())
                         }
                     }, [
                         m('i.glyphicon.glyphicon-search')
@@ -34,8 +35,6 @@ var searchBoxComponent = (function() {
     }
 
     return {
-        init: function(dom) {
-            m.mount(dom, searchBox)
-        }
+      searchBox: searchBox
     }
 })()

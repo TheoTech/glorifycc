@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var babel = require('gulp-babel');
 var nodemon = require('gulp-nodemon');
+var watch = require('gulp-watch')
 
 //main task
 gulp.task('script', function() {
@@ -11,6 +12,23 @@ gulp.task('script', function() {
         .on('error', onError)
         .pipe(gulp.dest('dist/javascripts'));
 });
+
+// gulp.task('script', function() {
+//     // Endless stream mode
+//     return watch('public/javascripts/*.js', {
+//             ignoreInitial: false
+//         })
+//         .pipe(babel())
+//         .on('error', onError)
+//         .pipe(gulp.dest('dist/javascripts'));
+// });
+
+// gulp.task('clean', function() {
+//     return watch('public/javascripts/*.js', {
+//             ignoreInitial: false
+//         })
+//         .pipe(gulp.dest('dist/javascripts'));
+// })
 
 // Watch Files For Changes
 gulp.task('watch', function() {
@@ -25,14 +43,15 @@ gulp.task('start', function() {
 });
 
 function onError(err) {
-    this.emit('end');
+    console.log(err)
+    this.emit('end')
 }
 
-gulp.task('lint', function() {
-    return gulp.src('public/javascripts/*.js')
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
-});
+// gulp.task('lint', function() {
+//     return gulp.src('public/javascripts/*.js')
+//         .pipe(jshint())
+//         .pipe(jshint.reporter('default'));
+// });
 
 // Default Task
 gulp.task('default', ['start', 'script', 'watch']);

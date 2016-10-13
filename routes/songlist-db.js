@@ -9,7 +9,7 @@ var express = require('express'),
 //   next()
 // })
 
-router.get('/', function(req, res) {
+router.get('/test', function(req, res) {
     Song.find({
         source: null
     }, function(err, songs, count) {
@@ -80,6 +80,13 @@ router.post('/add', function(req, res) {
             })
         }
     })
+})
+
+router.delete('/:song_id', function(req, res){
+  Song.remove({_id: req.params.song_id}, function(err){
+    if (err) return handleError(err)
+    res.send()
+  })
 })
 
 router.route('/:song_id/edit')

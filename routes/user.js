@@ -13,6 +13,32 @@ var nodemailer = require('nodemailer')
 var config = require('config')
 
 
+router.get('/library/search', function(req, res) {
+    var tag = req.query.q
+    var messages = req.flash()
+    User.findOne({
+            _id: req.user._id
+        })
+        .populate('library')
+        .exec(function(err, user) {
+            if (err) return handleError(err)
+            Playlist.find({
+                owner: user._id
+            }, function(err, playlists) {
+                if (err) return handleError(err)
+                res.render('library', {
+                    songs: user.library.filter((s) => {
+                      return (s.title.search(tag) !== -1 ||
+                      s.lang.search(tag) !== -1 ||
+                      s.author.search(tag) !== -1)
+                    }),
+                    playlists: playlists,
+                    messages: messages
+                })
+            })
+        })
+})
+
 router.get('/library', isLoggedIn, function(req, res, next) {
     var messages = req.flash()
     User.findOne({
@@ -23,11 +49,11 @@ router.get('/library', isLoggedIn, function(req, res, next) {
             if (err) return handleError(err)
             Playlist.find({
                 owner: user._id
-            }, function(err, playlist) {
+            }, function(err, playlists) {
                 if (err) return handleError(err)
                 res.render('library', {
                     songs: user.library,
-                    playlistLibrary: playlist,
+                    playlists: playlists,
                     messages: messages
                 })
             })
@@ -37,58 +63,73 @@ router.get('/library', isLoggedIn, function(req, res, next) {
 router.put('/library', function(req, res) {
     var name = req.body.name
     var owner = req.user._id
-    Playlist.findOne({
-        owner: owner,
-        name: name
-    }, function(err, playlist) {
-        if (err) return handleError(err)
-        if (playlist) {
-            req.flash('error', 'Playlist exists. Choose different name')
-            res.send({
-                url: '/user/library'
-            })
-        } else {
-            var newPlaylist = new Playlist({
-                owner: owner,
-                name: name
-            })
-            newPlaylist.save(function(err) {
-                if (err) return handleError(err)
-                res.send({
-                    url: '/user/library'
+    var url = req.body.url
+    if (req.isAuthenticated()) {
+        Playlist.findOne({
+            owner: owner,
+            name: name
+        }, function(err, playlist) {
+            if (err) return handleError(err)
+            if (playlist) {
+                req.flash('error', 'Playlist exists. Choose different name')
+                res.send({url: url})
+            } else {
+                var newPlaylist = new Playlist({
+                    owner: owner,
+                    name: name
                 })
-            })
-        }
-    })
+                newPlaylist.save(function(err) {
+                    if (err) return handleError(err)
+                    res.send({
+                        url: url
+                    })
+                })
+            }
+        })
+    } else {
+        res.send({
+            url: '/user/login'
+        })
+    }
+
 })
 
 router.post('/library', function(req, res, next) {
     var name = req.body.name
     var song_id = req.body.id
-    Playlist.findOne({
-            owner: req.user._id,
-            name: name
+    var url = req.body.url
+    console.log(url)
+    if (req.isAuthenticated()) {
+        Playlist.findOne({
+                owner: req.user._id,
+                name: name
+            })
+            .populate('owner')
+            .exec(function(err, playlist) {
+                var newPlaylist
+                if (err) return handleError(err)
+                if (playlist) {
+                    playlist.songs.push(song_id)
+                    playlist.save(function(err) {
+                        if (err) {
+                            res.status(400).send('failed ' + err)
+                        } else {
+                            res.send({})
+                        }
+                    })
+                } else {
+                    req.flash('error', 'Choose Playlist')
+                    res.send({
+                        url: url
+                    })
+                }
+            })
+    } else {
+        res.send({
+            url: '/user/login'
         })
-        .populate('owner')
-        .exec(function(err, playlist) {
-            var newPlaylist
-            if (err) return handleErro(err)
-            if (playlist) {
-                playlist.songs.push(song_id)
-                playlist.save(function(err) {
-                    if (err) {
-                        res.status(400).send('failed ' + err)
-                    } else {
-                        res.send({})
-                    }
-                })
-            } else {
-                req.flash('error', 'Choose Playlist')
-                res.send({
-                    url: '/user/library'
-                })
-            }
-        })
+    }
+
 })
 
 router.delete('/library', function(req, res, next) {
@@ -116,15 +157,16 @@ router.delete('/library', function(req, res, next) {
                             msg: 'deleting done'
                         })
                     })
-
             }
         })
     })
 })
 
+
+
+
 router.get('/logout', isLoggedIn, function(req, res, next) {
     helperFunc.adminLogout()
-        // console.log(helperFunc.isAdmin())
     req.logout();
     res.redirect('/')
 })
@@ -223,10 +265,6 @@ router.post('/reset/:token', function(req, res) {
                     req.flash('error', 'Password reset token is invalid or has expired.');
                     return res.redirect('back');
                 }
-                // var newUser = new User();
-                // newUser.username = req.body.username;
-                // newUser.email = req.body.email;
-                // newUser.password = newUser.generateHash(req.body.password);
 
                 user.password = user.generateHash(req.body.password);
                 user.resetPasswordToken = undefined;

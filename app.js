@@ -18,9 +18,8 @@ var config = require('config')
 
 var app = module.exports = express();
 
-
-var routes = require('./routes/index');
-var songlist = require('./routes/songlist');
+// var routes = require('./routes/index');
+var index = require('./routes/index');
 var songlistdb = require('./routes/songlist-db');
 var searchbyletter = require('./routes/search-by-letter');
 var searchbylang = require('./routes/search-by-lang');
@@ -93,9 +92,8 @@ app.use('/bower_components', express.static(path.join(__dirname, 'bower_componen
 app.use('/dist', express.static(path.join(__dirname, 'dist')))
 
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/user', user)
-app.use('/songlist', songlist);
 app.use('/songlist-db', songlistdb)
 app.use('/search-by-letter', searchbyletter)
 app.use('/search-by-lang', searchbylang)

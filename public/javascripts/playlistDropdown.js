@@ -1,14 +1,17 @@
 var playlistDropdownComponent = (function() {
-    var addPlaylist = function(name) {
+    var addPlaylist = function(name, url) {
         m.request({
                 method: 'PUT',
                 url: '/user/library',
                 data: {
-                    name: name
+                    name: name,
+                    url: url
                 }
             })
             .then(function(res) {
-                window.location.href = res.url
+                if (res.url) {
+                    window.location.href = res.url
+                }
             })
     }
     var showModal = function(elem) {
@@ -17,12 +20,13 @@ var playlistDropdownComponent = (function() {
                 $('#newPlaylist').modal('show');
             }
         });
+        $(elem).selectpicker()
     }
     var playlistDropdown = {
         view: function(ctrl, args) {
             return m('div', [
-                m('select.selectpicker', {
-                    title: 'Choose Your Playlist',
+                m('select.selectpicker[multiple]', {
+                    title: 'Select Your Playlist',
                     onchange: function() {
                         args.playlistName(this.value)
                         console.log(args.playlistName())
@@ -38,7 +42,9 @@ var playlistDropdownComponent = (function() {
                     ]),
                     m('optgroup', [
                         playlists.map((pl) => {
-                            return m('option', pl.name)
+                            return m('option', {
+                              title: 'Selected Playlist: ' + pl.name
+                            }, pl.name)
                         })
                     ])
                 ]),
@@ -51,12 +57,13 @@ var playlistDropdownComponent = (function() {
                             m('.modal-body', [
                                 m('label', 'Enter Playlist Name'),
                                 m('input[name=playlist type=text]', {
+                                    value: 'New Playlist',
                                     onchange: m.withAttr('value', args.playlistName)
                                 }),
                                 m('br'),
                                 m('button.btn.btn-success', {
                                     onclick: function() {
-                                        addPlaylist(args.playlistName())
+                                        addPlaylist(args.playlistName(), args.url)
                                     }
                                 }, 'Create')
                             ])
