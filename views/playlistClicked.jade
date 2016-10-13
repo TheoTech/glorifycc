@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    include topnav
+    #playlistClicked
+
+
+    script.
+        var playlist = !{JSON.stringify(playlist).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/deleteButton.js')
+    script(src='/dist/javascripts/playlistClicked.js')
+    script.
+      m.mount(document.getElementById('playlistClicked'), playlistClickedComponent.playlistClicked)

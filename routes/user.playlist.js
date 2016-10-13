@@ -96,6 +96,16 @@ router.put('/', function(req, res) {
     })
 })
 
+router.get('/:playlist_name', function(req, res){
+  var playlistName = req.params.playlist_name
+  Playlist.findOne({owner: req.user._id, name: playlistName})
+  .populate('songs')
+  .exec(function(err, playlist){
+    if (err) return handleError(err)
+    res.render('playlistClicked', {playlist: playlist})
+  })
+})
+
 
 //this route is for step one of exporting playlist
 router.get('/:playlist_name/export1', function(req, res, next) {
