@@ -13,7 +13,7 @@ var languageFilterComponent = (function() {
                 songs(res.songs)
             })
     }
-    var langShown = m.prop('English')
+    var langShown = m.prop('All')
     var langFilter = m.prop([])
 
     var languageFilter = {
@@ -34,10 +34,10 @@ var languageFilterComponent = (function() {
                             m('label', [
                                 m('input#English[type=checkbox]', {
                                     onclick: function() {
-                                        if(this.checked){
-                                          langFilter().push(this.id)
+                                        if (this.checked) {
+                                            langFilter().push(this.id)
                                         } else {
-                                          _.remove(langFilter(), (n) => n === this.id)
+                                            _.remove(langFilter(), (n) => n === this.id)
                                         }
                                         addFilter(args.songs)
                                     }
@@ -48,10 +48,10 @@ var languageFilterComponent = (function() {
                             m('label', [
                                 m('input#Mandarin[type=checkbox]', {
                                     onclick: function() {
-                                        if(this.checked){
-                                          langFilter().push(this.id)
+                                        if (this.checked) {
+                                            langFilter().push(this.id)
                                         } else {
-                                          _.remove(langFilter(), (n) => n === this.id)
+                                            _.remove(langFilter(), (n) => n === this.id)
                                         }
                                         addFilter(args.songs)
                                     }
@@ -62,10 +62,10 @@ var languageFilterComponent = (function() {
                             m('label', [
                                 m('input#Spanish[type=checkbox]', {
                                     onclick: function() {
-                                        if(this.checked){
-                                          langFilter().push(this.id)
+                                        if (this.checked) {
+                                            langFilter().push(this.id)
                                         } else {
-                                          _.remove(langFilter(), (n) => n === this.id)
+                                            _.remove(langFilter(), (n) => n === this.id)
                                         }
                                         addFilter(args.songs)
                                     }
@@ -76,10 +76,10 @@ var languageFilterComponent = (function() {
                             m('label', [
                                 m('input#Portuguese[type=checkbox]', {
                                     onclick: function() {
-                                        if(this.checked){
-                                          langFilter().push(this.id)
+                                        if (this.checked) {
+                                            langFilter().push(this.id)
                                         } else {
-                                          _.remove(langFilter(), (n) => n === this.id)
+                                            _.remove(langFilter(), (n) => n === this.id)
                                         }
                                         addFilter(args.songs)
                                     }
@@ -94,10 +94,18 @@ var languageFilterComponent = (function() {
                         'data-toggle': "dropdown",
                         'aria-haspopup': "true",
                         'aria-expanded': "false"
-                    }, 'Show Songs in: ' + langShown(), [
+                    }, 'Show Songs in: ' + (langShown() === 'All' ? 'All Language' : langShown()), [
                         m('span.caret')
                     ]),
                     m('ul.dropdown-menu', [
+                        m('li#All', {
+                            onclick: function() {
+                                langShown(this.id)
+                                addFilter(args.songs)
+                            }
+                        }, [
+                            m('a', 'All Language')
+                        ]),
                         m('li#English', {
                             onclick: function() {
                                 langShown(this.id)
