@@ -9,20 +9,7 @@ block content
         br
 
     #filterOption
-    //-     <!-- Example split danger button -->
-    //- .btn-group
-    //-     button(type="button" class="btn btn-default") Action
-    //-     button(type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-    //-         span(class="sr-only") Toggle Dropdown
-    //-     .dropdown-menu
-    //-         a.dropdown-item(href="#") Action
-    //-         a.dropdown-item(href="#") Another action</a>
-    //-         a.dropdown-item(href="#") Something else here</a>
-    //- .btn
-    //- .dropdown-menu
-    //-     a.dropdown-item(href="#") Action
-    //-     a.dropdown-item(href="#") Another action
-    //-     a.dropdown-item(href="#") Something else here
+    
     if messages.error
         .alert.alert-danger
             p #{messages.error}
@@ -35,12 +22,10 @@ block content
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/playlistDropdown.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/languageFilter.js')
-    script(src='/dist/javascripts/songlistTable.js')
+    script(src='/dist/javascripts/showSongsIn.js')
+    script(src='/dist/javascripts/hasTranslationsIn.js')
     script(src='/dist/javascripts/searchBox.js')
+    script(src='/dist/javascripts/songlistTable.js')
+    script(src='/dist/javascripts/home.js')
     script.
-        songlistTableComponent.init(document.getElementById('songlistTable'))
-        m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: ''}))
-        //- m.mount(document.getElementById('filterOption'), m(languageFilterComponent.languageFilter))
-        //- songs = languageFilterComponent.songs
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js")
+        home.init()

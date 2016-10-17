@@ -15,35 +15,33 @@ var playlistDropdownComponent = (function() {
             })
     }
     var showModal = function(elem) {
-        $(elem).change(function() {
-            if ($(this).val() == "New Playlist") {
-                $('#newPlaylist').modal('show');
-            }
-        });
-        $(elem).selectpicker()
+        $('#newPlaylist').modal('show');
     }
     var playlistDropdown = {
         view: function(ctrl, args) {
             return m('div', [
-                m('select.selectpicker[multiple]', {
-                    title: 'Select Your Playlist',
-                    onchange: function() {
-                        args.playlistName(this.value)
-                        console.log(args.playlistName())
-                    },
-                    config: function(elem, isInit, context) {
-                        if (!isInit) {
-                            showModal(elem);
+                m('.btn-group', [
+                    m('button.btn.btn-default.dropdown-toggle[type=button]', {
+                        'data-toggle': "dropdown",
+                        'aria-haspopup': "true",
+                        'aria-expanded': "false",
+                        style: {
+                            border: 0
                         }
-                    }
-                }, [
-                    m('optgroup', [
-                        m('option', 'New Playlist')
+                    }, 'Select Playlist', [
+                        m('span.caret')
                     ]),
-                    m('optgroup', [
+                    m('ul.dropdown-menu', [
+                        m('li', {
+                            onclick: function(elem, isInit, context) {
+                                if (!isInit) {
+                                    showModal(elem);
+                                }
+                            }
+                        }, 'New Playlist'),
                         playlists.map((pl) => {
-                            return m('option', {
-                              title: 'Selected Playlist: ' + pl.name
+                            return m('li', {
+                                onclick: m.withAttr('value', args.playlistName)
                             }, pl.name)
                         })
                     ])

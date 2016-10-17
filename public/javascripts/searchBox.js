@@ -29,12 +29,18 @@ var searchBoxComponent = (function() {
                     }, [
                         m('i.glyphicon.glyphicon-search')
                     ])
-                ])
+                ]),
+                m(hasTranslationsIn, {
+                    langShown: args.langShown,
+                    langFilter: args.langFilter,
+                    loadMore: args.loadMore,
+                    initial: args.initial
+                })
             ])
         }
     }
 
     return {
-      searchBox: searchBox
+        searchBox: searchBox
     }
 })()

@@ -7,20 +7,14 @@ var express = require('express'),
     async = require('async')
 
 
-router.get('/demo', function(req, res) {
-    var temp = ['english', 'spanish', 'portuguese']
-    var number = 0
-    temp.forEach((t) => {
-        Song.find({
-            lang: t
-        }, function(err, songs) {
-            songs.forEach((s) => {
-                number++
-            })
-            console.log(songs)
-            console.log(number)
-        })
-    })
+router.get('/temp', function(req, res){
+  for (var i = 0; i < 20; i++){
+    new Song({
+      title: 'english song ' + i,
+      lang: ''
+    }).save()
+  }
+  res.send('success')
 })
 
 router.get('/', function(req, res) {
@@ -64,39 +58,86 @@ router.get('/', function(req, res) {
 })
 
 router.put('/', function(req, res) {
-    var messages = req.flash()
-    var amount = req.body.amount
-    var langShown = req.body.langShown.toLowerCase()
-    if (langShown === 'all') {
-        Song.find(function(err, songs) {
-                if (err) {
-                    res.status(400).send('error getting song list ' + err)
-                }
-                res.send({
-                    songs: songs
-                })
-            })
-            .sort({
-                title: 1
-            })
-            .limit(amount)
-    } else {
-        Song.find({
-                lang: langShown
-            }, function(err, songs) {
-                if (err) {
-                    res.status(400).send('error getting song list ' + err)
-                }
-                res.send({
-                    songs: songs
-                })
-            })
-            .sort({
-                title: 1
-            })
-            .limit(amount)
-
-    }
+  var langShown = req.body.langShown.toLowerCase()
+  var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
+  var totalSongsDisplayed = req.body.totalSongsDisplayed
+  var songs2d = []
+  async.waterfall([
+          function(done) {
+              Song.find({
+                  source: {
+                      $exists: false
+                  }
+              }, function(err, songs) {
+                  done(err, songs)
+              })
+          },
+          function(songs, done) {
+              var task = songs.map((s, i, arr) => {
+                  return function(done) {
+                      var temp = []
+                      temp.push(s)
+                      Song.find({
+                          source: s._id
+                      }, (err, translations) => {
+                          translations.forEach((t) => {
+                              temp.push(t)
+                          })
+                          songs2d.push(temp)
+                          if (i === arr.length - 1) {
+                              done(null, songs2d)
+                          } else {
+                              done()
+                          }
+                      })
+                  }
+              });
+              async.waterfall(task, function(err, songs2d) {
+                  done(null, songs2d)
+              });
+          },
+          function(songs2d, done) {
+              console.log(songs2d)
+              if (!_.isEmpty(langFilter)) {
+                  songs2d = songs2d.filter((songs) => {
+                      var langArray = (songs.map((song) => song.lang))
+                      for (var i = 0; i < langFilter.length; i++) {
+                          if (!_.includes(langArray, langFilter[i])) {
+                              return false
+                          }
+                      }
+                      return true
+                  })
+              }
+              done(null, songs2d)
+          },
+          function(songs2d, done) {
+              if (!_.isEmpty(songs2d)) {
+                  songs2d = songs2d.reduce((prev, curr) => {
+                      return _.concat(prev, curr)
+                  }).sort()
+              }
+              done(null, songs2d)
+          },
+          function(songs2d, done) {
+              if (langShown !== 'all') {
+                  songs2d = songs2d.filter((s) => s.lang === langShown)
+              }
+              console.log(songs2d.length)
+              if (songs2d.length >= totalSongsDisplayed) {
+                  songs2d = songs2d.slice(0, totalSongsDisplayed)
+              } else {
+                  songs2d = songs2d.slice(0, songs2d.length)
+              }
+              done(null, songs2d)
+          }
+      ],
+      function(err, songs2d) {
+          if (err) return handleError(err)
+          res.send({
+              songs: songs2d
+          })
+      })
 })
 
 router.post('/', function(req, res) {
@@ -144,9 +185,8 @@ router.delete('/', function(req, res) {
 router.post('/filter', function(req, res) {
     var langShown = req.body.langShown.toLowerCase()
     var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
-    console.log(langFilter)
+    var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
-    var temp = []
     async.waterfall([
             function(done) {
                 Song.find({
@@ -158,9 +198,9 @@ router.post('/filter', function(req, res) {
                 })
             },
             function(songs, done) {
-                var cbs = songs.map((s, i, arr) => {
+                var task = songs.map((s, i, arr) => {
                     return function(done) {
-                        temp = []
+                        var temp = []
                         temp.push(s)
                         Song.find({
                             source: s._id
@@ -177,22 +217,22 @@ router.post('/filter', function(req, res) {
                         })
                     }
                 });
-                async.waterfall(cbs, function(err, songs2d) {
+                async.waterfall(task, function(err, songs2d) {
                     done(null, songs2d)
                 });
             },
             function(songs2d, done) {
                 console.log(songs2d)
-                if(!_.isEmpty(langFilter)){
-                  songs2d = songs2d.filter((songs) => {
-                      var langArray = (songs.map((song) => song.lang))
-                      for (var i = 0; i < langFilter.length; i++) {
-                          if (!_.includes(langArray, langFilter[i])) {
-                              return false
-                          }
-                      }
-                      return true
-                  })
+                if (!_.isEmpty(langFilter)) {
+                    songs2d = songs2d.filter((songs) => {
+                        var langArray = (songs.map((song) => song.lang))
+                        for (var i = 0; i < langFilter.length; i++) {
+                            if (!_.includes(langArray, langFilter[i])) {
+                                return false
+                            }
+                        }
+                        return true
+                    })
                 }
                 done(null, songs2d)
             },
@@ -200,13 +240,19 @@ router.post('/filter', function(req, res) {
                 if (!_.isEmpty(songs2d)) {
                     songs2d = songs2d.reduce((prev, curr) => {
                         return _.concat(prev, curr)
-                    })
+                    }).sort()
                 }
                 done(null, songs2d)
             },
             function(songs2d, done) {
                 if (langShown !== 'all') {
                     songs2d = songs2d.filter((s) => s.lang === langShown)
+                }
+                console.log(songs2d.length)
+                if (songs2d.length >= totalSongsDisplayed) {
+                    songs2d = songs2d.slice(0, totalSongsDisplayed)
+                } else {
+                    songs2d = songs2d.slice(0, songs2d.length)
                 }
                 done(null, songs2d)
             }

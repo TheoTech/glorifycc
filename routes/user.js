@@ -28,9 +28,9 @@ router.get('/library/search', function(req, res) {
                 if (err) return handleError(err)
                 res.render('library', {
                     songs: user.library.filter((s) => {
-                      return (s.title.search(tag) !== -1 ||
-                      s.lang.search(tag) !== -1 ||
-                      s.author.search(tag) !== -1)
+                        return (s.title.search(tag) !== -1 ||
+                            s.lang.search(tag) !== -1 ||
+                            s.author.search(tag) !== -1)
                     }),
                     playlists: playlists,
                     messages: messages
@@ -62,9 +62,9 @@ router.get('/library', isLoggedIn, function(req, res, next) {
 
 router.put('/library', function(req, res) {
     var name = req.body.name
-    var owner = req.user._id
     var url = req.body.url
     if (req.isAuthenticated()) {
+        var owner = req.user._id
         Playlist.findOne({
             owner: owner,
             name: name
@@ -72,7 +72,9 @@ router.put('/library', function(req, res) {
             if (err) return handleError(err)
             if (playlist) {
                 req.flash('error', 'Playlist exists. Choose different name')
-                res.send({url: url})
+                res.send({
+                    url: url
+                })
             } else {
                 var newPlaylist = new Playlist({
                     owner: owner,

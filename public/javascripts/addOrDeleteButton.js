@@ -27,12 +27,16 @@ var addOrDeleteButtonComponent = (function(){
     view: function(ctrl, args){
       return m('button.btn', {
           className: _.includes(args.inLibrary(), args.songID) ? 'btn-danger' : 'btn-success',
+          title: _.includes(args.inLibrary(), args.songID) ? 'Delete from Library' : 'Add to Library',
           onclick: function() {
               _.includes(args.inLibrary(), args.songID) ? deleteSong(args.songID, args.url, args.inLibrary) : addSong(args.songID, args.url, args.inLibrary)
           }
-      }, _.includes(args.inLibrary(), args.songID) ? 'Delete from ' +  args.text : 'Add to ' + args.text)
+      }, [
+        _.includes(args.inLibrary(), args.songID) ? m('i.glyphicon.glyphicon-remove') : m('i.glyphicon.glyphicon-plus')
+      ])
     }
   }
+
 
   return {
     addOrDeleteButton: addOrDeleteButton
