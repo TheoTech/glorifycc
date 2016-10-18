@@ -12,6 +12,9 @@ var crypto = require('crypto')
 var nodemailer = require('nodemailer')
 var config = require('config')
 
+// router.get('/profile', function(req, res){
+//   res.render('profile', {});
+// })
 
 router.get('/library/search', function(req, res) {
     var tag = req.query.q

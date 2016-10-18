@@ -26,7 +26,7 @@
         width: 25em;
     }*/
 
-    #searchBox.index{
+    #searchBox.index {
         width: 30em;
         margin: auto;
     }
@@ -36,7 +36,7 @@
     }
 
     @media screen and (max-width: 480px) {
-        #searchBox.index{
+        #searchBox.index {
             width: 25em;
             margin: auto;
         }
@@ -64,174 +64,120 @@
     a#playlist {
         cursor: pointer
     }
+
+
+
+
     /***
-User Profile Sidebar by @keenthemes
-A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
-Licensed under MIT
-***/
+    User Profile Sidebar by @keenthemes
+    A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+    Licensed under MIT
+    ***/
 
     body {
-        background: #F1F3FA;
+      background: #F1F3FA;
     }
+
     /* Profile container */
-
     .profile {
-        margin: 20px 0;
+      margin: 20px 0;
     }
-    /* Profile sidebar */
 
+    /* Profile sidebar */
     .profile-sidebar {
-        padding: 20px 0 10px 0;
-        background: #fff;
+      padding: 20px 0 10px 0;
+      background: #fff;
     }
 
     .profile-userpic img {
-        float: none;
-        margin: 0 auto;
-        width: 50%;
-        height: 50%;
-        -webkit-border-radius: 50% !important;
-        -moz-border-radius: 50% !important;
-        border-radius: 50% !important;
+      float: none;
+      margin: 0 auto;
+      width: 50%;
+      height: 50%;
+      -webkit-border-radius: 50% !important;
+      -moz-border-radius: 50% !important;
+      border-radius: 50% !important;
     }
 
     .profile-usertitle {
-        text-align: center;
-        margin-top: 20px;
+      text-align: center;
+      margin-top: 20px;
     }
 
     .profile-usertitle-name {
-        color: #5a7391;
-        font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 7px;
+      color: #5a7391;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 7px;
     }
 
     .profile-usertitle-job {
-        text-transform: uppercase;
-        color: #5b9bd1;
-        font-size: 12px;
-        font-weight: 600;
-        margin-bottom: 15px;
+      text-transform: uppercase;
+      color: #5b9bd1;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 15px;
     }
 
     .profile-userbuttons {
-        text-align: center;
-        margin-top: 10px;
+      text-align: center;
+      margin-top: 10px;
     }
 
     .profile-userbuttons .btn {
-        text-transform: uppercase;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 6px 15px;
-        margin-right: 5px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 15px;
+      margin-right: 5px;
     }
 
     .profile-userbuttons .btn:last-child {
-        margin-right: 0px;
+      margin-right: 0px;
     }
 
     .profile-usermenu {
-        margin-top: 30px;
+      margin-top: 30px;
     }
 
     .profile-usermenu ul li {
-        border-bottom: 1px solid #f0f4f7;
+      border-bottom: 1px solid #f0f4f7;
     }
 
     .profile-usermenu ul li:last-child {
-        border-bottom: none;
+      border-bottom: none;
     }
 
     .profile-usermenu ul li a {
-        color: #93a3b5;
-        font-size: 14px;
-        font-weight: 400;
+      color: #93a3b5;
+      font-size: 14px;
+      font-weight: 400;
     }
 
     .profile-usermenu ul li a i {
-        margin-right: 8px;
-        font-size: 14px;
+      margin-right: 8px;
+      font-size: 14px;
     }
 
     .profile-usermenu ul li a:hover {
-        background-color: #fafcfd;
-        color: #5b9bd1;
+      background-color: #fafcfd;
+      color: #5b9bd1;
     }
 
     .profile-usermenu ul li.active {
-        border-bottom: none;
+      border-bottom: none;
     }
 
     .profile-usermenu ul li.active a {
-        color: #5b9bd1;
-        background-color: #f6f9fb;
-        border-left: 2px solid #5b9bd1;
-        margin-left: -2px;
+      color: #5b9bd1;
+      background-color: #f6f9fb;
+      border-left: 2px solid #5b9bd1;
+      margin-left: -2px;
     }
+
     /* Profile Content */
-
     .profile-content {
-        padding: 20px;
-        background: #fff;
-        min-height: 460px;
+      padding: 20px;
+      background: #fff;
+      min-height: 460px;
     }
-
-
-.dropdown-submenu {
-    position: relative;
-}
-
-.dropdown-submenu>.dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -6px;
-    margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px;
-    border-radius: 0 6px 6px 6px;
-}
-
-.dropdown-submenu:hover>.dropdown-menu {
-    display: block;
-}
-
-.dropdown-submenu>a:after {
-    display: block;
-    content: " ";
-    float: right;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-left-color: #ccc;
-    margin-top: 5px;
-    margin-right: -10px;
-}
-
-.dropdown-submenu:hover>a:after {
-    border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-    float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
-    left: -100%;
-    margin-left: 10px;
-    -webkit-border-radius: 6px 0 6px 6px;
-    -moz-border-radius: 6px 0 6px 6px;
-    border-radius: 6px 0 6px 6px;
-}
-    /*.borderless {
-        border-top-style: none;
-        border-left-style: none;
-        border-right-style: none;
-        border-bottom-style: none;
-    }*/
-    /*.hidden {
-        display: none;
-    }*/

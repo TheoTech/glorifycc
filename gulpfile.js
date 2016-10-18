@@ -13,16 +13,6 @@ gulp.task('script', function() {
         .pipe(gulp.dest('dist/javascripts'));
 });
 
-// gulp.task('script', function() {
-//     // Endless stream mode
-//     return watch('public/javascripts/*.js', {
-//             ignoreInitial: false
-//         })
-//         .pipe(babel())
-//         .on('error', onError)
-//         .pipe(gulp.dest('dist/javascripts'));
-// });
-
 // gulp.task('clean', function() {
 //     return watch('public/javascripts/*.js', {
 //             ignoreInitial: false

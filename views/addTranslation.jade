@@ -31,18 +31,18 @@ block content
                     input.capitalize.form-control(name="copyright", value=song.copyright, readonly)
             .col-md-6
                 .form-group
-                    label(for="lang_t") Language
-                    select#language.form-control(name="lang_t")
+                    label(for="translationLang") Language
+                    select#language.form-control(name="translationLang")
                         option(value="english") English
                         option(value="mandarin") Mandarin
                         option(value="spanish") Spanish
                         option(value="portuguese") Portuguese
                 .form-group
-                    label(for="title_t") Title
-                    input#title.form-control(name="title_t", type="text")
+                    label(for="translationTitle") Title
+                    input#title.form-control(name="translationTitle", type="text")
                 .form-group
-                    label(for="copyright_t") Copyright
-                    select#copyright.form-control(name="copyright_t")
+                    label(for="translationCopyright") Copyright
+                    select#copyright.form-control(name="translationCopyright")
                         option Public
                         option CC0
         .row
@@ -52,6 +52,6 @@ block content
                     textarea#lyric.form-control(name="lyric", rows='20' readonly) #{stringLyric}
             .col-md-6
                 .form-group
-                    label(for="lyric_t") Lyric
-                    textarea#lyric.form-control(name="lyric_t", rows='20')
+                    label(for="translationLyric") Lyric
+                    textarea#lyric.form-control(name="translationLyric", rows='20')
                 button.btn.btn-primary(type="submit") Submit Translation

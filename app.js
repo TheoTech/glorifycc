@@ -18,7 +18,6 @@ var config = require('config')
 
 var app = module.exports = express();
 
-// var routes = require('./routes/index');
 var index = require('./routes/index');
 var songlistdb = require('./routes/songlist-db');
 var searchbyletter = require('./routes/search-by-letter');

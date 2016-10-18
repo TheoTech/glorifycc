@@ -36,9 +36,7 @@ block content
                     !{line}
                     br
             </p> 
-            //- if messages.error
-            //-     .alert.alert-danger
-            //-         div = messages.error
+            
             -if(!(login && user.username == "admin"))
                 #song      
         .col-xs-6
@@ -52,9 +50,7 @@ block content
                         !{line}
                         br
                 </p> 
-                //- if messages.error
-                //-     .alert.alert-danger
-                //-         div = messages.error 
+                
                 -if(!(login && user.username == "admin"))  
                     #translation
             br 
@@ -71,9 +67,9 @@ block content
     script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/playlistDropdown.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/buttons.js')
+    script(src='/dist/javascripts/songPageButtons.js')
     script.
-        m.mount(document.getElementById('song'), m(buttonsComponent.buttons, {_id: song._id}))
+        m.mount(document.getElementById('song'), m(songPageButtonsComponent.buttons, {_id: song._id}))
         if (isTranslationExisted) {
-            m.mount(document.getElementById('translation'), m(buttonsComponent.buttons, {_id: translation._id}))
+            m.mount(document.getElementById('translation'), m(songPageButtonsComponent.buttons, {_id: translation._id}))
         }

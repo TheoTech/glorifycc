@@ -32,17 +32,24 @@ var playlistDropdownComponent = (function() {
                         m('span.caret')
                     ]),
                     m('ul.dropdown-menu', [
-                        m('li', {
-                            onclick: function(elem, isInit, context) {
-                                if (!isInit) {
-                                    showModal(elem);
-                                }
-                            }
-                        }, 'New Playlist'),
+                        m('li', [
+                          m('a', {
+                              href: '',
+                              onclick: function(elem, isInit, context) {
+                                  if (!isInit) {
+                                      showModal(elem);
+                                  }
+                              }
+                          }, 'New Playlist')
+                        ]),
+                        m('li.divider'),
                         playlists.map((pl) => {
-                            return m('li', {
-                                onclick: m.withAttr('value', args.playlistName)
-                            }, pl.name)
+                            return m('li', [
+                              m('a', {
+                                  href: '',
+                                  onclick: m.withAttr('value', args.playlistName)
+                              }, pl.name)
+                            ])
                         })
                     ])
                 ]),

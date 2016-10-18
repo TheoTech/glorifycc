@@ -10,9 +10,9 @@ var songlistTable = {
             m('.table-responsive', [
                 m('table.table', [
                     m('thead', [
+                        m('th'),
                         m('th', 'Title'),
                         m('th', 'Author'),
-                        m('th'),
                         m('th', [
                             m(playlistDropdownComponent.playlistDropdown, {
                                 playlistName: args.playlistName,

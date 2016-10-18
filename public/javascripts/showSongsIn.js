@@ -11,34 +11,37 @@ var showSongsIn = {
                         m('span.caret')
                     ]),
                     m('ul.dropdown-menu', [
-                        m('li#All', {
-                            onclick: function() {
-                                args.langShown(this.id)
-                                args.loadMore(args.initial, args.langShown(), args.langFilter())
-                            }
-                        }, [
-                            m('a', 'All Language')
+                        m('li#All', [
+                            m('a', {
+                                href: '',
+                                onclick: function() {
+                                    args.langShown(this.id)
+                                    args.loadMore(args.initial, args.langShown(), args.langFilter())
+                                }
+                            }, 'All Language')
                         ]),
-                        m('li#English', {
-                            onclick: function() {
-                                args.langShown(this.id)
-                                args.loadMore(args.initial, args.langShown(), args.langFilter())
-                            }
-                        }, [
-                            m('a', 'English')
+                        m('li', [
+                            m('a#English', {
+                                href: '',
+                                onclick: function() {
+                                    args.langShown(this.id)
+                                    args.loadMore(args.initial, args.langShown(), args.langFilter())
+                                }
+                            }, 'English')
                         ]),
-                        m('li#Mandarin', {
-                            onclick: function() {
-                                args.langShown(this.id)
-                                args.loadMore(args.initial, args.langShown(), args.langFilter())
-                            },
-
-                        }, [
-                            m('a', 'Mandarin')
+                        m('li', [
+                            m('a#Mandarin', {
+                                href: '',
+                                onclick: function() {
+                                    args.langShown(this.id)
+                                    args.loadMore(args.initial, args.langShown(), args.langFilter())
+                                }
+                            }, 'Mandarin')
 
                         ]),
                         m('li', [
                             m('a#Spanish', {
+                                href: '',
                                 onclick: function() {
                                     args.langShown(this.id)
                                     args.loadMore(args.initial, args.langShown(), args.langFilter())
@@ -47,6 +50,7 @@ var showSongsIn = {
                         ]),
                         m('li', [
                             m('a#Portuguese', {
+                                href: '',
                                 onclick: function() {
                                     args.langShown(this.id)
                                     args.loadMore(args.initial, args.langShown(), args.langFilter())

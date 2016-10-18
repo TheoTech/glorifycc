@@ -1,5 +1,5 @@
 //this is mithril component for buttons in the song clicked page
-var buttonsComponent = (function() {
+var songPageButtonsComponent = (function() {
     var playlistName = m.prop()
     var buttons = {
         view: function(ctrl, args) {

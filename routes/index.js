@@ -401,8 +401,8 @@ router.route('/:song_id/add-translation')
         })
     })
     .post(function(req, res) {
-        req.checkBody('title_t', 'Title is required').notEmpty()
-        req.checkBody('lyric_t', 'Lyric is required').notEmpty()
+        req.checkBody('translationTitle', 'Title is required').notEmpty()
+        req.checkBody('translationLyric', 'Lyric is required').notEmpty()
         var messages = req.validationErrors()
 
         if (messages) {
@@ -410,8 +410,8 @@ router.route('/:song_id/add-translation')
                 messages: messages
             })
         } else {
-            var lang = req.body.lang_t
-            var stringArr_t = req.body.lyric_t.split(/\r?\n|\//)
+            var lang = req.body.translationLang
+            var translationLyricArray = req.body.translationLyric.split(/\r?\n|\//)
             Song.findOne({
                     source: song.id,
                     lang: lang
@@ -420,13 +420,13 @@ router.route('/:song_id/add-translation')
                         res.status(400).send('error ' + err)
                     }
                     var newSong = new Song({
-                        title: req.body.title_t,
+                        title: req.body.translationTitle,
                         author: song.author,
                         year: song.year,
                         lang: lang,
                         contributor: req.user.username,
-                        copyright: req.body.copyright_t,
-                        lyric: stringArr_t.slice(0),
+                        copyright: req.body.translationCopyright,
+                        lyric: translationLyricArray.slice(0),
                         source: song.id,
                         oriSong: song.title,
                         timeAdded: Date.now()
