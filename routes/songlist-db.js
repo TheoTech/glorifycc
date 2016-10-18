@@ -46,7 +46,8 @@ router.get('/add', function(req, res) {
 
 router.post('/add', function(req, res) {
     var title = req.body.title
-    var stringArr = req.body.lyric.split(/\r?\n|\//)
+    var lyricArray = req.body.lyric.split(/\r?\n|\//)
+
     Song.findOne({
         title: title
     }, function(err, song) {
@@ -64,13 +65,12 @@ router.post('/add', function(req, res) {
                 author: req.body.author,
                 year: req.body.year,
                 lang: req.body.lang,
-                lyric: stringArr.slice(0),
+                lyric: lyricArray,
                 contributor: req.user.username,
                 copyright: req.body.copyright,
                 timeAdded: Date.now()
             })
 
-            console.log(stringArr)
             newSong.save(function(err) {
                 if (err) {
                     res.status(400).send('error saving new song ' + err)

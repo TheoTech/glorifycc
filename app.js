@@ -25,7 +25,8 @@ var searchbylang = require('./routes/search-by-lang');
 var user = require('./routes/user');
 var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
-var userlist = require('./routes/userlist')
+var userlist = require('./routes/userlist');
+var privatesong = require('./routes/user.privatesong');
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -99,6 +100,7 @@ app.use('/search-by-lang', searchbylang)
 app.use('/userlist', userlist)
 app.use('/user/signup', usersignup)
 app.use('/user/playlist', userplaylist)
+app.use('/user/privatesong', privatesong)
 
 app.get('/api', function(req, res) {
     app.render('songs-in-pdf', function(err, html) {

@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    include topnav
+    h1 My Private Songs
+    a.btn.btn-primary(href='add') Add Song
+    table.table
+        thead
+            th
+            th Title
+            th Author
+            th Language
+            th
+        tbody
+            each song in songs
+                tr
+                    td
+                    td
+                        a(href='privatesong/#{song._id}') #{song.title}
+                    td #{song.author}
+                    td.capitalize #{song.lang}
+                    td
+                        a.btn.btn-default(href='privatesong/#{song._id}/edit') Edit

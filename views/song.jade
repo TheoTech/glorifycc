@@ -56,7 +56,6 @@ block content
             br 
             -if(login && user.username == "admin")
                 a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
-
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
