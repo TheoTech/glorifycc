@@ -1,6 +1,35 @@
 //this is mithril component for buttons in the song clicked page
 var songPageButtonsComponent = (function() {
-    var playlistName = m.prop()
+    var addToPlaylist = function(name, songID) {
+        m.request({
+            method: 'POST',
+            url: '/user/library',
+            data: {
+                name: name,
+                id: songID,
+                url: url
+            }
+        })
+    };
+
+    var addPlaylist = function(name, url) {
+        m.request({
+                method: 'PUT',
+                url: '/user/library',
+                data: {
+                    name: name,
+                    url: url
+                }
+            })
+            .then(function(res) {
+                if (res.url) {
+                    window.location.href = res.url
+                }
+            })
+    }
+
+    var playlistName = m.prop();
+    console.log(playlists)
     var buttons = {
         view: function(ctrl, args) {
             return [
@@ -11,15 +40,61 @@ var songPageButtonsComponent = (function() {
                     inLibrary: inLibrary,
                 }),
                 m('br'),
-                m(playlistDropdownComponent.playlistDropdown, {
-                    playlistName: playlistName,
-                    url: '/' + args._id
-                }),
-                m(addToPlaylistButtonComponent.addToPlaylistButton, {
-                    playlistName: playlistName,
-                    songID: args._id,
-                    url: '/' + args._id
-                })
+                m('button.btn.btn-default', {
+                    onclick: function() {
+                        $('#playlistList').modal('show');
+                    }
+                }, 'Add to Playlist'),
+                m('#playlistList.modal.fade[role=dialog]', [
+                    m('.modal-dialog.modal-sm', [
+                        m('.modal-content', [
+                            m('.modal-header', [
+                                m('button.btn.btn-default.pull-right', {
+                                    onclick: function() {
+                                        $('#newPlaylist').modal('show');
+                                    }
+                                }, [
+                                    m('i.glyphicon.glyphicon-plus')
+                                ]),
+                                m('h4', 'Playlist')
+                            ]),
+                            m('.modal-body', [
+                                playlists.map((pl) => {
+                                    return m('p', [
+                                        m('a', {
+                                            href: '',
+                                            onclick: function() {
+                                                addToPlaylist(pl.name, args._id)
+                                            }
+                                        }, pl.name)
+                                    ])
+                                })
+                            ])
+                        ])
+                    ])
+                ]),
+                m('#newPlaylist.modal.fade[role=dialog]', [
+                    m('.modal-dialog.modal-sm', [
+                        m('.modal-content', [
+                            m('.modal-header', [
+                                m('h4', 'New Playlist')
+                            ]),
+                            m('.modal-body', [
+                                m('label', 'Enter Playlist Name'),
+                                m('input[name=playlist type=text]', {
+                                    value: 'New Playlist',
+                                    onchange: m.withAttr('value', playlistName)
+                                }),
+                                m('br'),
+                                m('button.btn.btn-success', {
+                                    onclick: function() {
+                                        addPlaylist(playlistName(), url)
+                                    }
+                                }, 'Create')
+                            ])
+                        ])
+                    ])
+                ])
             ]
         }
     }

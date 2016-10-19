@@ -16,9 +16,7 @@ var fs = require('file-system')
 router.get('/', function(req, res, next) {
     Playlist.find({
             owner: req.user._id
-        })
-        .populate('songs')
-        .exec(function(err, playlists) {
+        }, function(err, playlists) {
             if (err) return handleError(err)
             res.render('playlist', {
                 playlists: playlists
@@ -161,11 +159,9 @@ router.get('/:playlist_name/export1', function(req, res, next) {
                             }]
                         },
                         function(err, songs) {
-                            // console.log(songs)
                             if (err) return handleError(err)
                             translations2d.push(songs.map((s) => s))
                             if (i == arr.length - 1) {
-                                // console.log(translations2d)
                                 res.render('export1', {
                                     playlistID: playlist._id,
                                     playlistName: playlist.name,

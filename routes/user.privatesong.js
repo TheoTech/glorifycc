@@ -2,19 +2,20 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var mongoose = require('mongoose');
-var PrivateSong = require('../models/privateSong');
+var Playlist = require('../models/playlist');
 var _ = require('lodash');
+var Song = require('../models/song');
 
 
-router.get('/', function(req, res) {
-    PrivateSong.find(function(err, songs) {
-        if (err) return handleError(err)
-        console.log(songs)
-        res.render('privateSong', {
-            songs: songs
-        })
-    })
-})
+// router.get('/', function(req, res) {
+//     Song.find(function(err, songs) {
+//         if (err) return handleError(err)
+//         console.log(songs)
+//         res.render('privateSong', {
+//             songs: songs
+//         })
+//     })
+// })
 
 router.get('/add', function(req, res) {
     res.render('addPrivateSong', {})
@@ -34,8 +35,10 @@ router.post('/add', function(req, res) {
             errors: errors
         })
     } else {
-        PrivateSong.findOne({
-            title: title
+        Song.findOne({
+            title: title,
+            private: true,
+            contributor: req.user.username
         }, function(err, song) {
             if (err) {
                 res.status(400).send('error ' + err)
@@ -46,18 +49,31 @@ router.post('/add', function(req, res) {
                     song: song
                 });
             } else {
-                var newSong = new PrivateSong({
+                var newSong = new Song({
+                    contributor: req.user.username,
+                    owner: req.user._id,
                     title: title,
                     author: req.body.author,
                     lang: req.body.lang,
                     lyric: lyricArray,
-                    timeAdded: Date.now()
+                    timeAdded: Date.now(),
+                    private: true,
+                    copyright: 'Private'
                 })
                 newSong.save(function(err) {
                     if (err) {
                         res.status(400).send('error saving new song ' + err)
                     } else {
-                        res.redirect('/user/privatesong')
+                        User.findOne({
+                            _id: req.user._id
+                        }, function(err, user) {
+                            if (err) return handleError(err)
+                            user.library.push(newSong._id)
+                            user.save(function(err) {
+                                if (err) return handleError(err)
+                                res.redirect('/user/library')
+                            })
+                        })
                     }
                 })
             }
@@ -68,47 +84,71 @@ router.post('/add', function(req, res) {
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
-        songID = req.params.song_id
+        song_id = req.params.song_id
         song = {}
-        PrivateSong.findById(songID, function(err, s) {
+        Song.findOne({
+            contributor: req.user.username,
+            _id: song_id,
+            private: true
+        }, function(err, s) {
             song = s;
             next()
         })
     })
     .get(function(req, res) {
-        PrivateSong.findById(songID, function(err, song) {
-            if (err) return handleError(err)
-            PrivateSong.find({
-                $or: [{
-                    $and: [{
-                        source: song.source
-                    }, {
-                        source: {
-                            $exists: true
-                        }
-                    }, {
-                        lang: {
-                            $ne: song.lang
-                        }
-                    }]
+        Song.find({
+            $or: [{
+                $and: [{
+                    source: song.source
                 }, {
-                    _id: song.source
+                    source: {
+                        $exists: true
+                    }
                 }, {
-                    source: song._id
+                    lang: {
+                        $ne: song.lang
+                    }
                 }]
-            }, function(err, translations) {
-                if (err) {
-                    res.status(400).send('Error getting songs ' + err)
-                }
-                var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                var isTranslationExisted = !_.isEmpty(rightTranslation)
+            }, {
+                _id: song.source
+            }, {
+                source: song._id
+            }]
+        }, function(err, translations) {
+            if (err) {
+                res.status(400).send('Error getting songs ' + err)
+            }
+            var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
+            var isTranslationExisted = !_.isEmpty(rightTranslation)
+            if (req.isAuthenticated()) {
+                Playlist.find({
+                    owner: req.user._id
+                }, function(err, playlists) {
+                    User.findOne({
+                        _id: req.user._id
+                    }, function(err, user) {
+                        console.log(user.library)
+                        res.render('song', {
+                            song: song,
+                            rightTranslation: rightTranslation,
+                            isTranslationExisted: isTranslationExisted,
+                            translations: translations,
+                            playlists: playlists,
+                            inLibrary: user.library
+                        })
+                    })
+
+                })
+            } else {
                 res.render('song', {
                     song: song,
                     rightTranslation: rightTranslation,
                     isTranslationExisted: isTranslationExisted,
-                    translations: translations
+                    translations: translations,
+                    playlists: [],
+                    inLibrary: []
                 })
-            })
+            }
         })
     })
 
@@ -116,7 +156,11 @@ router.route('/:song_id/add-translation')
     .all(function(req, res, next) {
         song_id = req.params.song_id;
         song = {}
-        PrivateSong.findById(song_id, function(err, s) {
+        Song.findOne({
+            _id: song_id,
+            private: true,
+            contributor: req.user.username
+        }, function(err, s) {
             song = s;
             next();
         })
@@ -147,19 +191,32 @@ router.route('/:song_id/add-translation')
             var lang = req.body.translationLang
             console.log(lang)
             var lyricArray = req.body.translationLyric.split(/\r?\n|\//)
-            var newSong = new PrivateSong({
+            var newSong = new Song({
                 title: req.body.translationTitle,
                 author: song.author,
                 lang: lang,
                 lyric: lyricArray,
                 source: song.id,
-                timeAdded: Date.now()
+                timeAdded: Date.now(),
+                contributor: req.user.username,
+                private: true,
+                copyright: 'Private',
+                oriSong: song.title
             })
             newSong.save(function(err) {
                 if (err) {
                     res.status(400).send('error saving new song ' + err)
                 } else {
-                    res.redirect("/user/privatesong/" + song_id)
+                    User.findOne({
+                        _id: req.user._id
+                    }, function(err, user) {
+                        if (err) return handleError(err)
+                        user.library.push(newSong._id)
+                        user.save(function(err) {
+                            if (err) return handleError(err)
+                            res.redirect("/user/privatesong/" + song_id)
+                        })
+                    })
                 }
             })
         }
@@ -181,7 +238,11 @@ router.route('/:song_id/edit')
     .all(function(req, res, next) {
         song_id = req.params.song_id
         song = {}
-        PrivateSong.findById(song_id, function(err, s) {
+        Song.findById({
+            _id: song_id,
+            private: true,
+            contributor: req.user.username
+        }, function(err, s) {
             song = s
             next()
         })
@@ -194,7 +255,7 @@ router.route('/:song_id/edit')
                 return prev + '\n' + curr
             }
         }, '')
-        res.render('edit', {
+        res.render('editPrivate', {
             song: song,
             lyric: lyric
         })
@@ -202,10 +263,7 @@ router.route('/:song_id/edit')
     .post(function(req, res) {
         song.title = req.body.title
         song.author = req.body.author
-        song.year = req.body.year
         song.lang = req.body.lang
-        song.copyright = req.body.copyright
-        song.contributor = req.body.contributor
         song.lyric = (req.body.lyric || '').split(/\r?\n|\//)
         song.save(function(err) {
             if (err) {

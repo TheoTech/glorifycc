@@ -68,7 +68,8 @@ router.post('/add', function(req, res) {
                 lyric: lyricArray,
                 contributor: req.user.username,
                 copyright: req.body.copyright,
-                timeAdded: Date.now()
+                timeAdded: Date.now(),
+                private: false
             })
 
             newSong.save(function(err) {

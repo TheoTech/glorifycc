@@ -8,19 +8,19 @@ var express = require('express'),
 
 
 router.get('/temp', function(req, res){
-  for (var i = 0; i < 20; i++){
-    new Song({
-      title: 'english song ' + i,
-      lang: ''
-    }).save()
-  }
-  res.send('success')
+  Song.find(function(err, songs){
+    songs.forEach((s) => {
+      s.private = false;
+      s.save();
+    })
+    res.send('success')
+  })
 })
 
 router.get('/', function(req, res) {
     console.log()
     var messages = req.flash()
-    Song.find(function(err, songs, count) {
+    Song.find({private: false}, function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
@@ -67,7 +67,8 @@ router.put('/', function(req, res) {
               Song.find({
                   source: {
                       $exists: false
-                  }
+                  },
+                  private: false
               }, function(err, songs) {
                   done(err, songs)
               })
@@ -78,7 +79,8 @@ router.put('/', function(req, res) {
                       var temp = []
                       temp.push(s)
                       Song.find({
-                          source: s._id
+                          source: s._id,
+                          private: false
                       }, (err, translations) => {
                           translations.forEach((t) => {
                               temp.push(t)
@@ -271,7 +273,8 @@ router.get('/search', function(req, res) {
     Song.find({
             $text: {
                 $search: "\"" + tag + "\""
-            }
+            },
+            private: false
         }, function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)

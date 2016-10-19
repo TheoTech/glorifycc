@@ -36,7 +36,7 @@ block content
                     !{line}
                     br
             </p> 
-            
+
             -if(!(login && user.username == "admin"))
                 #song      
         .col-xs-6
@@ -50,11 +50,11 @@ block content
                         !{line}
                         br
                 </p> 
-                
+
                 -if(!(login && user.username == "admin"))  
                     #translation
             br 
-            -if(login && user.username == "admin")
+            -if(song.private)
                 a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
@@ -68,7 +68,11 @@ block content
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/songPageButtons.js')
     script.
-        m.mount(document.getElementById('song'), m(songPageButtonsComponent.buttons, {_id: song._id}))
+        var url = '/songlist/' + song._id
+        if(!song.copyright){
+          url = '/user/privatesong/' + song._id
+        }
+        m.mount(document.getElementById('song'), m(songPageButtonsComponent.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
         if (isTranslationExisted) {
             m.mount(document.getElementById('translation'), m(songPageButtonsComponent.buttons, {_id: translation._id}))
         }

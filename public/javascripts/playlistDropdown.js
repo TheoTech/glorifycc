@@ -28,13 +28,13 @@ var playlistDropdownComponent = (function() {
                         style: {
                             border: 0
                         }
-                    }, 'Select Playlist', [
+                    }, args.playlistName() ? 'Selected Playlist: ' + args.playlistName() : 'Select Playlist', [
                         m('span.caret')
                     ]),
                     m('ul.dropdown-menu', [
                         m('li', [
                           m('a', {
-                              href: '',
+                              href: '#',
                               onclick: function(elem, isInit, context) {
                                   if (!isInit) {
                                       showModal(elem);
@@ -46,8 +46,10 @@ var playlistDropdownComponent = (function() {
                         playlists.map((pl) => {
                             return m('li', [
                               m('a', {
-                                  href: '',
-                                  onclick: m.withAttr('value', args.playlistName)
+                                  href: '#',
+                                  onclick: function(){
+                                    args.playlistName(pl.name)
+                                  }
                               }, pl.name)
                             ])
                         })

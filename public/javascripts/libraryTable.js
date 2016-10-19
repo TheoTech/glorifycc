@@ -9,6 +9,7 @@ var libraryTableComponent = (function() {
                 m('table.table', [
                     m('thead', [
                         m('th'),
+                        m('th'),
                         m('th', 'Title'),
                         m('th', 'Author'),
                         m('th', [
@@ -32,9 +33,26 @@ var libraryTableComponent = (function() {
                                     })
                                 ]),
                                 m('td', [
-                                    m('a', {
-                                        href: '/songlist/' + s._id
-                                    }, s.title)
+                                    function() {
+                                        if (s.private) {
+                                            return m('a.btn.btn-default', {
+                                                href: 'privatesong/' + s._id + '/edit'
+                                            }, 'Edit')
+                                        }
+                                    }()
+                                ]),
+                                m('td', [
+                                  function() {
+                                      if (s.private) {
+                                          return m('a', {
+                                              href: '/user/privatesong/' + s._id
+                                          }, s.title)
+                                      } else {
+                                        return m('a', {
+                                            href: '/' + s._id
+                                        }, s.title)
+                                      }
+                                  }()
                                 ]),
                                 m('td', s.author),
                                 m('td', [

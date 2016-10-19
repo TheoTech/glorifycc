@@ -44,9 +44,7 @@ router.get('/library/search', function(req, res) {
 
 router.get('/library', isLoggedIn, function(req, res, next) {
     var messages = req.flash()
-    User.findOne({
-            username: req.user.username
-        })
+    User.findById(req.user._id)
         .populate('library')
         .exec(function(err, user) {
             if (err) return handleError(err)
@@ -57,9 +55,11 @@ router.get('/library', isLoggedIn, function(req, res, next) {
                 res.render('library', {
                     songs: user.library,
                     playlists: playlists,
-                    messages: messages
+                    messages: messages,
+                    inLibrary: user.library
                 })
             })
+
         })
 })
 
