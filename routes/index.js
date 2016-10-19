@@ -115,9 +115,9 @@ router.put('/', function(req, res) {
           },
           function(songs2d, done) {
               if (!_.isEmpty(songs2d)) {
-                  songs2d = songs2d.reduce((prev, curr) => {
+                  songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
                       return _.concat(prev, curr)
-                  }).sort()
+                  }), ['title'])
               }
               done(null, songs2d)
           },
