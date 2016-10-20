@@ -7,11 +7,11 @@ var export1TableComponent = (function() {
             })
     })
 
-    var exportSong = function(songID, translationID) {
-        this.song = songID
-        this.translations = []
-        this.translations.push(translationID)
-    }
+    // var exportSong = function(songID, translationID) {
+    //     this.song = songID
+    //     this.translations = []
+    //     this.translations.push(translationID)
+    // }
 
     //this function adds/deletes the song in the ExportSong collection
     var pickTranslation = function(songID, translationID, checked) {

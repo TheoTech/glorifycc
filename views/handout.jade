@@ -4,7 +4,7 @@ block content
     each songs in songs2d
         -var i = 0
         -var j = 0
-        -while (i < songs.length && j < songs.length)
+        -while (i < songs.length - 1 && j < songs.length - 1)
             table.table(style='text-align: center; page-break-after: always')
                 thead
                     th(style='text-align: center') #{songs[i].title}
@@ -15,38 +15,19 @@ block content
                 tbody
                     tr
                         td
-                            -for(var x = 0; x < minLine; x++)
+                            -for(var x = 0; x < songs[songs.length - 1]; x++)
                                 - if (songs[j].lyric[x] === '')
                                     br
                                 - else
                                     !{songs[j].lyric[x]}
                                     br
                         -j++
-                        -while(j % 3 !== 0 && j < songs.length)            
+                        -while(j % 3 !== 0 && j < songs.length - 1)            
                             td
-                                -for(var x = 0; x < minLine; x++)
+                                -for(var x = 0; x < songs[songs.length - 1]; x++)
                                     - if (songs[j].lyric[x] === '')
                                         br
                                     - else
                                         !{songs[j].lyric[x]}
                                         br
                             -j++
-    //- tr
-    //-     -for(var i = 0; i < songs.length; i++)
-    //-         -if (i % 3 === 0)
-    //-             div(style='page-break-after: always')
-    //-                 td
-    //-                     each line in songs[i].lyric
-    //-                         - if (line === '')
-    //-                             br
-    //-                         - else
-    //-                             !{line}
-    //-                             br
-    //-         -else
-    //-             td
-    //-                 each line in songs[i].lyric
-    //-                     - if (line === '')
-    //-                         br
-    //-                     - else
-    //-                         !{line}
-    //-                         br
