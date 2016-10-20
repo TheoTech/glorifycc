@@ -215,8 +215,8 @@ router.post('/forgot', function(req, res, next) {
             var smtpTransport = nodemailer.createTransport('SMTP', {
                 service: 'SendGrid',
                 auth: {
-                    user: process.env.SENDGRID_USER || config.get('Nev.user'),
-                    pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                    user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
+                    pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
                 }
             });
             var mailOptions = {
@@ -286,8 +286,8 @@ router.post('/reset/:token', function(req, res) {
             var smtpTransport = nodemailer.createTransport('SMTP', {
                 service: 'SendGrid',
                 auth: {
-                    user: process.env.SENDGRID_USER || config.get('Nev.user'),
-                    pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                    user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
+                    pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
                 }
             });
             var mailOptions = {

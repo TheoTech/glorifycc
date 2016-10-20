@@ -15,7 +15,7 @@ var myHasher = function(password, tempUserData, insertTempUser, callback) {
     return insertTempUser(hash, tempUserData, callback);
 };
 
-// emailVerification configuration =====================
+// emailVerification configuration
 emailVerification.configure({
     persistentUserModel: User,
     tempUserCollection: 'tempuser',
