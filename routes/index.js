@@ -7,20 +7,22 @@ var express = require('express'),
     async = require('async')
 
 
-router.get('/temp', function(req, res){
-  Song.find(function(err, songs){
-    songs.forEach((s) => {
-      s.private = false;
-      s.save();
+router.get('/temp', function(req, res) {
+    Song.find(function(err, songs) {
+        songs.forEach((s) => {
+            s.private = false;
+            s.save();
+        })
+        res.send('success')
     })
-    res.send('success')
-  })
 })
 
 router.get('/', function(req, res) {
     console.log()
     var messages = req.flash()
-    Song.find({private: false}, function(err, songs, count) {
+    Song.find({
+            private: false
+        }, function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
@@ -58,88 +60,92 @@ router.get('/', function(req, res) {
 })
 
 router.put('/', function(req, res) {
-  var langShown = req.body.langShown.toLowerCase()
-  var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
-  var totalSongsDisplayed = req.body.totalSongsDisplayed
-  var songs2d = []
-  async.waterfall([
-          function(done) {
-              Song.find({
-                  source: {
-                      $exists: false
-                  },
-                  private: false
-              }, function(err, songs) {
-                  done(err, songs)
-              })
-          },
-          function(songs, done) {
-              var task = songs.map((s, i, arr) => {
-                  return function(done) {
-                      var temp = []
-                      temp.push(s)
-                      Song.find({
-                          source: s._id,
-                          private: false
-                      }, (err, translations) => {
-                          translations.forEach((t) => {
-                              temp.push(t)
-                          })
-                          songs2d.push(temp)
-                          if (i === arr.length - 1) {
-                              done(null, songs2d)
-                          } else {
-                              done()
-                          }
-                      })
-                  }
-              });
-              async.waterfall(task, function(err, songs2d) {
-                  done(null, songs2d)
-              });
-          },
-          function(songs2d, done) {
-              console.log(songs2d)
-              if (!_.isEmpty(langFilter)) {
-                  songs2d = songs2d.filter((songs) => {
-                      var langArray = (songs.map((song) => song.lang))
-                      for (var i = 0; i < langFilter.length; i++) {
-                          if (!_.includes(langArray, langFilter[i])) {
-                              return false
-                          }
-                      }
-                      return true
-                  })
-              }
-              done(null, songs2d)
-          },
-          function(songs2d, done) {
-              if (!_.isEmpty(songs2d)) {
-                  songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
-                      return _.concat(prev, curr)
-                  }), ['title'])
-              }
-              done(null, songs2d)
-          },
-          function(songs2d, done) {
-              if (langShown !== 'all') {
-                  songs2d = songs2d.filter((s) => s.lang === langShown)
-              }
-              console.log(songs2d.length)
-              if (songs2d.length >= totalSongsDisplayed) {
-                  songs2d = songs2d.slice(0, totalSongsDisplayed)
-              } else {
-                  songs2d = songs2d.slice(0, songs2d.length)
-              }
-              done(null, songs2d)
-          }
-      ],
-      function(err, songs2d) {
-          if (err) return handleError(err)
-          res.send({
-              songs: songs2d
-          })
-      })
+    var langShown = req.body.langShown.toLowerCase()
+    var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
+    var totalSongsDisplayed = req.body.totalSongsDisplayed
+    var songs2d = []
+
+
+    function findOriginalSong(done) {
+        Song.find({
+            source: {
+                $exists: false
+            },
+            private: false
+        }, function(err, songs) {
+            done(err, songs)
+        })
+    }
+
+    function findTranslations(songs, done) {
+        var task = songs.map((s, i, arr) => {
+            return function(done) {
+                var temp = []
+                temp.push(s)
+                Song.find({
+                    source: s._id,
+                    private: false
+                }, (err, translations) => {
+                    translations.forEach((t) => {
+                        temp.push(t)
+                    })
+                    songs2d.push(temp)
+                    if (i === arr.length - 1) {
+                        done(null, songs2d)
+                    } else {
+                        done()
+                    }
+                })
+            }
+        });
+        async.waterfall(task, function(err, songs2d) {
+            done(null, songs2d)
+        });
+    }
+
+    function applyFilter(songs2d, done) {
+        console.log(songs2d)
+        if (!_.isEmpty(langFilter)) {
+            songs2d = songs2d.filter((songs) => {
+                var langArray = (songs.map((song) => song.lang))
+                for (var i = 0; i < langFilter.length; i++) {
+                    if (!_.includes(langArray, langFilter[i])) {
+                        return false
+                    }
+                }
+                return true
+            })
+        }
+        done(null, songs2d)
+    }
+
+    function concatSongs(songs2d, done) {
+        if (!_.isEmpty(songs2d)) {
+            songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
+                return _.concat(prev, curr)
+            }), ['title'])
+        }
+        done(null, songs2d)
+    }
+
+    function loadMore(songs2d, done) {
+        if (langShown !== 'all') {
+            songs2d = songs2d.filter((s) => s.lang === langShown)
+        }
+        if (songs2d.length >= totalSongsDisplayed) {
+            songs2d = songs2d.slice(0, totalSongsDisplayed)
+        }
+        done(null, songs2d)
+    }
+
+    function finalize(err, songs2d) {
+        if (err) return handleError(err)
+        res.send({
+            songs: songs2d
+        })
+    }
+
+    async.waterfall([findOriginalSong, findTranslations, applyFilter, concatSongs, loadMore], finalize)
 })
 
 router.post('/', function(req, res) {
@@ -315,7 +321,7 @@ router.get('/search', function(req, res) {
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
-        v = req.query.v || ''
+        // v = req.query.v || ''
         song_id = req.params.song_id
         song = {}
         Song.findById(song_id, function(err, s) {
@@ -347,6 +353,8 @@ router.route('/:song_id')
             if (err) {
                 res.status(400).send('Error getting songs ' + err)
             }
+
+            //rightTranslation is the song obj in the language that the user picks in the dropdown
             var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
             var isTranslationExisted = !_.isEmpty(rightTranslation)
             if (req.isAuthenticated()) {
@@ -434,11 +442,11 @@ router.route('/:song_id/add-translation')
                         oriSong: song.title,
                         timeAdded: Date.now()
                     })
-                    if (translation) {
-                        newSong.v = translation.v + 1
-                    } else {
-                        newSong.v = 1;
-                    }
+                    // if (translation) {
+                    //     newSong.v = translation.v + 1
+                    // } else {
+                    //     newSong.v = 1;
+                    // }
                     newSong.save(function(err) {
                         if (err) {
                             res.status(400).send('error saving new song ' + err)

@@ -33,7 +33,7 @@ var searchBoxComponent = (function() {
                 m(hasTranslationsIn, {
                     langShown: args.langShown,
                     langFilter: args.langFilter,
-                    loadMore: args.loadMore,
+                    loadMoreAndApplyFilter: args.loadMoreAndApplyFilter,
                     initial: args.initial
                 })
             ])

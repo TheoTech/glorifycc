@@ -13,13 +13,6 @@ gulp.task('script', function() {
         .pipe(gulp.dest('dist/javascripts'));
 });
 
-// gulp.task('clean', function() {
-//     return watch('public/javascripts/*.js', {
-//             ignoreInitial: false
-//         })
-//         .pipe(gulp.dest('dist/javascripts'));
-// })
-
 // Watch Files For Changes
 gulp.task('watch', function() {
     gulp.watch('public/javascripts/*.js', ['script']);
@@ -37,11 +30,11 @@ function onError(err) {
     this.emit('end')
 }
 
-// gulp.task('lint', function() {
-//     return gulp.src('public/javascripts/*.js')
-//         .pipe(jshint())
-//         .pipe(jshint.reporter('default'));
-// });
+gulp.task('lint', function() {
+    return gulp.src('public/javascripts/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
 
 // Default Task
 gulp.task('default', ['start', 'script', 'watch']);

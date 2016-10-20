@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var mongoose = require('mongoose');
-var nev = require('email-verification')(mongoose);
+var emailVerification = require('email-verification')(mongoose);
 var bcrypt = require('bcrypt-nodejs');
 var config = require('config')
 
@@ -15,17 +15,17 @@ var myHasher = function(password, tempUserData, insertTempUser, callback) {
     return insertTempUser(hash, tempUserData, callback);
 };
 
-// NEV configuration =====================
-nev.configure({
+// emailVerification configuration =====================
+emailVerification.configure({
     persistentUserModel: User,
     tempUserCollection: 'tempuser',
     expirationTime: 600, // 10 minutes
-    verificationURL: process.env.VERIFICATION_URL || config.get('Nev.verificationURL'),
+    verificationURL: process.env.VERIFICATION_URL || config.get('emailVerification.verificationURL'),
     transportOptions: {
         service: 'SendGrid',
         auth: {
-            user: process.env.SENDGRID_USER || config.get('Nev.user'),
-            pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+            user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
+            pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
         }
     },
     hashingFunction: myHasher,
@@ -39,7 +39,7 @@ nev.configure({
     console.log('configured: ' + (typeof options === 'object'));
 });
 
-nev.generateTempUserModel(User, function(err, tempUserModel) {
+emailVerification.generateTempUserModel(User, function(err, tempUserModel) {
     if (err) {
         console.log(err);
         return;
@@ -92,7 +92,7 @@ router.post('/', function(req, res) {
                     resend: true
                 });
             } else {
-                nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
+                emailVerification.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
                     if (err) {
                         return res.status(404).send('ERROR: creating temp user FAILED');
                     }
@@ -108,9 +108,9 @@ router.post('/', function(req, res) {
                         });
                     } else if (newTempUser) {
                         // new user created
-                        var URL = newTempUser[nev.options.URLFieldName];
+                        var URL = newTempUser[emailVerification.options.URLFieldName];
 
-                        nev.sendVerificationEmail(email, URL, function(err, info) {
+                        emailVerification.sendVerificationEmail(email, URL, function(err, info) {
                             if (err) {
                                 return res.status(404).send('ERROR: sending verification email FAILED');
                             }
@@ -144,7 +144,7 @@ router.get('/resend', function(req, res){
 })
 router.post('/resend', function(req, res) {
     var email = req.body.email
-    nev.resendVerificationEmail(email, function(err, userFound) {
+    emailVerification.resendVerificationEmail(email, function(err, userFound) {
         if (err) {
             return res.status(404).send('ERROR: resending verification email FAILED');
         }
@@ -160,9 +160,9 @@ router.post('/resend', function(req, res) {
 router.get('/email-verification/:URL', function(req, res) {
     var url = req.params.URL;
     console.log(url)
-    nev.confirmTempUser(url, function(err, user) {
+    emailVerification.confirmTempUser(url, function(err, user) {
         if (user) {
-            nev.sendConfirmationEmail(user.email, function(err, info) {
+            emailVerification.sendConfirmationEmail(user.email, function(err, info) {
                 if (err) {
                     return res.status(404).send('ERROR: sending confirmation email FAILED');
                 }

@@ -4,7 +4,7 @@ var songlistTable = {
             m(showSongsIn, {
                 langShown: args.langShown,
                 langFilter: args.langFilter,
-                loadMore: args.loadMore,
+                loadMoreAndApplyFilter: args.loadMoreAndApplyFilter,
                 initial: args.initial
             }),
             m('.table-responsive', [
