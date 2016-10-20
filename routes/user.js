@@ -12,69 +12,129 @@ var crypto = require('crypto')
 var nodemailer = require('nodemailer')
 var config = require('config')
 
+// router.get('/profile', function(req, res){
+//   res.render('profile', {});
+// })
 
-router.get('/library', isLoggedIn, function(req, res, next) {
+router.get('/library/search', function(req, res) {
+    var tag = req.query.q
+    var messages = req.flash()
     User.findOne({
-            username: req.user.username
+            _id: req.user._id
         })
         .populate('library')
         .exec(function(err, user) {
             if (err) return handleError(err)
             Playlist.find({
                 owner: user._id
-            }, function(err, playlist) {
+            }, function(err, playlists) {
                 if (err) return handleError(err)
                 res.render('library', {
-                    songs: user.library,
-                    playlistLibrary: playlist
+                    songs: user.library.filter((s) => {
+                        return (s.title.search(tag) !== -1 ||
+                            s.lang.search(tag) !== -1 ||
+                            s.author.search(tag) !== -1)
+                    }),
+                    playlists: playlists,
+                    messages: messages
                 })
             })
         })
 })
 
-router.post('/library', function(req, res, next) {
-    var name = req.body.name
-    var song_id = req.body.id
-    Playlist.findOne({
-            owner: req.user._id,
-            name: name
+router.get('/library', isLoggedIn, function(req, res, next) {
+    var messages = req.flash()
+    User.findById(req.user._id)
+        .populate('library')
+        .exec(function(err, user) {
+            if (err) return handleError(err)
+            Playlist.find({
+                owner: user._id
+            }, function(err, playlists) {
+                if (err) return handleError(err)
+                res.render('library', {
+                    songs: user.library,
+                    playlists: playlists,
+                    messages: messages,
+                    inLibrary: user.library
+                })
+            })
+
         })
-        .populate('owner')
-        .exec(function(err, playlist) {
-            var newPlaylist
-            if (err) return handleErro(err)
+})
+
+router.put('/library', function(req, res) {
+    var name = req.body.name
+    var url = req.body.url
+    if (req.isAuthenticated()) {
+        var owner = req.user._id
+        Playlist.findOne({
+            owner: owner,
+            name: name
+        }, function(err, playlist) {
+            if (err) return handleError(err)
             if (playlist) {
-                console.log('playlist exist')
-                    // var pl = return userHasThePlaylist.map((a) => a.playlistLibrary.map((b) => b.filter((c) => c.playlistName == name)))
-                    // console.log(pl)
-                playlist.songs.push(song_id)
-                playlist.save(function(err) {
-                    if (err) {
-                        res.status(400).send('failed ' + err)
-                    } else {
-                        res.send({
-                            url: '/user/library'
-                        })
-                    }
+                req.flash('error', 'Playlist exists. Choose different name')
+                res.send({
+                    url: url
                 })
             } else {
-                console.log(playlist)
                 var newPlaylist = new Playlist({
-                    owner: req.user._id,
+                    owner: owner,
                     name: name
                 })
-                newPlaylist.songs.push(song_id)
                 newPlaylist.save(function(err) {
-                    if (err) {
-                        res.status(400).send('failed ' + err)
-                    } else {
-                        res.send({
-                            url: '/user/library'
-                        })
-                    }
+                    if (err) return handleError(err)
+                    res.send({
+                        url: url
+                    })
                 })
             }
         })
+    } else {
+        res.send({
+            url: '/user/login'
+        })
+    }
+
+})
+
+router.post('/library', function(req, res, next) {
+    var name = req.body.name
+    var song_id = req.body.id
+    var url = req.body.url
+    console.log(url)
+    if (req.isAuthenticated()) {
+        Playlist.findOne({
+                owner: req.user._id,
+                name: name
+            })
+            .populate('owner')
+            .exec(function(err, playlist) {
+                var newPlaylist
+                if (err) return handleError(err)
+                if (playlist) {
+                    playlist.songs.push(song_id)
+                    playlist.save(function(err) {
+                        if (err) {
+                            res.status(400).send('failed ' + err)
+                        } else {
+                            res.send({})
+                        }
+                    })
+                } else {
+                    req.flash('error', 'Choose Playlist')
+                    res.send({
+                        url: url
+                    })
+                }
+            })
+    } else {
+        res.send({
+            url: '/user/login'
+        })
+    }
+
 })
 
 router.delete('/library', function(req, res, next) {
@@ -102,78 +162,81 @@ router.delete('/library', function(req, res, next) {
                             msg: 'deleting done'
                         })
                     })
-
             }
         })
     })
 })
 
+
+
+
 router.get('/logout', isLoggedIn, function(req, res, next) {
     helperFunc.adminLogout()
-        // console.log(helperFunc.isAdmin())
     req.logout();
     res.redirect('/')
 })
 
-router.get('/forgot', function(req, res){
-  var messages = req.flash()
-  console.log(messages)
-  res.render('forgot', {
-    user: req.user,
-    messages: messages
-  })
+router.get('/forgot', function(req, res) {
+    var messages = req.flash()
+    console.log(messages)
+    res.render('forgot', {
+        user: req.user,
+        messages: messages
+    })
 })
 
 
 router.post('/forgot', function(req, res, next) {
-  async.waterfall([
-    function(done) {
-      crypto.randomBytes(20, function(err, buf) {
-        var token = buf.toString('hex');
-        done(err, token);
-      });
-    },
-    function(token, done) {
-      User.findOne({ email: req.body.email }, function(err, user) {
-        if (!user) {
-          req.flash('error', 'No account with that email address exists.');
-          return res.redirect('/user/forgot');
-        }
+    async.waterfall([
+        function(done) {
+            crypto.randomBytes(20, function(err, buf) {
+                var token = buf.toString('hex');
+                done(err, token);
+            });
+        },
+        function(token, done) {
+            User.findOne({
+                email: req.body.email
+            }, function(err, user) {
+                if (!user) {
+                    req.flash('error', 'No account with that email address exists.');
+                    return res.redirect('/user/forgot');
+                }
 
-        user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-        user.save(function(err) {
-          done(err, token, user);
-        });
-      });
-    },
-    function(token, user, done) {
-      var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
-        auth: {
-          user: process.env.SENDGRID_USER || config.get('Nev.user'),
-          pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                user.save(function(err) {
+                    done(err, token, user);
+                });
+            });
+        },
+        function(token, user, done) {
+            var smtpTransport = nodemailer.createTransport('SMTP', {
+                service: 'SendGrid',
+                auth: {
+                    user: process.env.SENDGRID_USER || config.get('Nev.user'),
+                    pass: process.env.SENDGRID_PASS || config.get('Nev.pass')
+                }
+            });
+            var mailOptions = {
+                to: user.email,
+                from: 'passwordreset@donotreply',
+                subject: 'Reset Password',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
+                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            };
+            smtpTransport.sendMail(mailOptions, function(err) {
+                req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+                done(err, 'done');
+            });
         }
-      });
-      var mailOptions = {
-        to: user.email,
-        from: 'passwordreset@donotreply',
-        subject: 'Reset Password',
-        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-      };
-      smtpTransport.sendMail(mailOptions, function(err) {
-        req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-        done(err, 'done');
-      });
-    }
-  ], function(err) {
-    if (err) return next(err);
-    res.redirect('/user/forgot');
-  });
+    ], function(err) {
+        if (err) return next(err);
+        res.redirect('/user/forgot');
+    });
 });
 
 
@@ -207,10 +270,6 @@ router.post('/reset/:token', function(req, res) {
                     req.flash('error', 'Password reset token is invalid or has expired.');
                     return res.redirect('back');
                 }
-                // var newUser = new User();
-                // newUser.username = req.body.username;
-                // newUser.email = req.body.email;
-                // newUser.password = newUser.generateHash(req.body.password);
 
                 user.password = user.generateHash(req.body.password);
                 user.resetPasswordToken = undefined;

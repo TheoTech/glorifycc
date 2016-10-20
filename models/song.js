@@ -15,7 +15,8 @@ var songSchema = new Schema({
     source: Schema.Types.ObjectId,
     v: Number,
     oriSong: String,
-    timeAdded: Date
+    timeAdded: Date,
+    private: Boolean
 })
 
 module.exports = mongoose.model('Song', songSchema)

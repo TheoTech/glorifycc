@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var babel = require('gulp-babel');
 var nodemon = require('gulp-nodemon');
+var watch = require('gulp-watch')
 
 //main task
 gulp.task('script', function() {

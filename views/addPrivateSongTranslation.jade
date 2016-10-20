@@ -3,10 +3,10 @@ extends layout
 block content
     include topnav
     - var langCapitalized = song.lang.charAt(0).toUpperCase() + song.lang.slice(1)
-    if messages[0]
-        .alert.alert-danger
-            each msg in messages
-                p #{msg.msg}
+    //- if messages[0]
+    //-     .alert.alert-danger
+    //-         each msg in messages
+    //-             p #{msg.msg}
         
     form(role='form', method="post", action="")
         .row
@@ -25,10 +25,7 @@ block content
                     input#language.form-control(name="lang", value=langCapitalized, readonly)         
                 .form-group
                     label(for="title") Title
-                    input#title.form-control(name="title", type="text", value=song.title, readonly)    
-                .form-group
-                    label.capitalize(for="copyright") Copyright
-                    input.capitalize.form-control(name="copyright", value=song.copyright, readonly)
+                    input#title.form-control(name="title", type="text", value=song.title, readonly)  
             .col-md-6
                 .form-group
                     label(for="translationLang") Language
@@ -40,11 +37,6 @@ block content
                 .form-group
                     label(for="translationTitle") Title
                     input#title.form-control(name="translationTitle", type="text")
-                .form-group
-                    label(for="translationCopyright") Copyright
-                    select#copyright.form-control(name="translationCopyright")
-                        option Public
-                        option CC0
         .row
             .col-md-6
                 .form-group

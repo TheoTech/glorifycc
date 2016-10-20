@@ -2,18 +2,27 @@ extends layout
 
 block content
     include topnav
-    a.btn.btn-success(href='/songlist') Browse Songs
     h1 My Library
+    #searchBox
+    if messages.error
+        .alert.alert-danger
+            p #{messages.error}
     br
+    a.btn.btn-default(href='privatesong/add') Add Private Song
     #library
 
     script.
         var s = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var playlists = !{JSON.stringify(playlistLibrary).replace(/<\//g, "<\\/")}
+        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
     script(src='/bower_components/mithril/mithril.min.js')
+    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/addToPlaylistButton.js')
+    script(src='/dist/javascripts/deleteButton.js')
+    script(src='/dist/javascripts/searchBox.js')
     script(src='/dist/javascripts/libraryTable.js')
     script.
         libraryTableComponent.init(document.getElementById('library'))
+        m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: '/user/library'}))
 
         
         

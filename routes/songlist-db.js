@@ -9,7 +9,7 @@ var express = require('express'),
 //   next()
 // })
 
-router.get('/', function(req, res) {
+router.get('/test', function(req, res) {
     Song.find({
         source: null
     }, function(err, songs, count) {
@@ -46,7 +46,8 @@ router.get('/add', function(req, res) {
 
 router.post('/add', function(req, res) {
     var title = req.body.title
-    var stringArr = req.body.lyric.split(/\r?\n|\//)
+    var lyricArray = req.body.lyric.split(/\r?\n|\//)
+
     Song.findOne({
         title: title
     }, function(err, song) {
@@ -64,13 +65,13 @@ router.post('/add', function(req, res) {
                 author: req.body.author,
                 year: req.body.year,
                 lang: req.body.lang,
-                lyric: stringArr.slice(0),
+                lyric: lyricArray,
                 contributor: req.user.username,
                 copyright: req.body.copyright,
-                timeAdded: Date.now()
+                timeAdded: Date.now(),
+                private: false
             })
 
-            console.log(stringArr)
             newSong.save(function(err) {
                 if (err) {
                     res.status(400).send('error saving new song ' + err)
@@ -80,6 +81,13 @@ router.post('/add', function(req, res) {
             })
         }
     })
+})
+
+router.delete('/:song_id', function(req, res){
+  Song.remove({_id: req.params.song_id}, function(err){
+    if (err) return handleError(err)
+    res.send()
+  })
 })
 
 router.route('/:song_id/edit')

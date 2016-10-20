@@ -3,13 +3,13 @@ extends layout
 block content
     include topnav
     .row
-        .col-md-6
+        .col-xs-6
             h1 #{song.title}
             h3 by #{song.author}
             h4 Copyright: #{song.copyright}
             h4 Contributor: #{song.contributor}
         if isTranslationExisted
-            .col-md-6
+            .col-xs-6
                 h1 #{rightTranslation.title}
                 h3 by #{song.author}
                 h4 Copyright: #{rightTranslation.copyright}
@@ -18,7 +18,7 @@ block content
     br
     br
     .row
-        .col-md-6.pull-right
+        .col-xs-6.pull-right
             .form-group
                 label(for="language") Language
                 select#myselect.form-control.capitalize(name="language", default="none", onChange= 'window.location.href=this.value')
@@ -26,7 +26,7 @@ block content
                     for t in translations
                         option(value='?lang=' + t.lang) #{t.lang}
     .row
-        .col-md-6
+        .col-xs-6
             h4.capitalize=song.lang
             <p> 
             each line in song.lyric
@@ -35,9 +35,11 @@ block content
                 - else
                     !{line}
                     br
-            </p>        
+            </p> 
 
-        .col-md-6
+            -if(!(login && user.username == "admin"))
+                #song      
+        .col-xs-6
             if isTranslationExisted 
                 h4.capitalize #{rightTranslation.lang}
                 <p> 
@@ -47,20 +49,30 @@ block content
                     - else
                         !{line}
                         br
-                </p>  
+                </p> 
+
                 -if(!(login && user.username == "admin"))  
-                    #translation 
+                    #translation
             br 
-            -if(login && user.username == "admin")
+            -if(song.private)
                 a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
-    br
-    -if(!(login && user.username == "admin"))
-        #song
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
         var isTranslationExisted = !{JSON.stringify(isTranslationExisted).replace(/<\//g, "<\\/")}
+        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+        var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
     script(src='/dist/javascripts/songButton.js')
+    script(src='/dist/javascripts/addToPlaylistButton.js')
+    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/addOrDeleteButton.js')
+    script(src='/dist/javascripts/songPageButtons.js')
     script.
-        buttonComponent.init(document.getElementById('song'), song)
-        if (isTranslationExisted) buttonComponent.init(document.getElementById('translation'), translation)
+        var url = '/songlist/' + song._id
+        if(!song.copyright){
+          url = '/user/privatesong/' + song._id
+        }
+        m.mount(document.getElementById('song'), m(songPageButtonsComponent.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
+        if (isTranslationExisted) {
+            m.mount(document.getElementById('translation'), m(songPageButtonsComponent.buttons, {_id: translation._id}))
+        }

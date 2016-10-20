@@ -18,16 +18,15 @@ var config = require('config')
 
 var app = module.exports = express();
 
-
-var routes = require('./routes/index');
-var songlist = require('./routes/songlist');
+var index = require('./routes/index');
 var songlistdb = require('./routes/songlist-db');
 var searchbyletter = require('./routes/search-by-letter');
 var searchbylang = require('./routes/search-by-lang');
 var user = require('./routes/user');
 var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
-var userlist = require('./routes/userlist')
+var userlist = require('./routes/userlist');
+var privatesong = require('./routes/user.privatesong');
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -93,15 +92,15 @@ app.use('/bower_components', express.static(path.join(__dirname, 'bower_componen
 app.use('/dist', express.static(path.join(__dirname, 'dist')))
 
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/user', user)
-app.use('/songlist', songlist);
 app.use('/songlist-db', songlistdb)
 app.use('/search-by-letter', searchbyletter)
 app.use('/search-by-lang', searchbylang)
 app.use('/userlist', userlist)
 app.use('/user/signup', usersignup)
 app.use('/user/playlist', userplaylist)
+app.use('/user/privatesong', privatesong)
 
 app.get('/api', function(req, res) {
     app.render('songs-in-pdf', function(err, html) {

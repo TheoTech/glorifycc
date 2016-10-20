@@ -2,9 +2,10 @@ extends layout
 
 block content
     include topnav
-    if msg
+    if errors
         .alert.alert-danger
-            p #{msg}
+            each error in errors
+                p #{error.msg}
     .row
         .col-md-6
             h1 Add a Song
@@ -16,20 +17,12 @@ block content
                     label(for="author") Author
                     input#singer.form-control(name="author", type="text")
                 .form-group
-                    label(for="year") Year Published
-                    input#singer.form-control(name="year", type="text")
-                .form-group
                     label(for="lang") Language
                     select#language.form-control(name="lang")
                         option(value="english") English
                         option(value="mandarin") Mandarin
                         option(value="spanish") Spanish
                         option(value="portuguese") Portuguese
-                .form-group
-                    label(for="copyright") Copyright
-                    select#copyright.form-control(name="copyright")
-                        option Public
-                        option CC0
                 .form-group
                     label(for="lyric") Lyric
                     textarea#lyric.form-control(name="lyric", rows='20')
