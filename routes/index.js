@@ -9,43 +9,6 @@ var express = require('express'),
 var fs = require('file-system');
 var officegen = require('officegen');
 var async = require('async');
-// var http = require('http')
-
-
-// http.create
-// router.get('/temp', function(req, res) {
-//     Song.find(function(err, songs) {
-//         songs.forEach((s) => {
-//             s.private = false;
-//             s.save();
-//         })
-//         res.send('success')
-//     })
-// })
-
-// router.get('/dlppt', function(req, res){
-//   var file = fs.readFile('out.pptx', 'binary')
-//   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.presentationml.presentation')
-//   res.setHeader('Content-Disposition', 'attachment; filename=out.pptx')
-//   res.write(file, 'binary')
-//   res.end()
-// })
-
-
-
-<<
-<< << < c2062782029385f787d86182e5d8a0eaea135a60
-router.get('/temp', function(req, res) {
-        Song.find(function(err, songs) {
-            songs.forEach((s) => {
-                s.private = false;
-                s.save();
-            })
-            res.send('success')
-        })
-    }) ===
-    === = >>>
-    >>> > pptx feature done
 
 router.get('/', function(req, res) {
     console.log()
