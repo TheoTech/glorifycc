@@ -18,14 +18,15 @@ router.get('/temp', function(req, res) {
 })
 
 router.get('/', function(req, res) {
-    console.log()
-    var messages = req.flash()
+    var messages = req.flash();
+    var langsExist;
     Song.find({
             private: false
         }, function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
+            langsExist = _.uniq(songs.map((s) => s.lang))
             if (req.isAuthenticated()) {
                 User.findOne({
                     _id: req.user._id
@@ -39,7 +40,8 @@ router.get('/', function(req, res) {
                             songs: songs,
                             inLibrary: user.library,
                             playlists: playlists,
-                            messages: messages
+                            messages: messages,
+                            langsExist: langsExist
                         })
                     })
 
@@ -49,7 +51,8 @@ router.get('/', function(req, res) {
                     songs: songs,
                     inLibrary: [],
                     playlists: [],
-                    messages: messages
+                    messages: messages,
+                    langsExist: langsExist
                 })
             }
         })
@@ -60,51 +63,70 @@ router.get('/', function(req, res) {
 })
 
 router.put('/', function(req, res) {
-    var langShown = req.body.langShown.toLowerCase()
-    var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
+    var langShown = req.body.langShown
+    var langFilter = req.body.langFilter
+    var searchString = req.body.searchString
     var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
 
-
-    function findOriginalSong(done) {
-        Song.find({
-            source: {
-                $exists: false
-            },
-            private: false
-        }, function(err, songs) {
-            done(err, songs)
-        })
-    }
-
-    function findTranslations(songs, done) {
-        var task = songs.map((s, i, arr) => {
-            return function(done) {
-                var temp = []
-                temp.push(s)
-                Song.find({
-                    source: s._id,
+    var findOriginalSong = function(done) {
+        if (searchString) {
+            Song.find({
+                    source: {
+                        $exists: false
+                    },
+                    $text: {
+                        $search: "\"" + searchString + "\""
+                    },
                     private: false
-                }, (err, translations) => {
-                    translations.forEach((t) => {
-                        temp.push(t)
-                    })
-                    songs2d.push(temp)
-                    if (i === arr.length - 1) {
-                        done(null, songs2d)
-                    } else {
-                        done()
-                    }
+                },
+                function(err, songs) {
+                    done(err, songs)
                 })
-            }
-        });
-        async.waterfall(task, function(err, songs2d) {
-            done(null, songs2d)
-        });
+        } else {
+            Song.find({
+                    source: {
+                        $exists: false
+                    },
+                    private: false
+                },
+                function(err, songs) {
+                    done(err, songs)
+                })
+        }
     }
 
-    function applyFilter(songs2d, done) {
-        console.log(songs2d)
+    var findTranslations = function(songs, done) {
+        if (_.isEmpty(songs)) {
+            done(null, [])
+        } else {
+            var task = songs.map((s, i, arr) => {
+                return function(done) {
+                    var temp = []
+                    temp.push(s)
+                    Song.find({
+                        source: s._id,
+                        private: false
+                    }, (err, translations) => {
+                        translations.forEach((t) => {
+                            temp.push(t)
+                        })
+                        songs2d.push(temp)
+                        if (i === arr.length - 1) {
+                            done(null, songs2d)
+                        } else {
+                            done()
+                        }
+                    })
+                }
+            });
+            async.waterfall(task, function(err, songs2d) {
+                done(null, songs2d)
+            });
+        }
+    }
+
+    var applyFilter = function(songs2d, done) {
         if (!_.isEmpty(langFilter)) {
             songs2d = songs2d.filter((songs) => {
                 var langArray = (songs.map((song) => song.lang))
@@ -119,7 +141,7 @@ router.put('/', function(req, res) {
         done(null, songs2d)
     }
 
-    function concatSongs(songs2d, done) {
+    var concatSongs = function(songs2d, done) {
         if (!_.isEmpty(songs2d)) {
             songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
                 return _.concat(prev, curr)
@@ -128,7 +150,7 @@ router.put('/', function(req, res) {
         done(null, songs2d)
     }
 
-    function loadMore(songs2d, done) {
+    var loadMore = function(songs2d, done) {
         if (langShown !== 'all') {
             songs2d = songs2d.filter((s) => s.lang === langShown)
         }
@@ -138,7 +160,7 @@ router.put('/', function(req, res) {
         done(null, songs2d)
     }
 
-    function finalize(err, songs2d) {
+    var finalize = function(err, songs2d) {
         if (err) return handleError(err)
         res.send({
             songs: songs2d
@@ -321,7 +343,7 @@ router.get('/search', function(req, res) {
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
-        // v = req.query.v || ''
+            // v = req.query.v || ''
         song_id = req.params.song_id
         song = {}
         Song.findById(song_id, function(err, s) {
@@ -431,22 +453,22 @@ router.route('/:song_id/add-translation')
                         res.status(400).send('error ' + err)
                     }
                     var newSong = new Song({
-                        title: req.body.translationTitle,
-                        author: song.author,
-                        year: song.year,
-                        lang: lang,
-                        contributor: req.user.username,
-                        copyright: req.body.translationCopyright,
-                        lyric: translationLyricArray.slice(0),
-                        source: song.id,
-                        oriSong: song.title,
-                        timeAdded: Date.now()
-                    })
-                    // if (translation) {
-                    //     newSong.v = translation.v + 1
-                    // } else {
-                    //     newSong.v = 1;
-                    // }
+                            title: req.body.translationTitle,
+                            author: song.author,
+                            year: song.year,
+                            lang: lang,
+                            contributor: req.user.username,
+                            copyright: req.body.translationCopyright,
+                            lyric: translationLyricArray.slice(0),
+                            source: song.id,
+                            oriSong: song.title,
+                            timeAdded: Date.now()
+                        })
+                        // if (translation) {
+                        //     newSong.v = translation.v + 1
+                        // } else {
+                        //     newSong.v = 1;
+                        // }
                     newSong.save(function(err) {
                         if (err) {
                             res.status(400).send('error saving new song ' + err)

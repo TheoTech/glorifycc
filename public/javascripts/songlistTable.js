@@ -1,11 +1,14 @@
 var songlistTable = {
     view: function(ctrl, args) {
+        console.log(args.langsExist)
         return [
             m(showSongsIn, {
                 langShown: args.langShown,
                 langFilter: args.langFilter,
                 loadMoreAndApplyFilter: args.loadMoreAndApplyFilter,
-                initial: args.initial
+                initial: args.initial,
+                langsExist: args.langsExist,
+                searchString: args.searchString
             }),
             m('.table-responsive', [
                 m('table.table', [

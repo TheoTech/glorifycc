@@ -13,7 +13,6 @@ var deleteButtonComponent = (function(){
           .then(function(data) {
               songs(data.songs)
           })
-
   }
 
   var deleteButton = {

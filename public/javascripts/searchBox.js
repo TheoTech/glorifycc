@@ -1,5 +1,4 @@
 var searchBoxComponent = (function() {
-    var tag = m.prop()
     var enter = function(elem, checkboxClass) {
         $(elem).keyup(function(e) {
             if (e.keyCode == 13) {
@@ -12,8 +11,8 @@ var searchBoxComponent = (function() {
         view: function(ctrl, args) {
             return m('#searchInput.input-group', [
                 m('input.form-control[type=text]', {
-                    placeholder: 'Language, Title, or Author',
-                    onchange: m.withAttr('value', tag),
+                    placeholder: 'Language, Title, Lyric or Author',
+                    onchange: m.withAttr('value', args.searchString),
                     config: function(elem, isInit, context) {
                         if (!isInit) {
                             enter(elem);
@@ -23,19 +22,42 @@ var searchBoxComponent = (function() {
                 m('span.input-group-btn', [
                     m('button#search-button.btn.btn-success', {
                         onclick: function() {
-                            console.log(args.url)
-                            window.location.replace(args.url + '/search?q=' + tag())
+                            args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
                         }
                     }, [
                         m('i.glyphicon.glyphicon-search')
                     ])
                 ]),
-                m(hasTranslationsIn, {
-                    langShown: args.langShown,
-                    langFilter: args.langFilter,
-                    loadMoreAndApplyFilter: args.loadMoreAndApplyFilter,
-                    initial: args.initial
-                })
+                m('span.input-group-btn', [
+                    m('.btn-group', [
+                        m('button.btn.btn-default.dropdown-toggle[type=button]', {
+                            'data-toggle': "dropdown",
+                            'aria-haspopup': "true",
+                            'aria-expanded': "false"
+                        }, [
+                            m('i.glyphicon.glyphicon-cog')
+                        ]),
+                        m('ul.dropdown-menu', [
+                            m('li', [
+                                m('h5', 'Show songs that have translations in: ')
+                            ]),
+                            args.langsExist.map((lang) => {
+                                return m('li.capitalize', [
+                                    m('input[type=checkbox]', {
+                                        onclick: function() {
+                                            if (this.checked) {
+                                                args.langFilter().push(lang)
+                                            } else {
+                                                _.remove(args.langFilter(), (n) => n === lang)
+                                            }
+                                            args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
+                                        }
+                                    })
+                                ], lang)
+                            })
+                        ])
+                    ])
+                ])
             ])
         }
     }
