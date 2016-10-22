@@ -52,7 +52,8 @@ var home = (function() {
                 playlistName: playlistName,
                 inLibrary: inLibrary,
                 langsExist: langsExist,
-                searchString: searchString
+                searchString: searchString,
+                isLoggedIn: isLoggedIn
             }))
         }
     }

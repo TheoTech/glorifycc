@@ -19,7 +19,8 @@ var songlistTable = {
                         m('th', [
                             m(playlistDropdownComponent.playlistDropdown, {
                                 playlistName: args.playlistName,
-                                url: '/'
+                                url: '/',
+                                isLoggedIn: args.isLoggedIn
                             })
                         ])
                     ]),

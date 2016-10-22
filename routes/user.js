@@ -16,31 +16,31 @@ var config = require('config')
 //   res.render('profile', {});
 // })
 
-router.get('/library/search', function(req, res) {
-    var tag = req.query.q
-    var messages = req.flash()
-    User.findOne({
-            _id: req.user._id
-        })
-        .populate('library')
-        .exec(function(err, user) {
-            if (err) return handleError(err)
-            Playlist.find({
-                owner: user._id
-            }, function(err, playlists) {
-                if (err) return handleError(err)
-                res.render('library', {
-                    songs: user.library.filter((s) => {
-                        return (s.title.search(tag) !== -1 ||
-                            s.lang.search(tag) !== -1 ||
-                            s.author.search(tag) !== -1)
-                    }),
-                    playlists: playlists,
-                    messages: messages
-                })
-            })
-        })
-})
+// router.get('/library/search', function(req, res) {
+//     var tag = req.query.q
+//     var messages = req.flash()
+//     User.findOne({
+//             _id: req.user._id
+//         })
+//         .populate('library')
+//         .exec(function(err, user) {
+//             if (err) return handleError(err)
+//             Playlist.find({
+//                 owner: user._id
+//             }, function(err, playlists) {
+//                 if (err) return handleError(err)
+//                 res.render('library', {
+//                     songs: user.library.filter((s) => {
+//                         return (s.title.search(tag) !== -1 ||
+//                             s.lang.search(tag) !== -1 ||
+//                             s.author.search(tag) !== -1)
+//                     }),
+//                     playlists: playlists,
+//                     messages: messages
+//                 })
+//             })
+//         })
+// })
 
 router.get('/library', isLoggedIn, function(req, res, next) {
     var messages = req.flash()
@@ -85,9 +85,7 @@ router.put('/library', function(req, res) {
                 })
                 newPlaylist.save(function(err) {
                     if (err) return handleError(err)
-                    res.send({
-                        url: url
-                    })
+                    res.send({})
                 })
             }
         })

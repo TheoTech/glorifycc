@@ -41,10 +41,10 @@ router.get('/', function(req, res) {
                             inLibrary: user.library,
                             playlists: playlists,
                             messages: messages,
-                            langsExist: langsExist
+                            langsExist: langsExist,
+                            isLoggedIn: true
                         })
                     })
-
                 })
             } else {
                 res.render('index', {
@@ -52,7 +52,8 @@ router.get('/', function(req, res) {
                     inLibrary: [],
                     playlists: [],
                     messages: messages,
-                    langsExist: langsExist
+                    langsExist: langsExist,
+                    isLoggedIn: false
                 })
             }
         })

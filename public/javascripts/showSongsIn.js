@@ -3,7 +3,7 @@ var showSongsIn = {
         return m('div', [
             m('h5', 'Show songs in: ', [
                 m('.btn-group', [
-                    m('button.btn.btn-default.dropdown-toggle[type=button]', {
+                    m('button.btn.btn-default.dropdown-toggle[type=button].capitalize', {
                         'data-toggle': "dropdown",
                         'aria-haspopup': "true",
                         'aria-expanded': "false"
