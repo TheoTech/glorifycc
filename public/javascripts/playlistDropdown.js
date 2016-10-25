@@ -14,6 +14,7 @@ var playlistDropdownComponent = (function() {
                 }
             })
     }
+
     var showModal = function(elem) {
         $('#newPlaylist').modal('show');
     }
