@@ -85,9 +85,14 @@ router.put('/library', function(req, res) {
                 })
                 newPlaylist.save(function(err) {
                     if (err) return handleError(err)
-                    res.send({
-                        url: url
+                    Playlist.find({
+                        owner: owner
+                    }, function(err, playlists) {
+                        res.send({
+                            playlists: playlists
+                        })
                     })
+
                 })
             }
         })

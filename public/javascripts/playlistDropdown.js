@@ -1,4 +1,5 @@
 var playlistDropdownComponent = (function() {
+    var currentPlaylists = m.prop(playlists)
     var addPlaylist = function(name, url) {
         m.request({
                 method: 'PUT',
@@ -11,8 +12,26 @@ var playlistDropdownComponent = (function() {
             .then(function(res) {
                 if (res.url) {
                     window.location.href = res.url
+                } else {
+                    currentPlaylists(res.playlists)
                 }
             })
+    }
+    var enter = function(elem) {
+        // $(elem).keypress(function(e) {
+        //     var key = e.which;
+        //     if (key == 13) // the enter key code
+        //     {
+        //         $('#createButton').click();
+        //         return false;
+        //     }
+        // });
+        $(elem).keyup(function(e) {
+            console.log('hehehe')
+            if (e.keyCode === 13) {
+                $("#createButton").click()
+            }
+        })
     }
 
     var showModal = function(elem) {
@@ -34,24 +53,24 @@ var playlistDropdownComponent = (function() {
                     ]),
                     m('ul.dropdown-menu', [
                         m('li', [
-                          m('a', {
-                              href: '#',
-                              onclick: function(elem, isInit, context) {
-                                  if (!isInit) {
-                                      showModal(elem);
-                                  }
-                              }
-                          }, 'New Playlist')
+                            m('a', {
+                                href: '#',
+                                onclick: function(elem, isInit, context) {
+                                    if (!isInit) {
+                                        showModal(elem);
+                                    }
+                                }
+                            }, 'New Playlist')
                         ]),
                         m('li.divider'),
-                        playlists.map((pl) => {
+                        currentPlaylists().map((pl) => {
                             return m('li', [
-                              m('a', {
-                                  href: '#',
-                                  onclick: function(){
-                                    args.playlistName(pl.name)
-                                  }
-                              }, pl.name)
+                                m('a', {
+                                    href: '#',
+                                    onclick: function() {
+                                        args.playlistName(pl.name)
+                                    }
+                                }, pl.name)
                             ])
                         })
                     ])
@@ -64,14 +83,20 @@ var playlistDropdownComponent = (function() {
                             ]),
                             m('.modal-body', [
                                 m('label', 'Enter Playlist Name'),
-                                m('input[name=playlist type=text]', {
+                                m('input.form-control[name=playlist type=text]', {
                                     value: 'New Playlist',
-                                    onchange: m.withAttr('value', args.playlistName)
+                                    onchange: m.withAttr('value', args.playlistName),
+                                    config: function(elem, isInit, context) {
+                                        if (!isInit) {
+                                            enter(elem);
+                                        }
+                                    }
                                 }),
                                 m('br'),
-                                m('button.btn.btn-success', {
+                                m('button#createButton.btn.btn-success', {
                                     onclick: function() {
                                         addPlaylist(args.playlistName(), args.url)
+                                        $('#newPlaylist').modal('hide')
                                     }
                                 }, 'Create')
                             ])
