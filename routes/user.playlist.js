@@ -230,10 +230,9 @@ router.route('/:playlist_name/export3')
                         temp.push(s.song)
                         s.translations.forEach((t) => {
                             temp.push(t)
-                                // console.log(t.lyric)
                         })
+                        //this is for taking the mininum number of lines between song and translations
                         temp.push(_.min(temp.map((s) => s.lyric.length)))
-                            // console.log(temp)
                         songs2d.push(temp)
                         if (i === arr.length - 1) {
                             next()
@@ -276,32 +275,33 @@ router.route('/:playlist_name/export3')
                 console.log(err);
             });
 
-            pptx.setDocTitle('Sample PPTX Document');
-
+            pptx.setDocTitle(playlistName);
             function generateSlides(callback) {
                 songs2d.forEach((s2d) => {
                     slide = pptx.makeNewSlide();
                     slide.back = {
                         type: 'solid',
-                        color: 'ffffff'
+                        color: '000000'
                     };
                     for (var i = 0; i < s2d[0].lyric.length; i++) {
+                        //make new slide for every lyric line
                         slide = pptx.makeNewSlide();
                         slide.back = {
                             type: 'solid',
-                            color: 'ffffff'
+                            color: '000000'
                         };
                         for (var j = 0; j < s2d.length - 1; j++) {
+                            //print the lyric line for each translation
                             pObj = slide.addText(s2d[j].lyric[i], {
-                                x: 'c',
-                                y: 250 + j * 100,
-                                cx: '100%',
-                                cy: 50,
+                                x: 'c', //x position
+                                y: 250 + j * 100, //y position
+                                cx: '100%', //width
+                                cy: 50, //height
                                 font_size: 40,
                                 align: 'center',
                                 color: {
                                     type: 'solid',
-                                    color: '000000'
+                                    color: 'ffffff'
                                 }
                             });
                         }
@@ -317,7 +317,6 @@ router.route('/:playlist_name/export3')
                 out.on('error', function(err) {
                     console.log(err);
                 });
-                // console.log('hehehe')
                 pptx.generate(res);
             }
 
