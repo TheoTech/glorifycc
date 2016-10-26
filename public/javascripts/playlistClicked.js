@@ -1,7 +1,6 @@
 var playlistClickedComponent = (function(){
-    var songs = m.prop(playlist.songs)
-    var playlistName = m.prop(playlist.name)
-
+    var songs = m.prop(playlist_songs)
+    var playlistName = m.prop(playlist_name)
     var deletePlaylist = function(name) {
         m.request({
                 method: 'PUT',

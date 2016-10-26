@@ -4,13 +4,11 @@ block content
     include topnav
     h1 Select Translations
     #export1Table
-    
+
     script.
-        var playlistID = !{JSON.stringify(playlistID).replace(/<\//g, "<\\/")}
-        var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
+        var uniqueLanguages = !{JSON.stringify(uniqueLanguages).replace(/<\//g, "<\\/")}
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var translations2d = !{JSON.stringify(translations2d).replace(/<\//g, "<\\/")}
-        var exportSongCollection = !{JSON.stringify(currentExportSongCollection).replace(/<\//g, "<\\/")}
+        var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/export1Table.js')
     script.
         export1TableComponent.init(document.getElementById('export1Table'))

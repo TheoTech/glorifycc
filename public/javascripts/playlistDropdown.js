@@ -18,14 +18,6 @@ var playlistDropdownComponent = (function() {
             })
     }
     var enter = function(elem) {
-        // $(elem).keypress(function(e) {
-        //     var key = e.which;
-        //     if (key == 13) // the enter key code
-        //     {
-        //         $('#createButton').click();
-        //         return false;
-        //     }
-        // });
         $(elem).keyup(function(e) {
             console.log('hehehe')
             if (e.keyCode === 13) {
