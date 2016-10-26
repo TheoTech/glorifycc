@@ -4,18 +4,11 @@ var express = require('express'),
     User = require('../models/user'),
     _ = require('lodash'),
     Playlist = require('../models/playlist'),
-    async = require('async')
+    async = require('async');
 
-
-router.get('/temp', function(req, res) {
-    Song.find(function(err, songs) {
-        songs.forEach((s) => {
-            s.private = false;
-            s.save();
-        })
-        res.send('success')
-    })
-})
+var fs = require('file-system');
+var officegen = require('officegen');
+var async = require('async');
 
 router.get('/', function(req, res) {
     console.log()
@@ -64,7 +57,6 @@ router.put('/', function(req, res) {
     var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
     var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
-
 
     function findOriginalSong(done) {
         Song.find({
@@ -146,6 +138,7 @@ router.put('/', function(req, res) {
     }
 
     async.waterfall([findOriginalSong, findTranslations, applyFilter, concatSongs, loadMore], finalize)
+
 })
 
 router.post('/', function(req, res) {
@@ -321,7 +314,7 @@ router.get('/search', function(req, res) {
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
-        // v = req.query.v || ''
+            // v = req.query.v || ''
         song_id = req.params.song_id
         song = {}
         Song.findById(song_id, function(err, s) {
@@ -431,22 +424,22 @@ router.route('/:song_id/add-translation')
                         res.status(400).send('error ' + err)
                     }
                     var newSong = new Song({
-                        title: req.body.translationTitle,
-                        author: song.author,
-                        year: song.year,
-                        lang: lang,
-                        contributor: req.user.username,
-                        copyright: req.body.translationCopyright,
-                        lyric: translationLyricArray.slice(0),
-                        source: song.id,
-                        oriSong: song.title,
-                        timeAdded: Date.now()
-                    })
-                    // if (translation) {
-                    //     newSong.v = translation.v + 1
-                    // } else {
-                    //     newSong.v = 1;
-                    // }
+                            title: req.body.translationTitle,
+                            author: song.author,
+                            year: song.year,
+                            lang: lang,
+                            contributor: req.user.username,
+                            copyright: req.body.translationCopyright,
+                            lyric: translationLyricArray.slice(0),
+                            source: song.id,
+                            oriSong: song.title,
+                            timeAdded: Date.now()
+                        })
+                        // if (translation) {
+                        //     newSong.v = translation.v + 1
+                        // } else {
+                        //     newSong.v = 1;
+                        // }
                     newSong.save(function(err) {
                         if (err) {
                             res.status(400).send('error saving new song ' + err)

@@ -7,16 +7,6 @@ var _ = require('lodash');
 var Song = require('../models/song');
 
 
-// router.get('/', function(req, res) {
-//     Song.find(function(err, songs) {
-//         if (err) return handleError(err)
-//         console.log(songs)
-//         res.render('privateSong', {
-//             songs: songs
-//         })
-//     })
-// })
-
 router.get('/add', function(req, res) {
     res.render('addPrivateSong', {})
 })

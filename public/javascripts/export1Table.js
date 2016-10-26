@@ -7,12 +7,6 @@ var export1TableComponent = (function() {
             })
     })
 
-    var exportSong = function(songID, translationID) {
-        this.song = songID
-        this.translations = []
-        this.translations.push(translationID)
-    }
-
     //this function adds/deletes the song in the ExportSong collection
     var pickTranslation = function(songID, translationID, checked) {
         var idx = _.findIndex(exportSongCollection, (e) => e.song === songID)
@@ -29,7 +23,6 @@ var export1TableComponent = (function() {
                 exportSongCollection.splice(idx, 1)
             }
         }
-        // console.log(exportSongCollection)
     }
 
     var postExportSongCollection = function(exportSongCollection) {
