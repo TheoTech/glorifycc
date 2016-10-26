@@ -9,9 +9,15 @@ var export1TableComponent = (function() {
                 data: songs
             })
             .then(function(res) {
-              console.log(res.url)
+                console.log(res.url)
                 window.location.href = res.url
             })
+    }
+
+    var selectAll = function(elem, checkboxClass) {
+        $(elem).click(function() {
+            $(".checkBoxClass").prop('checked', $(this).prop('checked'));
+        });
     }
 
     var export1Table = {
@@ -34,7 +40,12 @@ var export1TableComponent = (function() {
                                     margin: 'auto'
                                 }, [
                                     m('input', {
-                                        type: 'checkbox'
+                                        type: 'checkbox',
+                                        onclick: function() {
+                                            if($("." + lang).checked){
+
+                                            }
+                                        }
                                     })
                                 ])
                             })
@@ -47,6 +58,7 @@ var export1TableComponent = (function() {
                                     var songID = rightSong ? rightSong._id : ''
                                     return m('td', [
                                         m('input', {
+                                            className: lang,
                                             id: rightSong ? songID : '',
                                             type: 'checkbox',
                                             disabled: rightSong ? false : true,
