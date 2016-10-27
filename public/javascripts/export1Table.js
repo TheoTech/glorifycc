@@ -14,10 +14,12 @@ var export1TableComponent = (function() {
             })
     }
 
-    var selectAll = function(elem, checkboxClass) {
-        $(elem).click(function() {
-            $(".checkBoxClass").prop('checked', $(this).prop('checked'));
-        });
+    var selectAll = function(elem, lang) {
+        $('.' + lang).each(function(i, obj) {
+            if ($(obj).prop('checked') !== $(elem).prop('checked')) {
+                $(obj).trigger('click');
+            }
+        })
     }
 
     var export1Table = {
@@ -42,9 +44,7 @@ var export1TableComponent = (function() {
                                     m('input', {
                                         type: 'checkbox',
                                         onclick: function() {
-                                            if($("." + lang).checked){
-
-                                            }
+                                            selectAll(this, lang)
                                         }
                                     })
                                 ])
