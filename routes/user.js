@@ -87,7 +87,10 @@ router.put('/library', function(req, res) {
                 newPlaylist.save(function(err) {
                     if (err) return handleError(err)
                     Playlist.find({
-                        owner: owner
+                        owner: owner,
+                        song: {
+                            $exists: false
+                        }
                     }, function(err, playlists) {
                         res.send({
                             playlists: playlists
@@ -126,7 +129,7 @@ router.post('/library', function(req, res, next) {
                         owner: playlistOwner,
                         name: name,
                         song: song_id,
-                        translationsPicked: []
+                        translationsChecked: []
                     })
                     Song.findById(song_id, function(err, song) {
                         //find all the family of that song (song + translations)

@@ -32,7 +32,8 @@ router.get('/', function(req, res) {
                             songs: songs,
                             inLibrary: user.library,
                             playlists: playlists,
-                            messages: messages
+                            messages: messages,
+                            isLoggedIn: true
                         })
                     })
 
@@ -42,7 +43,8 @@ router.get('/', function(req, res) {
                     songs: songs,
                     inLibrary: [],
                     playlists: [],
-                    messages: messages
+                    messages: messages,
+                    isLoggedIn: false
                 })
             }
         })

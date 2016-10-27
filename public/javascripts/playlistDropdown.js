@@ -39,6 +39,12 @@ var playlistDropdownComponent = (function() {
                         'aria-expanded': "false",
                         style: {
                             border: 0
+                        },
+                        onclick: function() {
+                            //isLoggedIn is defined on the index.jade
+                            if (!isLoggedIn) {
+                                window.location.href = '/user/login'
+                            }
                         }
                     }, args.playlistName() ? 'Selected Playlist: ' + args.playlistName() : 'Select Playlist', [
                         m('span.caret')

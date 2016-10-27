@@ -141,6 +141,7 @@ router.get('/:playlist_name/export1', function(req, res, next) {
             songs =
                 //get the songs object useful for client side
                 playlists.map((playlist) => {
+                    console.log(playlist.translationsChecked)
                     return {
                         song: playlist.song,
                         availableTranslations: playlist.availableTranslations.map((availableTranslation) => {
@@ -149,12 +150,12 @@ router.get('/:playlist_name/export1', function(req, res, next) {
                                 lang: availableTranslation.lang
                             }
                         }),
-                        translationsChecked: playlist.song.translationsChecked
+                        translationsChecked: playlist.translationsChecked
                     }
                 })
             res.render('export1', {
                 uniqueLanguages: uniqueLanguages,
-                songs: playlists,
+                songs: songs,
                 playlistName: playlistName
             })
         })
@@ -165,22 +166,25 @@ router.get('/:playlist_name/export1', function(req, res, next) {
 router.post('/:playlist_name/export1', function(req, res, next) {
     var playlistName = req.params.playlist_name
     var songs = req.body
-    songs.forEach((song) => {
-        Playlist.findOne({
-            owner: req.user._id,
-            name: playlistName,
-            song: song.song
-        }, function(err, playlist) {
-            playlist.translationsChecked = song.translationsChecked;
-            playlist.save()
+    async.waterfall(songs.map((song, i, arr) => {
+        return function(done) {
+            Playlist.findOne({
+                owner: req.user._id,
+                name: playlistName,
+                song: song.song
+            }, function(err, playlist) {
+                playlist.translationsChecked = song.translationsChecked;
+                playlist.save()
+                done()
+            })
+        }
+    }), function(err) {
+        if (err) return handleError
+        res.send({
+            url: '/user/playlist/' + playlistName + '/export3'
         })
     })
-    res.send({
-        url: '/user/playlist/' + playlistName + '/export3'
-    })
 })
-
-
 
 //this route is for step 2 of exporting playlist
 router.get('/:playlist_name/export2', function(req, res) {
@@ -204,12 +208,13 @@ router.route('/:playlist_name/export3')
             .exec(function(err, playlists) {
                 if (err) return handleError(err)
                 songs2d = playlists.map((playlist) => {
-                        return {
-                            songs: playlist.translationsChecked,
-                            minLine: _.min(playlist.translationsChecked.map((t) => t.lyric.length))
-                        }
-                    })
-                    next()
+                    return {
+                        songs: playlist.translationsChecked,
+                        minLine: _.min(playlist.translationsChecked.map((t) => t.lyric.length))
+                    }
+                })
+                console.log('test: ' + songs2d)
+                next()
             })
     })
     .get(function(req, res) {
@@ -229,10 +234,6 @@ router.route('/:playlist_name/export3')
             });
         } else if (type === 'pptx') {
             filename = Date.now()
-            res.writeHead(200, {
-                "Content-Type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                'Content-disposition': 'attachment; filename=' + filename + '.pptx'
-            });
             var pptx = officegen('pptx');
 
             var slide;
@@ -246,25 +247,25 @@ router.route('/:playlist_name/export3')
                 console.log(err);
             });
 
-            pptx.setDocTitle(playlistName);
+            pptx.setDocTitle('');
 
             function generateSlides(callback) {
-                songs2d.forEach((s2d) => {
+                songs2d.forEach((songObj) => {
                     slide = pptx.makeNewSlide();
                     slide.back = {
                         type: 'solid',
                         color: '000000'
                     };
-                    for (var i = 0; i < s2d[0].lyric.length; i++) {
+                    for (var i = 0; i < songObj.minLine; i++) {
                         //make new slide for every lyric line
                         slide = pptx.makeNewSlide();
                         slide.back = {
                             type: 'solid',
                             color: '000000'
                         };
-                        for (var j = 0; j < s2d.length - 1; j++) {
+                        for (var j = 0; j < songObj.songs.length; j++) {
                             //print the lyric line for each translation
-                            pObj = slide.addText(s2d[j].lyric[i], {
+                            pObj = slide.addText(songObj.songs[j].lyric[i], {
                                 x: 'c', //x position
                                 y: 250 + j * 100, //y position
                                 cx: '100%', //width
@@ -285,9 +286,12 @@ router.route('/:playlist_name/export3')
 
             function finalize() {
                 var out = fs.createWriteStream(filename + '.pptx');
-
                 out.on('error', function(err) {
                     console.log(err);
+                });
+                res.writeHead(200, {
+                    "Content-Type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    'Content-disposition': 'attachment; filename=' + filename + '.pptx'
                 });
                 pptx.generate(res);
             }
@@ -301,7 +305,5 @@ router.route('/:playlist_name/export3')
             })
         }
     })
-
-
 
 module.exports = router;
