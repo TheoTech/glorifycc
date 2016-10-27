@@ -1,6 +1,5 @@
 var playlistClickedComponent = (function(){
-    var songs = m.prop(playlist_songs)
-    var playlistName = m.prop(playlist_name)
+    //Note: var playlist_songs, var playlist_name are defined on playlistClicked.jade
     var deletePlaylist = function(name) {
         m.request({
                 method: 'PUT',

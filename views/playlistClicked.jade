@@ -6,8 +6,8 @@ block content
 
 
     script.
-        var playlist_songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var playlist_name = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
+        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/deleteButton.js')
     script(src='/dist/javascripts/playlistClicked.js')
     script.
