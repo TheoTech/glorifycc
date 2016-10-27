@@ -3,7 +3,7 @@ extends layout
 block content
     include topnav
     header#header(style="text-align: center")
-        h1 SPF.IO Songbase
+        img(src='/images/glorifylogo400x100.png')
         p Find Public Domain and CC0 Worship Song in Multiple Language
         #searchBox(style='width: 30em; margin: auto')
         br
@@ -29,3 +29,6 @@ block content
     script(src='/dist/javascripts/home.js')
     script.
         home.init()
+        $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });

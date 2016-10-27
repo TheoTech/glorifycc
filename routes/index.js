@@ -11,7 +11,6 @@ var officegen = require('officegen');
 var async = require('async');
 
 router.get('/', function(req, res) {
-    console.log()
     var messages = req.flash()
     Song.find({
             private: false
@@ -25,7 +24,10 @@ router.get('/', function(req, res) {
                 }, function(err, user) {
                     if (err) return handleError(err)
                     Playlist.find({
-                        owner: req.user._id
+                        owner: req.user._id,
+                        song: {
+                            $exists: false
+                        }
                     }, function(err, playlists) {
                         if (err) return handleError(err)
                         res.render('index', {

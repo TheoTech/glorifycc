@@ -1,11 +1,12 @@
-var playlistClickedComponent = (function(){
+var playlistClickedComponent = (function() {
     //Note: var playlistName, var songs are defined on playlistClicked.jade
     var deletePlaylist = function(name) {
         m.request({
                 method: 'PUT',
                 url: '/user/playlist',
                 data: {
-                    name: name
+                    name: name,
+                    redirect: true
                 }
             })
             .then(function(res) {

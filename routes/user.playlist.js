@@ -44,54 +44,50 @@ router.get('/', function(req, res, next) {
 //         })
 // })
 
-// router.delete('/', function(req, res) {
-//     var songID = req.body.id
-//     console.log(songID)
-//     var playlistName = req.body.name
-//     Playlist.findOne({
-//         owner: req.user._id,
-//         name: playlistName
-//     }, function(err, pl) {
-//         if (err) return handleError(err)
-//         var index = pl.songs.indexOf(songID)
-//         if (index > -1) {
-//             pl.songs.splice(index, 1)
-//         }
-//         ExportSong.remove({
-//             owner: pl._id,
-//             song: songID
-//         }, function(err) {
-//             pl.save(function(err) {
-//                 if (err) return handleError(err)
-//                 Playlist.findOne({
-//                         owner: req.user._id,
-//                         name: playlistName
-//                     })
-//                     .populate('songs')
-//                     .exec(function(err, afterDelete) {
-//                         res.send({
-//                             msg: 'deleting done',
-//                             songs: afterDelete.songs
-//                         })
-//                     })
-//             })
-//         })
-//
-//     })
-// })
+
+//delete song from playlist
+router.delete('/', function(req, res) {
+    var songID = req.body.id
+    var playlistName = req.body.name
+    Playlist.remove({
+        owner: req.user._id,
+        name: playlistName,
+        song: songID
+    }, function(err) {
+        if (err) return handleError(err)
+        Playlist.find({
+            owner: req.user._id,
+            name: playlistName,
+            song: {
+                $exists: true
+            }
+        }, function(err, playlists) {
+            res.send({
+                songs: playlists.map((pl) => pl.song)
+            })
+        })
+
+    })
+})
+
 
 //delete playlist
 router.put('/', function(req, res) {
     var playlistName = req.body.name
+    var redirect = req.body.redirect
     console.log(playlistName)
     Playlist.remove({
         owner: req.user._id,
         name: playlistName
     }, function(err) {
         if (err) return handleError(err)
-        res.send({
-            url: '/user/playlist'
-        })
+        if (redirect) {
+            res.send({
+                url: '/user/playlist'
+            })
+        } else {
+            res.send({})
+        }
     })
 })
 
