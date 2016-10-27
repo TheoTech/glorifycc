@@ -63,7 +63,7 @@ router.put('/', function(req, res) {
     var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
     var findOriginalSong = function(done) {
-        var query = new RegExp('.*' + searchString + '.*', 'i')
+        var query = new RegExp('.*' + searchString + '.*')
         if (searchString) {
             Song.find({
                     source: {
@@ -72,14 +72,17 @@ router.put('/', function(req, res) {
                     $or: [{
                         title: {
                             $regex: query,
+                            $options: 'si'
                         }
                     }, {
                         author: {
                             $regex: query,
+                            $options: 'si'
                         }
                     }, {
                         lyric: {
                             $regex: query,
+                            $options: 'si'
                         }
                     }],
                     private: false
@@ -361,7 +364,6 @@ router.route('/:song_id')
         })
     })
     .get(function(req, res) {
-        console.log(song._id)
         Song.find({
             $or: [{
                 $and: [{
