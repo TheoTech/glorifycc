@@ -62,16 +62,26 @@ router.put('/', function(req, res) {
     var searchString = req.body.searchString
     var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
-
     var findOriginalSong = function(done) {
+        var query = new RegExp('.*' + searchString + '.*', 'i')
         if (searchString) {
             Song.find({
                     source: {
                         $exists: false
                     },
-                    $text: {
-                        $search: "\"" + searchString + "\""
-                    },
+                    $or: [{
+                        title: {
+                            $regex: query,
+                        }
+                    }, {
+                        author: {
+                            $regex: query,
+                        }
+                    }, {
+                        lyric: {
+                            $regex: query,
+                        }
+                    }],
                     private: false
                 },
                 function(err, songs) {
@@ -155,10 +165,14 @@ router.put('/', function(req, res) {
     }
 
     var finalize = function(err, songs2d) {
-        if (err) return handleError(err)
-        res.send({
-            songs: songs2d
-        })
+        if (err) {
+            res.status(500).send('Internal error' + err)
+            console.log(err)
+        } else {
+            res.send({
+                songs: songs2d
+            })
+        }
     }
 
     async.waterfall([findOriginalSong, findTranslations, applyFilter, concatSongs, loadMore], finalize)

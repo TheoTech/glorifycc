@@ -11,7 +11,7 @@ var searchBoxComponent = (function() {
         view: function(ctrl, args) {
             return m('#searchInput.input-group', [
                 m('input.form-control[type=text]', {
-                    placeholder: 'Language, Title, Lyric or Author',
+                    placeholder: 'Title, Lyric or Author',
                     onchange: m.withAttr('value', args.searchString),
                     config: function(elem, isInit, context) {
                         if (!isInit) {
