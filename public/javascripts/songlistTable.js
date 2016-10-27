@@ -1,11 +1,14 @@
 var songlistTable = {
     view: function(ctrl, args) {
+        console.log(args.langsExist)
         return [
             m(showSongsIn, {
                 langShown: args.langShown,
                 langFilter: args.langFilter,
                 loadMoreAndApplyFilter: args.loadMoreAndApplyFilter,
-                initial: args.initial
+                initial: args.initial,
+                langsExist: args.langsExist,
+                searchString: args.searchString
             }),
             m('.table-responsive', [
                 m('table.table', [
@@ -16,7 +19,8 @@ var songlistTable = {
                         m('th', [
                             m(playlistDropdownComponent.playlistDropdown, {
                                 playlistName: args.playlistName,
-                                url: '/'
+                                url: '/',
+                                isLoggedIn: args.isLoggedIn
                             })
                         ])
                     ]),

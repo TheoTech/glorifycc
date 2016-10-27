@@ -17,26 +17,15 @@ var playlistDropdownComponent = (function() {
                 }
             })
     }
+
     var enter = function(elem) {
-        // $(elem).keypress(function(e) {
-        //     var key = e.which;
-        //     if (key == 13) // the enter key code
-        //     {
-        //         $('#createButton').click();
-        //         return false;
-        //     }
-        // });
         $(elem).keyup(function(e) {
-            console.log('hehehe')
-            if (e.keyCode === 13) {
-                $("#createButton").click()
+            if (e.keyCode == 13) {
+                $("#create").click()
             }
         })
     }
 
-    var showModal = function(elem) {
-        $('#newPlaylist').modal('show');
-    }
     var playlistDropdown = {
         view: function(ctrl, args) {
             return m('div', [
@@ -47,6 +36,11 @@ var playlistDropdownComponent = (function() {
                         'aria-expanded': "false",
                         style: {
                             border: 0
+                        },
+                        onclick: function() {
+                            if (!args.isLoggedIn) {
+                                window.location.href = '/user/login'
+                            }
                         }
                     }, args.playlistName() ? 'Selected Playlist: ' + args.playlistName() : 'Select Playlist', [
                         m('span.caret')
@@ -55,11 +49,8 @@ var playlistDropdownComponent = (function() {
                         m('li', [
                             m('a', {
                                 href: '#',
-                                onclick: function(elem, isInit, context) {
-                                    if (!isInit) {
-                                        showModal(elem);
-                                    }
-                                }
+                                'data-toggle': 'modal',
+                                'data-target': '#newPlaylist'
                             }, 'New Playlist')
                         ]),
                         m('li.divider'),
@@ -86,14 +77,15 @@ var playlistDropdownComponent = (function() {
                                 m('input.form-control[name=playlist type=text]', {
                                     value: 'New Playlist',
                                     onchange: m.withAttr('value', args.playlistName),
-                                    config: function(elem, isInit, context) {
+                                    config: function(elem, isInit) {
                                         if (!isInit) {
-                                            enter(elem);
+                                            enter(elem)
                                         }
                                     }
                                 }),
                                 m('br'),
-                                m('button#createButton.btn.btn-success', {
+                                m('button.btn.btn-success#create', {
+                                    "data-dismiss": "modal",
                                     onclick: function() {
                                         addPlaylist(args.playlistName(), args.url)
                                         $('#newPlaylist').modal('hide')
