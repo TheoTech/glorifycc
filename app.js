@@ -25,6 +25,7 @@ var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
 var userlist = require('./routes/userlist');
 var privatesong = require('./routes/user.privatesong');
+var songlist = require('./routes/songlist')
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -92,6 +93,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 
 
 app.use('/', index);
+app.use('/songlist', songlist);
 app.use('/user', user)
 app.use('/admin/songlist-db', adminsonglistdb)
 app.use('/userlist', userlist)

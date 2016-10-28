@@ -8,11 +8,24 @@ block content
         #searchBox(style='width: 30em; margin: auto')
         br
 
-    #filterOption
-    if messages.error
-        .alert.alert-danger
-            p #{messages.error}
-    #songlistTable
+    h1 Why Does This Matter?
+
+    h1 Get Started
+    .row
+        .col-xs-6.col-md-4
+            a.thumbnail.home(href='#')
+              h3 Create a slide of multiple language song lyrics
+        .col-xs-6.col-md-4
+            a.thumbnail.home(href='/songlist')
+              h3 Discover songs
+        .col-xs-6.col-md-4
+            a.thumbnail.home(href='#')
+              h3 Contribute to cc0 songs
+    //- #filterOption
+    //- if messages.error
+    //-     .alert.alert-danger
+    //-         p #{messages.error}
+    //- #songlistTable
 
     script.
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}

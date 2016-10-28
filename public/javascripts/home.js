@@ -7,7 +7,6 @@ var home = (function() {
     var langFilter = m.prop([])
     var searchString = m.prop()
 
-
     var loadMoreAndApplyFilter = function(totalSongsDisplayed, langShown, langFilter, searchString) {
         m.request({
                 method: 'PUT',
@@ -31,6 +30,31 @@ var home = (function() {
         }
     });
 
+    var searchBox = {
+        view: function(ctrl, args) {
+            return m('#searchInput.input-group', [
+                m('input.form-control[type=text]', {
+                    placeholder: 'Title, Lyric or Author',
+                    onchange: m.withAttr('value', args.searchString),
+                    config: function(elem, isInit, context) {
+                        if (!isInit) {
+                            enter(elem);
+                        }
+                    }
+                }),
+                m('span.input-group-btn', [
+                    m('button#search-button.btn.btn-success', {
+                        onclick: function() {
+                            args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
+                        }
+                    }, [
+                        m('i.glyphicon.glyphicon-search')
+                    ])
+                ])
+            ])
+        }
+    }
+
     return {
         init: function() {
             m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {
@@ -42,18 +66,18 @@ var home = (function() {
                 searchString: searchString,
                 langsExist: langsExist
             }))
-            m.mount(document.getElementById('songlistTable'), m(songlistTable, {
-                langShown: langShown,
-                langFilter: langFilter,
-                loadMoreAndApplyFilter: loadMoreAndApplyFilter,
-                initial: initial,
-                displayedSongs: displayedSongs,
-                playlistName: playlistName,
-                inLibrary: inLibrary,
-                langsExist: langsExist,
-                searchString: searchString,
-                isLoggedIn: isLoggedIn
-            }))
+            // m.mount(document.getElementById('songlistTable'), m(songlistTable, {
+            //     langShown: langShown,
+            //     langFilter: langFilter,
+            //     loadMoreAndApplyFilter: loadMoreAndApplyFilter,
+            //     initial: initial,
+            //     displayedSongs: displayedSongs,
+            //     playlistName: playlistName,
+            //     inLibrary: inLibrary,
+            //     langsExist: langsExist,
+            //     searchString: searchString,
+            //     isLoggedIn: isLoggedIn
+            // }))
         }
     }
 })()
