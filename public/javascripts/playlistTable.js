@@ -3,15 +3,13 @@ var playlistTableComponent = (function() {
 
     var deletePlaylist = function(name) {
         m.request({
-                method: 'PUT',
-                url: '/user/playlist',
-                data: {
-                    name: name
-                }
-            })
-            .then(function(res) {
-                window.location.href = res.url
-            })
+            method: 'PUT',
+            url: '/user/playlist',
+            data: {
+                name: name,
+                redirect: false
+            }
+        })
     }
 
     var playlistTable = {
@@ -36,6 +34,7 @@ var playlistTableComponent = (function() {
                                 m('button.btn.btn-default', {
                                     onclick: function() {
                                         deletePlaylist(pl.name)
+                                        _.remove(playlists, (n) => n.name === pl.name)
                                     }
                                 }, 'Delete Playlist')
                             ])

@@ -8,7 +8,8 @@ var exportSongSchema = new Schema({
         ref: 'Playlist'
     },
     song: {type: Schema.Types.ObjectId, ref: 'Song'},
-    translations: [{type: Schema.Types.ObjectId, ref: 'Song'}]
+    translationsPicked: [{type: Schema.Types.ObjectId, ref: 'Song'}],
+    availableTranslations: [{type: Schema.Types.ObjectId, ref: 'Song'}]
 })
 
 module.exports = mongoose.model('ExportSong', exportSongSchema)

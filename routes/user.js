@@ -63,6 +63,7 @@ router.get('/library', isLoggedIn, function(req, res, next) {
         })
 })
 
+//adding new playlist
 router.put('/library', function(req, res) {
     var name = req.body.name
     var url = req.body.url
@@ -86,7 +87,10 @@ router.put('/library', function(req, res) {
                 newPlaylist.save(function(err) {
                     if (err) return handleError(err)
                     Playlist.find({
-                        owner: owner
+                        owner: owner,
+                        song: {
+                            $exists: false
+                        }
                     }, function(err, playlists) {
                         res.send({
                             playlists: playlists
@@ -103,14 +107,16 @@ router.put('/library', function(req, res) {
 
 })
 
+//adding song to playlist
 router.post('/library', function(req, res, next) {
     var name = req.body.name
     var song_id = req.body.id
+    var playlistOwner = req.user._id
     var url = req.body.url
     console.log(url)
     if (req.isAuthenticated()) {
         Playlist.findOne({
-                owner: req.user._id,
+                owner: playlistOwner,
                 name: name
             })
             .populate('owner')
@@ -118,13 +124,48 @@ router.post('/library', function(req, res, next) {
                 var newPlaylist
                 if (err) return handleError(err)
                 if (playlist) {
-                    playlist.songs.push(song_id)
-                    playlist.save(function(err) {
-                        if (err) {
-                            res.status(400).send('failed ' + err)
-                        } else {
-                            res.send({})
-                        }
+                    var newPlaylistSong = new Playlist({
+                        owner: playlistOwner,
+                        name: name,
+                        song: song_id,
+                        translationsChecked: []
+                    })
+                    Song.findById(song_id, function(err, song) {
+                        //find all the family of that song (song + translations)
+                        Song.find({
+                                $or: [{
+                                    $and: [{
+                                        source: song.source
+                                    }, {
+                                        source: {
+                                            $exists: true
+                                        }
+                                    }, {
+                                        lang: {
+                                            $ne: song.lang
+                                        }
+                                    }]
+                                }, {
+                                    _id: song.source
+                                }, {
+                                    source: song._id
+                                }, {
+                                    _id: song._id
+                                }]
+                            }, function(err, translations) {
+                                console.log(translations.map((t) => t.lang))
+                                newPlaylistSong.availableTranslations = translations.map((t) => t._id)
+                                newPlaylistSong.save(function(err) {
+                                    if (err) {
+                                        res.status(400).send('failed ' + err)
+                                    } else {
+                                        res.send({})
+                                    }
+                                })
+                            })
+                            .sort({
+                                lang: 1
+                            })
                     })
                 } else {
                     req.flash('error', 'Choose Playlist')
@@ -138,11 +179,10 @@ router.post('/library', function(req, res, next) {
             url: '/user/login'
         })
     }
-
 })
 
+//delete song from library
 router.delete('/library', function(req, res, next) {
-    // var name = req.body.name
     var song_id = req.body.id
     User.findOne({
         _id: req.user._id

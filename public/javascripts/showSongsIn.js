@@ -33,8 +33,7 @@ var showSongsIn = {
                         })
                     ])
                 ])
-            ]),
-            m('hr')
+            ])
         ])
     }
 }

@@ -11,8 +11,11 @@ var officegen = require('officegen');
 var async = require('async');
 
 router.get('/', function(req, res) {
-    var messages = req.flash();
-    var langsExist;
+    // <<<<<<< HEAD
+    //     var messages = req.flash();
+    //     var langsExist;
+    // =======
+    var messages = req.flash()
     Song.find({
             private: false
         }, function(err, songs, count) {
@@ -26,7 +29,10 @@ router.get('/', function(req, res) {
                 }, function(err, user) {
                     if (err) return handleError(err)
                     Playlist.find({
-                        owner: req.user._id
+                        owner: req.user._id,
+                        song: {
+                            $exists: false
+                        }
                     }, function(err, playlists) {
                         if (err) return handleError(err)
                         res.render('index', {
@@ -34,7 +40,12 @@ router.get('/', function(req, res) {
                             inLibrary: user.library,
                             playlists: playlists,
                             messages: messages,
+                            <<
+                            << << < HEAD
                             langsExist: langsExist,
+                            ===
+                            === = >>>
+                            >>> > exportplaylist
                             isLoggedIn: true
                         })
                     })
@@ -45,7 +56,12 @@ router.get('/', function(req, res) {
                     inLibrary: [],
                     playlists: [],
                     messages: messages,
+                    <<
+                    << << < HEAD
                     langsExist: langsExist,
+                    ===
+                    === = >>>
+                    >>> > exportplaylist
                     isLoggedIn: false
                 })
             }

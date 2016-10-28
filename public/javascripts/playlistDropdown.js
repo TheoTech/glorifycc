@@ -38,7 +38,8 @@ var playlistDropdownComponent = (function() {
                             border: 0
                         },
                         onclick: function() {
-                            if (!args.isLoggedIn) {
+                            //isLoggedIn is defined on the index.jade
+                            if (!isLoggedIn) {
                                 window.location.href = '/user/login'
                             }
                         }

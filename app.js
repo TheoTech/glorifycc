@@ -90,6 +90,7 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')))
 app.use('/dist', express.static(path.join(__dirname, 'dist')))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 
 app.use('/', index);

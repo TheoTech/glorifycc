@@ -1,123 +1,78 @@
-//this function will check all the last exported songs
 var export1TableComponent = (function() {
-    $(window).load(function() {
-        exportSongCollection.map((es) => es.translations.map((t) => t))
-            .forEach((translationID) => {
-                $('#' + translationID).prop('checked', true)
-            })
-    })
+    //Note: var uniqueLanguages, var songs, var playlistName are defined on export1.jade
 
-    //this function adds/deletes the song in the ExportSong collection
-    var pickTranslation = function(songID, translationID, checked) {
-        var idx = _.findIndex(exportSongCollection, (e) => e.song === songID)
-
-        if (checked) {
-            //add
-            exportSongCollection[idx].translations.push(translationID)
-        } else {
-            //delete
-            _.remove(exportSongCollection[idx].translations, (t) => t === translationID)
-
-            //remove the exportSong obj if the user doesnt pick any translation for a particular song
-            if (_.isEmpty(exportSongCollection[idx].translations)) {
-                exportSongCollection.splice(idx, 1)
-            }
-        }
-    }
-
-    var postExportSongCollection = function(exportSongCollection) {
+    var saveTranslationsChecked = function(songs) {
+        console.log('hehehe')
         m.request({
                 method: 'POST',
                 url: '/user/playlist/' + playlistName + '/export1',
-                data: {
-                    obj: exportSongCollection,
-                    playlistID: playlistID
-                }
+                data: songs
             })
             .then(function(res) {
-                window.location.href = '/user/playlist/' + playlistName + '/export3'
+                console.log(res.url)
+                window.location.href = res.url
             })
     }
 
-    //this return the arr of languages to become table's headers
-    var langLabelArr = function(translations2d) {
-        var lang = []
-        translations2d.forEach((tr) => {
-            tr.forEach((t, i) => {
-                if (!_.includes(lang, t.lang)) {
-                    lang.push(t.lang)
-                }
-            })
+    var selectAll = function(elem, lang) {
+        $('.' + lang).each(function(i, obj) {
+            if ($(obj).prop('checked') !== $(elem).prop('checked')) {
+                $(obj).trigger('click');
+            }
         })
-        return lang
     }
 
-    var langOptions = langLabelArr(translations2d)
-    console.log(langOptions)
-
-    //select all checkbox
-    var selectAll = function(elem, checkboxClass) {
-        $(elem).click(function() {
-            $('.' + checkboxClass).trigger('click')
-        });
-    }
-
-
-    var getTranslation = function(idx, lang) {
-        return translations2d[idx].filter((t) => t.lang === lang)
-    }
-
-    var getCheckbox = function(translations2d, l, i, s) {
-        return _.includes(translations2d[i].map((t) => t.lang), l) ? m('td', [
-            m('input[type=checkbox]', {
-                className: l,
-                id: getTranslation(i, l)[0]._id,
-                onclick: m.withAttr('checked', function(checked) {
-                    pickTranslation(s._id, getTranslation(i, l)[0]._id, checked)
-                })
-            })
-        ]) : m('td')
-    }
-
-    //creating virtual DOM
     var export1Table = {
         view: function() {
             return [
                 m('table.table', [
                     m('thead', [
                         m('th', 'Title'),
-                        langOptions.map((l) => {
-                            return m('th', l)
+                        uniqueLanguages.map((lang) => {
+                            return m('th.capitalize', {
+                                margin: 'auto'
+                            }, lang)
                         })
                     ]),
                     m('tbody', [
-                        function() {
-                            if(!_.isEmpty(langOptions)) {
-                              return m('tr', [
-                                  m('td'),
-                                  langOptions.map((l) => {
-                                      return m('td', [
-                                          m('button.btn.btn-default.btn-sm', {
-                                              config: function(elem, isInit, context) {
-                                                  if (!isInit) {
-                                                      selectAll(elem, l);
-                                                  }
-                                              }
-                                          }, 'Select/Deselect All')
-                                      ])
-                                  })
-                              ])
-                            }
-                        }(),
-                        songs.map((s, i) => {
+                        m('tr', [
+                            m('td'),
+                            uniqueLanguages.map((lang) => {
+                                return m('td', {
+                                    margin: 'auto'
+                                }, [
+                                    m('input', {
+                                        type: 'checkbox',
+                                        onclick: function() {
+                                            selectAll(this, lang)
+                                        }
+                                    })
+                                ])
+                            })
+                        ]),
+                        songs.map((song, i) => {
                             return m('tr', [
-                                m('td', [
-                                    m('a', {
-                                        href: '/songlist/' + s._id
-                                    }, s.title)
-                                ]),
-                                langOptions.map((l) => {
-                                    return getCheckbox(translations2d, l, i, s)
+                                m('td', song.song.title),
+                                uniqueLanguages.map((lang, j) => {
+                                    var rightSong = song.availableTranslations.find((availableTranslation) => availableTranslation.lang === lang)
+                                    var songID = rightSong ? rightSong._id : ''
+                                    return m('td', [
+                                        m('input', {
+                                            className: lang,
+                                            id: rightSong ? songID : '',
+                                            type: 'checkbox',
+                                            disabled: rightSong ? false : true,
+                                            checked: _.includes(song.translationsChecked, songID) ? true : false,
+                                            onclick: function() {
+                                                if (this.checked) {
+                                                    song.translationsChecked.push(songID)
+                                                    console.log(song.translationsChecked)
+                                                } else {
+                                                    _.remove(song.translationsChecked, (n) => n === songID)
+                                                }
+                                            }
+                                        })
+                                    ])
                                 })
                             ])
                         })
@@ -125,7 +80,12 @@ var export1TableComponent = (function() {
                 ]),
                 m('button.btn.btn-primary', {
                     onclick: function() {
-                        postExportSongCollection(exportSongCollection)
+                        saveTranslationsChecked(songs.map((song) => {
+                            return {
+                                song: song.song._id,
+                                translationsChecked: song.translationsChecked
+                            }
+                        }))
                     }
                 }, 'Next')
             ]

@@ -2,8 +2,8 @@ extends layout
 
 block content
     include topnav
-    header#header(style="text-align: center")
-        h1 SPF.IO Songbase
+    header#header(style="text-align: center; margin-bottom: 90px")
+        img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
         p Find Public Domain and CC0 Worship Song in Multiple Language
         #searchBox(style='width: 30em; margin: auto')
         br
@@ -18,7 +18,9 @@ block content
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-        var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
+//- <<<<<<< HEAD
+//-         var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
+//- =======
         var isLoggedIn = !{JSON.stringify(isLoggedIn).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/playlistDropdown.js')
@@ -30,3 +32,6 @@ block content
     script(src='/dist/javascripts/home.js')
     script.
         home.init()
+        $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });
