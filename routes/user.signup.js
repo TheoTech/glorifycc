@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
 })
 
 
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
     //Validation Checks
     req.checkBody('username', 'Username is required').notEmpty();
     req.checkBody('email', 'Email is required').notEmpty();
@@ -81,7 +81,7 @@ router.post('/', function(req, res) {
         TempUser.findOne({
             username: username
         }, function(err, tu) {
-            if (err) return handleError(err)
+            if (err) return next(err)
             console.log(tu)
             if (tu) {
                 res.render('signup', {
@@ -138,11 +138,11 @@ router.post('/', function(req, res) {
     }
 })
 
-router.get('/resend', function(req, res){
+router.get('/resend', function(req, res, next){
   var messages = req.flash()
   res.render('resend', {messages: messages})
 })
-router.post('/resend', function(req, res) {
+router.post('/resend', function(req, res, next) {
     var email = req.body.email
     emailVerification.resendVerificationEmail(email, function(err, userFound) {
         if (err) {
@@ -157,7 +157,7 @@ router.post('/resend', function(req, res) {
     })
 });
 
-router.get('/email-verification/:URL', function(req, res) {
+router.get('/email-verification/:URL', function(req, res, next) {
     var url = req.params.URL;
     console.log(url)
     emailVerification.confirmTempUser(url, function(err, user) {

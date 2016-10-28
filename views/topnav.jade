@@ -7,17 +7,20 @@ nav.navbar.navbar-default
                 span.icon-bar
                 span.icon-bar
             a.navbar-brand(href='/') Home
-                //- img.na  vbar-brand(src='/images/glorifylogo400x100.png' style='padding: 0.3em')
 
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
             ul.nav.navbar-nav
-                if login
+                - if(login && user.username !== 'admin')
                     li
                         a(href="/user/library") Library
                     li
                         a(href="/user/playlist") Playlist
+                                        
+                - else if(login && user.username === 'admin')
+                    li
+                        a(href="/admin/songlist-db") Song Database
                     //- li
-                    //-     a(href="/user/profile") Profile
+                    //-     a(href="/admin/userlist") User Database
             ul.nav.navbar-nav.navbar-right
                 if login
                     li

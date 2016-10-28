@@ -9,11 +9,11 @@ var songSchema = new Schema({
     author: String,
     year: String,
     lang: String,
+    translator: String,
     contributor: String,
     copyright: String,
     lyric: [String],
     source: Schema.Types.ObjectId,
-    v: Number,
     oriSong: String,
     timeAdded: Date,
     private: Boolean

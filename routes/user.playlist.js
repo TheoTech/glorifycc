@@ -20,7 +20,7 @@ router.get('/', function(req, res, next) {
             $exists: false
         }
     }, function(err, playlists) {
-        if (err) return handleError(err)
+        if (err) return next(err)
         res.render('playlist', {
             playlists: playlists
         })
@@ -36,7 +36,7 @@ router.get('/', function(req, res, next) {
 //         })
 //         .populate('songs')
 //         .exec(function(err, playlist) {
-//             if (err) return handleError(err)
+//             if (err) return next(err)
 //             res.send({
 //                 songs: playlist.songs,
 //                 name: playlist.name
@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
 
 
 //delete song from playlist
-router.delete('/', function(req, res) {
+router.delete('/', function(req, res, next) {
     var songID = req.body.id
     var playlistName = req.body.name
     Playlist.remove({
@@ -54,7 +54,7 @@ router.delete('/', function(req, res) {
         name: playlistName,
         song: songID
     }, function(err) {
-        if (err) return handleError(err)
+        if (err) return next(err)
         Playlist.find({
             owner: req.user._id,
             name: playlistName,
@@ -72,7 +72,7 @@ router.delete('/', function(req, res) {
 
 
 //delete playlist
-router.put('/', function(req, res) {
+router.put('/', function(req, res, next) {
     var playlistName = req.body.name
     var redirect = req.body.redirect
     console.log(playlistName)
@@ -80,7 +80,7 @@ router.put('/', function(req, res) {
         owner: req.user._id,
         name: playlistName
     }, function(err) {
-        if (err) return handleError(err)
+        if (err) return next(err)
         if (redirect) {
             res.send({
                 url: '/user/playlist'
@@ -91,7 +91,7 @@ router.put('/', function(req, res) {
     })
 })
 
-router.get('/:playlist_name', function(req, res) {
+router.get('/:playlist_name', function(req, res, next) {
     var playlistName = req.params.playlist_name
     Playlist.find({
             owner: req.user._id,
@@ -102,7 +102,7 @@ router.get('/:playlist_name', function(req, res) {
         })
         .populate('song')
         .exec(function(err, playlists) {
-            if (err) return handleError(err)
+            if (err) return next(err)
             res.render('playlistClicked', {
                 //pass the array of songs in the playlist
                 songs: playlists.map((pl) => pl.song),
@@ -126,7 +126,7 @@ router.get('/:playlist_name/export1', function(req, res, next) {
         })
         .populate('song availableTranslations')
         .exec(function(err, playlists) {
-            if (err) return handleError(err)
+            if (err) return next(err)
             uniqueLanguages =
                 //get 2d array of songs' languages, turn it to 1d array, get the unique languages, sort it by alphabet
                 (_.uniq(playlists.map((pl) =>
@@ -175,7 +175,7 @@ router.post('/:playlist_name/export1', function(req, res, next) {
             })
         }
     }), function(err) {
-        if (err) return handleError
+        if (err) return next
         res.send({
             url: '/user/playlist/' + playlistName + '/export3'
         })
@@ -183,7 +183,7 @@ router.post('/:playlist_name/export1', function(req, res, next) {
 })
 
 //this route is for step 2 of exporting playlist
-router.get('/:playlist_name/export2', function(req, res) {
+router.get('/:playlist_name/export2', function(req, res, next) {
     res.render('export2', {
         playlistName: req.params.playlist_name
     })
@@ -202,7 +202,7 @@ router.route('/:playlist_name/export3')
             })
             .populate('translationsChecked')
             .exec(function(err, playlists) {
-                if (err) return handleError(err)
+                if (err) return next(err)
                 songs2d = playlists.map((playlist) => {
                     return {
                         songs: playlist.translationsChecked,
@@ -213,7 +213,7 @@ router.route('/:playlist_name/export3')
                 next()
             })
     })
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var type = req.query.type;
         var filename;
         if (type === 'pdf') {

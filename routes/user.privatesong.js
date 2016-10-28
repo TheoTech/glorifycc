@@ -7,12 +7,12 @@ var _ = require('lodash');
 var Song = require('../models/song');
 
 
-router.get('/add', function(req, res) {
+router.get('/add', function(req, res, next) {
     res.render('addPrivateSong', {})
 })
 
 
-router.post('/add', function(req, res) {
+router.post('/add', function(req, res, next) {
     var title = req.body.title
     var lyricArray = req.body.lyric.split(/\r?\n|\//)
     req.checkBody('title', 'Title cannot be empty').notEmpty();
@@ -57,10 +57,10 @@ router.post('/add', function(req, res) {
                         User.findOne({
                             _id: req.user._id
                         }, function(err, user) {
-                            if (err) return handleError(err)
+                            if (err) return next(err)
                             user.library.push(newSong._id)
                             user.save(function(err) {
-                                if (err) return handleError(err)
+                                if (err) return next(err)
                                 res.redirect('/user/library')
                             })
                         })
@@ -85,7 +85,7 @@ router.route('/:song_id')
             next()
         })
     })
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         Song.find({
             $or: [{
                 $and: [{
@@ -155,7 +155,7 @@ router.route('/:song_id/add-translation')
             next();
         })
     })
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var temp = '';
         song.lyric.forEach(function(s) {
             temp += s + '\n'
@@ -168,7 +168,7 @@ router.route('/:song_id/add-translation')
             hasErrors: messages.length > 0
         })
     })
-    .post(function(req, res) {
+    .post(function(req, res, next) {
         req.checkBody('translationTitle', 'Title is required').notEmpty()
         req.checkBody('translationLyric', 'Lyric is required').notEmpty()
         var messages = req.validationErrors()
@@ -200,10 +200,10 @@ router.route('/:song_id/add-translation')
                     User.findOne({
                         _id: req.user._id
                     }, function(err, user) {
-                        if (err) return handleError(err)
+                        if (err) return next(err)
                         user.library.push(newSong._id)
                         user.save(function(err) {
-                            if (err) return handleError(err)
+                            if (err) return next(err)
                             res.redirect("/user/privatesong/" + song_id)
                         })
                     })
@@ -237,7 +237,7 @@ router.route('/:song_id/edit')
             next()
         })
     })
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var lyric = song.lyric.reduce((prev, curr, i) => {
             if (i === 0) {
                 return curr
@@ -250,7 +250,7 @@ router.route('/:song_id/edit')
             lyric: lyric
         })
     })
-    .post(function(req, res) {
+    .post(function(req, res, next) {
         song.title = req.body.title
         song.author = req.body.author
         song.lang = req.body.lang

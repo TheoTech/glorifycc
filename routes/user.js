@@ -12,11 +12,11 @@ var crypto = require('crypto')
 var nodemailer = require('nodemailer')
 var config = require('config')
 
-// router.get('/profile', function(req, res){
+// router.get('/profile', function(req, res, next){
 //   res.render('profile', {});
 // })
 
-// router.get('/library/search', function(req, res) {
+// router.get('/library/search', function(req, res, next) {
 //     var tag = req.query.q
 //     var messages = req.flash()
 //     User.findOne({
@@ -24,11 +24,11 @@ var config = require('config')
 //         })
 //         .populate('library')
 //         .exec(function(err, user) {
-//             if (err) return handleError(err)
+//             if (err) return next(err)
 //             Playlist.find({
 //                 owner: user._id
 //             }, function(err, playlists) {
-//                 if (err) return handleError(err)
+//                 if (err) return next(err)
 //                 res.render('library', {
 //                     songs: user.library.filter((s) => {
 //                         return (s.title.search(tag) !== -1 ||
@@ -47,11 +47,11 @@ router.get('/library', isLoggedIn, function(req, res, next) {
     User.findById(req.user._id)
         .populate('library')
         .exec(function(err, user) {
-            if (err) return handleError(err)
+            if (err) return next(err)
             Playlist.find({
                 owner: user._id
             }, function(err, playlists) {
-                if (err) return handleError(err)
+                if (err) return next(err)
                 res.render('library', {
                     songs: user.library,
                     playlists: playlists,
@@ -64,7 +64,7 @@ router.get('/library', isLoggedIn, function(req, res, next) {
 })
 
 //adding new playlist
-router.put('/library', function(req, res) {
+router.put('/library', function(req, res, next) {
     var name = req.body.name
     var url = req.body.url
     if (req.isAuthenticated()) {
@@ -73,7 +73,7 @@ router.put('/library', function(req, res) {
             owner: owner,
             name: name
         }, function(err, playlist) {
-            if (err) return handleError(err)
+            if (err) return next(err)
             if (playlist) {
                 req.flash('error', 'Playlist exists. Choose different name')
                 res.send({
@@ -85,7 +85,7 @@ router.put('/library', function(req, res) {
                     name: name
                 })
                 newPlaylist.save(function(err) {
-                    if (err) return handleError(err)
+                    if (err) return next(err)
                     Playlist.find({
                         owner: owner,
                         song: {
@@ -122,7 +122,7 @@ router.post('/library', function(req, res, next) {
             .populate('owner')
             .exec(function(err, playlist) {
                 var newPlaylist
-                if (err) return handleError(err)
+                if (err) return next(err)
                 if (playlist) {
                     var newPlaylistSong = new Playlist({
                         owner: playlistOwner,
@@ -187,7 +187,7 @@ router.delete('/library', function(req, res, next) {
     User.findOne({
         _id: req.user._id
     }, function(err, u) {
-        if (err) return handleError(err)
+        if (err) return next(err)
         var index = u.library.indexOf(song_id)
         if (index > -1) {
             u.library.splice(index, 1)
@@ -220,7 +220,7 @@ router.get('/logout', isLoggedIn, function(req, res, next) {
     res.redirect('/')
 })
 
-router.get('/forgot', function(req, res) {
+router.get('/forgot', function(req, res, next) {
     var messages = req.flash()
     console.log(messages)
     res.render('forgot', {
@@ -284,7 +284,7 @@ router.post('/forgot', function(req, res, next) {
 });
 
 
-router.get('/reset/:token', function(req, res) {
+router.get('/reset/:token', function(req, res, next) {
     User.findOne({
         resetPasswordToken: req.params.token,
         resetPasswordExpires: {
@@ -301,7 +301,7 @@ router.get('/reset/:token', function(req, res) {
     });
 });
 
-router.post('/reset/:token', function(req, res) {
+router.post('/reset/:token', function(req, res, next) {
     async.waterfall([
         function(done) {
             User.findOne({

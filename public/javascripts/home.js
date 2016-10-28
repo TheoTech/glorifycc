@@ -33,7 +33,6 @@ var home = (function() {
 
     return {
         init: function() {
-            console.log(langsExist)
             m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {
                 url: '',
                 langShown: langShown,

@@ -5,46 +5,25 @@ var express = require('express'),
     helperFunc = require('../lib/passport')
 
 
-// router.use('/', isAdminLoggedIn, function(req, res, next){
+// router.use('/', isAdminLoggedIn, function(req, res, next, next){
 //   next()
 // })
 
-router.get('/test', function(req, res) {
-    Song.find({
-        source: null
-    }, function(err, songs, count) {
-        if (err) {
-            res.status(400).send('error getting song list ' + err)
-        } else {
-            Song.find({
-                source: {
-                    $ne: null
-                }
-            }, function(err, translations) {
-                if (err) {
-                    res.status(400).send('error getting song translations ' + err)
-                }
-                songs = songs || [{}]
-                translations = translations || [{}]
-                    // console.log(songs)
-                    // console.log(translations)
-                res.render('songlist-db', {
-                    songs: songs,
-                    translations: translations
-                })
-            })
-        }
-    })
+router.get('/', function(req, res, next){
+  Song.find(function(err, songs){
+    if(err) return next(err)
+    res.render('songlist-db', {songs: songs})
+  })
 })
 
-router.get('/add', function(req, res) {
+router.get('/add', function(req, res, next) {
     res.render('add', {
         song: {}
     })
 })
 
 
-router.post('/add', function(req, res) {
+router.post('/add', function(req, res, next) {
     var title = req.body.title
     var lyricArray = req.body.lyric.split(/\r?\n|\//)
 
@@ -76,16 +55,16 @@ router.post('/add', function(req, res) {
                 if (err) {
                     res.status(400).send('error saving new song ' + err)
                 } else {
-                    res.redirect('/songlist-db')
+                    res.redirect('/admin/songlist-db')
                 }
             })
         }
     })
 })
 
-router.delete('/:song_id', function(req, res){
+router.delete('/:song_id', function(req, res, next){
   Song.remove({_id: req.params.song_id}, function(err){
-    if (err) return handleError(err)
+    if (err) return next(err)
     res.send()
   })
 })
@@ -99,7 +78,7 @@ router.route('/:song_id/edit')
             next()
         })
     })
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var lyric = song.lyric.reduce((prev, curr, i) => {
             if (i === 0) {
                 return curr
@@ -112,7 +91,7 @@ router.route('/:song_id/edit')
             lyric: lyric
         })
     })
-    .post(function(req, res) {
+    .post(function(req, res, next) {
         song.title = req.body.title
         song.author = req.body.author
         song.year = req.body.year
@@ -138,13 +117,4 @@ function isAdminLoggedIn(req, res, next) {
     } else {
         res.redirect('/')
     }
-}
-
-var getLangAndVer = function(obj) {
-    return obj.map((t) => {
-        return {
-            lang: t.lang,
-            v: t.v
-        }
-    })
 }

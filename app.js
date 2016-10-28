@@ -19,9 +19,7 @@ var config = require('config')
 var app = module.exports = express();
 
 var index = require('./routes/index');
-var songlistdb = require('./routes/songlist-db');
-var searchbyletter = require('./routes/search-by-letter');
-var searchbylang = require('./routes/search-by-lang');
+var adminsonglistdb = require('./routes/admin.songlist-db');
 var user = require('./routes/user');
 var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
@@ -95,15 +93,13 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/', index);
 app.use('/user', user)
-app.use('/songlist-db', songlistdb)
-app.use('/search-by-letter', searchbyletter)
-app.use('/search-by-lang', searchbylang)
+app.use('/admin/songlist-db', adminsonglistdb)
 app.use('/userlist', userlist)
 app.use('/user/signup', usersignup)
 app.use('/user/playlist', userplaylist)
 app.use('/user/privatesong', privatesong)
 
-app.get('/api', function(req, res) {
+app.get('/api', function(req, res, next) {
     app.render('songs-in-pdf', function(err, html) {
       pdf.create(html).toStream(function(err, stream){
           stream.pipe(fs.createWriteStream('./foo.pdf'));
@@ -147,8 +143,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-isObjEmpty = function(obj){
-  return Object.keys(obj).length === 0 && obj.constructor === Object
-}

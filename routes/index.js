@@ -10,11 +10,10 @@ var fs = require('file-system');
 var officegen = require('officegen');
 var async = require('async');
 
-router.get('/', function(req, res) {
-    // <<<<<<< HEAD
-    //     var messages = req.flash();
-    //     var langsExist;
-    // =======
+
+router.get('/', function(req, res, next) {
+    var messages = req.flash();
+    var langsExist;
     var messages = req.flash()
     Song.find({
             private: false
@@ -22,30 +21,26 @@ router.get('/', function(req, res) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
+            //to get the what languages we need to include in the dropdown for filtering feature
             langsExist = _.uniq(songs.map((s) => s.lang))
             if (req.isAuthenticated()) {
                 User.findOne({
                     _id: req.user._id
                 }, function(err, user) {
-                    if (err) return handleError(err)
+                    if (err) next(err)
                     Playlist.find({
                         owner: req.user._id,
                         song: {
                             $exists: false
                         }
                     }, function(err, playlists) {
-                        if (err) return handleError(err)
+                        if (err) next(err)
                         res.render('index', {
                             songs: songs,
                             inLibrary: user.library,
                             playlists: playlists,
                             messages: messages,
-                            <<
-                            << << < HEAD
                             langsExist: langsExist,
-                            ===
-                            === = >>>
-                            >>> > exportplaylist
                             isLoggedIn: true
                         })
                     })
@@ -56,12 +51,7 @@ router.get('/', function(req, res) {
                     inLibrary: [],
                     playlists: [],
                     messages: messages,
-                    <<
-                    << << < HEAD
                     langsExist: langsExist,
-                    ===
-                    === = >>>
-                    >>> > exportplaylist
                     isLoggedIn: false
                 })
             }
@@ -72,7 +62,7 @@ router.get('/', function(req, res) {
         .limit(10)
 })
 
-router.put('/', function(req, res) {
+router.put('/', function(req, res, next) {
     var langShown = req.body.langShown
     var langFilter = req.body.langFilter
     var searchString = req.body.searchString
@@ -198,16 +188,16 @@ router.put('/', function(req, res) {
 
 })
 
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
     var id = req.body.id
     if (req.isAuthenticated()) {
         User.findOne({
             _id: req.user._id
         }, function(err, user) {
-            if (err) return handleError(err)
+            if (err) next(err)
             user.library.push(id)
             user.save(function(err) {
-                if (err) return handleError(err)
+                if (err) next(err)
                 res.send({
                     inLibrary: user.library
                 })
@@ -220,18 +210,18 @@ router.post('/', function(req, res) {
     }
 })
 
-router.delete('/', function(req, res) {
+router.delete('/', function(req, res, next) {
     var id = req.body.id
     User.findOne({
         _id: req.user._id
     }, function(err, user) {
-        if (err) return handleError(err)
+        if (err) next(err)
         var index = user.library.indexOf(id)
         if (index > -1) {
             user.library.splice(index, 1)
         }
         user.save(function(err) {
-            if (err) return handleError(err)
+            if (err) next(err)
             console.log('delete success')
             res.send({
                 inLibrary: user.library
@@ -240,7 +230,7 @@ router.delete('/', function(req, res) {
     })
 })
 
-router.post('/filter', function(req, res) {
+router.post('/filter', function(req, res, next) {
     var langShown = req.body.langShown.toLowerCase()
     var langFilter = req.body.langFilter.map((lf) => lf.toLowerCase())
     var totalSongsDisplayed = req.body.totalSongsDisplayed
@@ -316,14 +306,14 @@ router.post('/filter', function(req, res) {
             }
         ],
         function(err, songs2d) {
-            if (err) return handleError(err)
+            if (err) next(err)
             res.send({
                 songs: songs2d
             })
         })
 })
 
-router.get('/search', function(req, res) {
+router.get('/search', function(req, res, next) {
     var tag = req.query.q
     var messages = req.flash()
     Song.find({
@@ -339,11 +329,11 @@ router.get('/search', function(req, res) {
                 User.findOne({
                     _id: req.user._id
                 }, function(err, user) {
-                    if (err) return handleError(err)
+                    if (err) next(err)
                     Playlist.find({
                         owner: req.user._id
                     }, function(err, playlists) {
-                        if (err) return handleError(err)
+                        if (err) next(err)
                         res.render('index', {
                             songs: songs,
                             inLibrary: user.library,
@@ -368,75 +358,119 @@ router.get('/search', function(req, res) {
 })
 
 
-router.route('/:song_id')
-    .all(function(req, res, next) {
-        lang = req.query.lang || ''
-            // v = req.query.v || ''
-        song_id = req.params.song_id
-        song = {}
-        Song.findById(song_id, function(err, s) {
-            song = s;
-            next()
+// router.route('/:song_id')
+// .all(function(req, res, next) {
+//     lang = req.query.lang || ''
+//         // v = req.query.v || ''
+//     song_id = req.params.song_id
+//     song = {}
+//     Song.findById(song_id, function(err, s) {
+//         song = s;
+//         next()
+//     })
+// })
+router.get('/:song_id', function(req, res, next) {
+        var leftColumnSongID = req.params.song_id
+        Song.findById(leftColumnSongID, function(err, song) {
+            if (err) return next(err)
+            res.render('song', {
+                song: song
+            })
         })
     })
-    .get(function(req, res) {
-        Song.find({
-            $or: [{
-                $and: [{
-                    source: song.source
+    //     Song.find({
+    //         $or: [{
+    //             $and: [{
+    //                 source: song.source
+    //             }, {
+    //                 source: {
+    //                     $exists: true
+    //                 }
+    //             }, {
+    //                 lang: {
+    //                     $ne: song.lang
+    //                 }
+    //             }]
+    //         }, {
+    //             _id: song.source
+    //         }, {
+    //             source: song._id
+    //         }]
+    //     }, function(err, translations) {
+    //         if (err) {
+    //             res.status(400).send('Error getting songs ' + err)
+    //         }
+    //
+    //         //rightTranslation is the song obj in the language that the user picks in the dropdown
+    //         var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
+    //         var isTranslationExisted = !_.isEmpty(rightTranslation)
+    //         if (req.isAuthenticated()) {
+    //             Playlist.find({
+    //                 owner: req.user._id
+    //             }, function(err, playlists) {
+    //                 User.findOne({
+    //                     _id: req.user._id
+    //                 }, function(err, user) {
+    //                     console.log(user.library)
+    //                     res.render('song', {
+    //                         song: song,
+    //                         rightTranslation: rightTranslation,
+    //                         isTranslationExisted: isTranslationExisted,
+    //                         translations: translations,
+    //                         playlists: playlists,
+    //                         inLibrary: user.library
+    //                     })
+    //                 })
+    //
+    //             })
+    //         } else {
+    //             res.render('song', {
+    //                 song: song,
+    //                 rightTranslation: rightTranslation,
+    //                 isTranslationExisted: isTranslationExisted,
+    //                 translations: translations,
+    //                 playlists: [],
+    //                 inLibrary: []
+    //             })
+    //         }
+    //     })
+    // })
+    //choosing translations
+router.put('/:song_id', function(req, res, next) {
+    var lang = req.body.lang
+    var leftColumnSongID = req.params.song_id
+    Song.findById(leftColumnSongID, function(err, song) {
+        if (err) return next(err)
+        if (!song.source) {
+            //leftColumnSong is parent song in the Song Schema
+            //find one of its children which language is lang
+            Song.findOne({
+                source: song._id,
+                lang: lang
+            }, function(err, translation) {
+                if (err) return next(err)
+                res.send({
+                    translation: translation
+                })
+            })
+        } else {
+            //leftColumnSong is a child song in the Song Schema,
+            //find one of either its parent or siblings which language is lang
+            Song.findOne({
+                lang: lang,
+                $or: [{
+                    source: song.source,
                 }, {
-                    source: {
-                        $exists: true
-                    }
-                }, {
-                    lang: {
-                        $ne: song.lang
-                    }
+                    _id: song.source
                 }]
-            }, {
-                _id: song.source
-            }, {
-                source: song._id
-            }]
-        }, function(err, translations) {
-            if (err) {
-                res.status(400).send('Error getting songs ' + err)
-            }
-
-            //rightTranslation is the song obj in the language that the user picks in the dropdown
-            var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-            var isTranslationExisted = !_.isEmpty(rightTranslation)
-            if (req.isAuthenticated()) {
-                Playlist.find({
-                    owner: req.user._id
-                }, function(err, playlists) {
-                    User.findOne({
-                        _id: req.user._id
-                    }, function(err, user) {
-                        console.log(user.library)
-                        res.render('song', {
-                            song: song,
-                            rightTranslation: rightTranslation,
-                            isTranslationExisted: isTranslationExisted,
-                            translations: translations,
-                            playlists: playlists,
-                            inLibrary: user.library
-                        })
-                    })
-
+            }, function(err, translation) {
+                res.send({
+                    translation: translation
                 })
-            } else {
-                res.render('song', {
-                    song: song,
-                    rightTranslation: rightTranslation,
-                    isTranslationExisted: isTranslationExisted,
-                    translations: translations,
-                    playlists: [],
-                    inLibrary: []
-                })
-            }
-        })
+            })
+        }
     })
+})
 
 router.route('/:song_id/add-translation')
     .all(function(req, res, next) {
@@ -447,7 +481,7 @@ router.route('/:song_id/add-translation')
             next();
         })
     })
-    .get(isLoggedIn, function(req, res) {
+    .get(isLoggedIn, function(req, res, next) {
         var temp = '';
         song.lyric.forEach(function(s) {
             temp += s + '\n'
@@ -460,7 +494,7 @@ router.route('/:song_id/add-translation')
             hasErrors: messages.length > 0
         })
     })
-    .post(function(req, res) {
+    .post(function(req, res, next) {
         req.checkBody('translationTitle', 'Title is required').notEmpty()
         req.checkBody('translationLyric', 'Lyric is required').notEmpty()
         var messages = req.validationErrors()
@@ -485,6 +519,7 @@ router.route('/:song_id/add-translation')
                             year: song.year,
                             lang: lang,
                             contributor: req.user.username,
+                            translator: req.body.translator,
                             copyright: req.body.translationCopyright,
                             lyric: translationLyricArray.slice(0),
                             source: song.id,

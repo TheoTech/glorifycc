@@ -3,7 +3,7 @@ var express = require('express'),
     User = require('../models/user')
 
 
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
     User.find(function(err, users, count) {
         if (err) {
             res.status(400).send('error getting user list ' + err)
