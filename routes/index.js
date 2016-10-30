@@ -544,6 +544,7 @@ router.route('/:song_id/add-translation')
                 messages: messages
             })
         } else {
+            console.log('hehhee')
             var lang = req.body.translationLang
             var translationLyricArray = req.body.translationLyric.split(/\r?\n|\//)
             Song.findOne({
@@ -575,7 +576,7 @@ router.route('/:song_id/add-translation')
                         if (err) {
                             res.status(400).send('error saving new song ' + err)
                         } else {
-                            res.redirect('/songlist/' + song_id)
+                            res.redirect('/' + song_id)
                         }
                     })
                 })

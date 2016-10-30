@@ -33,8 +33,7 @@ block content
                         option(value='?lang=' + t.lang) #{t.lang}
     .row
         .col-xs-6
-            -if(!(login && user.username == "admin"))
-                #song 
+            #song 
             h4.capitalize=song.lang
             <p> 
             each line in song.lyric
@@ -45,9 +44,8 @@ block content
                     br
             </p> 
 
-        .col-xs-6
-            -if(!(login && user.username == "admin"))  
-                #translation
+        .col-xs-6  
+            #translation
             if isTranslationExisted 
                 h4.capitalize #{rightTranslation.lang}
                 <p> 
@@ -59,8 +57,9 @@ block content
                         br
                 </p> 
             br 
-            -if(song.private)
-                a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation
+            -if(login && user.username === 'admin')
+                a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation 
+            //- -if(song.private)
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
