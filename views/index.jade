@@ -5,17 +5,18 @@ block content
     header#header(style="text-align: center; margin-bottom: 90px")
         img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
         p Find Public Domain and CC0 Worship Songs in Multiple Languages
+        //- input.form-control(type='text' placeholder='Title, Lyric or Author')
         #searchBox(style='width: 30em; margin: auto')
 
     h2 Why Does This Matter?
     p.
-       Revelation 7 says that people from every language and every part of the world will be praising God together. And yet, many worship songs that are sung in churches right now originate from English-speaking countries and are copyrighted. Churches are legally required to pay in order to perform, display, print, and even translate worship songs. And license requirements also vary depending on the country.
+        Revelation 7 says that people from every language and every part of the world will be praising God together. And yet, many worship songs that are sung in churches right now originate from English-speaking countries and are copyrighted. Churches are legally required to pay in order to perform, display, print, and even translate worship songs. And license requirements also vary depending on the country.
 
     p.
-      We want to see the Church unleashed from the status quo. We want to see the Church united in worship across language and culture. We want to see the Church be able to worship freely. That's why we built Glorify.cc.
+        We want to see the Church unleashed from the status quo. We want to see the Church united in worship across language and culture. We want to see the Church be able to worship freely. That's why we built Glorify.cc.
 
     p.
-      Glorify.cc enables churches to sing praises in multiple languages together. It's a platform that empowers the global church to share their songs with one another and to contribute translations so others can join in. All songs and translations are available under the CC0 license, so the Church can come together and worship freely.
+        Glorify.cc enables churches to sing praises in multiple languages together. It's a platform that empowers the global church to share their songs with one another and to contribute translations so others can join in. All songs and translations are available under the CC0 license, so the Church can come together and worship freely.
 
     p Make Revelation 7 a reality in your church today, sign up with Glorify.cc.
 
@@ -23,44 +24,81 @@ block content
     .row
         .col-xs-12.col-sm-6.col-md-4
             a.thumbnail(href='#')
-              img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")
-              div.caption
-                h3 Create lyrics slides in multiple languages
-                p Easily create slides in multiple languages so people can worship together in their heart language.
+                img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")
+                div.caption
+                    h3 Create lyrics slides in multiple languages
+                    p Easily create slides in multiple languages so people can worship together in their heart language.
         .col-xs-12.col-sm-6.col-md-4
             a.thumbnail(href='/songlist')
-              img.img-responsive(alt="discover songs" src="images/discover-feature-image.jpeg")
-              div.caption
-                h3 Discover songs
-                p Discover music you can freely use for corporate worship.
+                img.img-responsive(alt="discover songs" src="images/discover-feature-image.jpeg")
+                div.caption
+                    h3 Discover songs
+                    p Discover music you can freely use for corporate worship.
         .col-xs-12.col-sm-6.col-md-4
             a.thumbnail(href='#')
-              img.img-responsive(alt="share songs" src="images/share-feature-image.jpeg")
-              div.caption
-                h3 Share your songs and contribute translations
-                p Contribute music you've created under the CC0 license so that people around the world can freely translate and sing your songs.
+                img.img-responsive(alt="share songs" src="images/share-feature-image.jpeg")
+                div.caption
+                    h3 Share your songs and contribute translations
+                    p Contribute music you've created under the CC0 license so that people around the world can freely translate and sing your songs.
+
+    script.
+        var searchString = m.prop('')
+        var enter = function(elem, checkboxClass) {
+            $(elem).keyup(function(e) {
+                if (e.keyCode == 13) {
+                    $("#search-button").click()
+                }
+            })
+        }
+        var searchBoxHome = {
+            view: function(){
+                return m('#searchInput.input-group', [
+                    m('input.form-control[type=text]', {
+                        placeholder: 'Title, Lyric or Author',
+                        onchange: m.withAttr('value', searchString),
+                        config: function(elem, isInit, context) {
+                            if (!isInit) {
+                                enter(elem);
+                            }
+                        }
+                    }),
+                    m('span.input-group-btn', [
+                        m('button#search-button.btn.btn-success', {
+                            onclick: function() {
+                                window.location.href = '/search?q=' + searchString()
+                            }
+                    }, [
+                        m('i.glyphicon.glyphicon-search')
+                    ])
+                ])
+              ])
+          }
+        }
+        m.mount(document.getElementById('searchBox'), searchBoxHome)
+
+
     //- #filterOption
     //- if messages.error
     //-     .alert.alert-danger
     //-         p #{messages.error}
     //- #songlistTable
 
-    script.
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-        var isLoggedIn = !{JSON.stringify(isLoggedIn).replace(/<\//g, "<\\/")}
-        var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/playlistDropdown.js')
-    script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/showSongsIn.js')
-    script(src='/dist/javascripts/hasTranslationsIn.js')
-    script(src='/dist/javascripts/searchBox.js')
-    script(src='/dist/javascripts/songlistTable.js')
-    script(src='/dist/javascripts/home.js')
-    script.
-        home.init()
-        $(".alert").fadeTo(2000, 500).slideUp(500, function(){
-            $(".alert").slideUp(500);
-        });
+    //- script.
+    //-     var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+    //-     var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+    //-     var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+    //-     var isLoggedIn = !{JSON.stringify(isLoggedIn).replace(/<\//g, "<\\/")}
+    //-     var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
+    //- script(src='/dist/javascripts/addOrDeleteButton.js')
+    //- script(src='/dist/javascripts/playlistDropdown.js')
+    //- script(src='/dist/javascripts/addToPlaylistButton.js')
+    //- script(src='/dist/javascripts/showSongsIn.js')
+    //- script(src='/dist/javascripts/hasTranslationsIn.js')
+    //- script(src='/dist/javascripts/searchBox.js')
+    //- script(src='/dist/javascripts/songlistTable.js')
+    //- script(src='/dist/javascripts/home.js')
+    //- script.
+    //-     home.init()
+    //-     $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+    //-         $(".alert").slideUp(500);
+    //-     });
