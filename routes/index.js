@@ -314,7 +314,7 @@ router.post('/filter', function(req, res, next) {
 
 router.get('/search', function(req, res, next) {
     var searchString = req.query.q
-    var messages = req.flash();
+    // var messages = req.flash();
     // if (!searchString) {
     //     var messages = req.flash();
     //     var langsExist;
@@ -387,7 +387,7 @@ router.get('/search', function(req, res, next) {
                             songs: songs2d,
                             inLibrary: user.library,
                             playlists: playlists,
-                            messages: messages,
+                            // messages: messages,
                             // langsExist: langsExist,
                             isLoggedIn: true
                         })
@@ -398,7 +398,7 @@ router.get('/search', function(req, res, next) {
                     songs: songs2d,
                     inLibrary: [],
                     playlists: [],
-                    messages: messages,
+                    // messages: messages,
                     // langsExist: langsExist,
                     isLoggedIn: false
                 })

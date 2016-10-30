@@ -63,7 +63,7 @@ var search = (function() {
                         m('th', [
                             m(playlistDropdownComponent.playlistDropdown, {
                                 playlistName: playlistName,
-                                url: '/songlist',
+                                url: '/',
                                 isLoggedIn: isLoggedIn
                             })
                         ])
@@ -77,7 +77,7 @@ var search = (function() {
                                     m(addOrDeleteButtonComponent.addOrDeleteButton, {
                                         songID: s._id,
                                         text: 'Library',
-                                        url: '/songlist',
+                                        url: '/',
                                         inLibrary: inLibrary
                                     })
                                 ]),
@@ -91,7 +91,7 @@ var search = (function() {
                                     m(addToPlaylistButton, {
                                         playlistName: playlistName,
                                         songID: s._id,
-                                        url: '/songlist',
+                                        url: '/',
                                         key: s._id,
                                         label: s.label,
                                         disabled: s.disabled
