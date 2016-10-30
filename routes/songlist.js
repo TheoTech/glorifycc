@@ -10,7 +10,7 @@ var fs = require('file-system');
 var officegen = require('officegen');
 var async = require('async');
 
-router.get('/', function(req, res, next) {
+router.get('/songlist', function(req, res, next) {
     var messages = req.flash();
     var langsExist;
     var messages = req.flash()
