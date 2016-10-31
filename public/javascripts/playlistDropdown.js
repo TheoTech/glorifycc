@@ -29,7 +29,7 @@ var playlistDropdownComponent = (function() {
     var playlistDropdown = {
         view: function(ctrl, args) {
             return m('div', [
-                m('.btn-group', [
+                m('#playlistDropdown.btn-group', [
                     m('button.btn.btn-default.dropdown-toggle[type=button]', {
                         'data-toggle': "dropdown",
                         'aria-haspopup': "true",

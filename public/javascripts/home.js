@@ -1,6 +1,6 @@
 var home = (function() {
     var inLibrary = m.prop(currentInLibrary)
-    var playlistName = m.prop()
+    var playlistName = m.prop('')
     var displayedSongs = m.prop(songs)
     var initial = 10
     var langShown = m.prop('all')

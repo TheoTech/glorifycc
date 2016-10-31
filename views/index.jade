@@ -5,7 +5,6 @@ block content
     header#header(style="text-align: center; margin-bottom: 90px")
         img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
         p Find Public Domain and CC0 Worship Songs in Multiple Languages
-        //- input.form-control(type='text' placeholder='Title, Lyric or Author')
         #searchBox(style='width: 30em; margin: auto')
 
     h2 Why Does This Matter?
@@ -40,65 +39,7 @@ block content
                 div.caption
                     h3 Share your songs and contribute translations
                     p Contribute music you've created under the CC0 license so that people around the world can freely translate and sing your songs.
-
+                    
+    script(src='/dist/javascripts/searchBoxHome.js')
     script.
-        var searchString = m.prop('')
-        var enter = function(elem, checkboxClass) {
-            $(elem).keyup(function(e) {
-                if (e.keyCode == 13) {
-                    $("#search-button").click()
-                }
-            })
-        }
-        var searchBoxHome = {
-            view: function(){
-                return m('#searchInput.input-group', [
-                    m('input.form-control[type=text]', {
-                        placeholder: 'Title, Lyric or Author',
-                        onchange: m.withAttr('value', searchString),
-                        config: function(elem, isInit, context) {
-                            if (!isInit) {
-                                enter(elem);
-                            }
-                        }
-                    }),
-                    m('span.input-group-btn', [
-                        m('button#search-button.btn.btn-success', {
-                            onclick: function() {
-                                window.location.href = '/search?q=' + searchString()
-                            }
-                    }, [
-                        m('i.glyphicon.glyphicon-search')
-                    ])
-                ])
-              ])
-          }
-        }
-        m.mount(document.getElementById('searchBox'), searchBoxHome)
-
-
-    //- #filterOption
-    //- if messages.error
-    //-     .alert.alert-danger
-    //-         p #{messages.error}
-    //- #songlistTable
-
-    //- script.
-    //-     var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-    //-     var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-    //-     var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-    //-     var isLoggedIn = !{JSON.stringify(isLoggedIn).replace(/<\//g, "<\\/")}
-    //-     var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
-    //- script(src='/dist/javascripts/addOrDeleteButton.js')
-    //- script(src='/dist/javascripts/playlistDropdown.js')
-    //- script(src='/dist/javascripts/addToPlaylistButton.js')
-    //- script(src='/dist/javascripts/showSongsIn.js')
-    //- script(src='/dist/javascripts/hasTranslationsIn.js')
-    //- script(src='/dist/javascripts/searchBox.js')
-    //- script(src='/dist/javascripts/songlistTable.js')
-    //- script(src='/dist/javascripts/home.js')
-    //- script.
-    //-     home.init()
-    //-     $(".alert").fadeTo(2000, 500).slideUp(500, function(){
-    //-         $(".alert").slideUp(500);
-    //-     });
+        m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)

@@ -26,7 +26,7 @@ var search = (function() {
         })
     }
 
-    var searchBox = {
+    var searchBoxComponent = {
         view: function(ctrl, args) {
             return m('#searchInput.input-group', [
                 m('input.form-control[type=text]', {
@@ -52,63 +52,69 @@ var search = (function() {
     }
 
 
-    var searchComponent = {
+    var searchResultComponent = {
         view: function() {
-            return m('.table-responsive', [
-                m('table.table', [
-                    m('thead', [
-                        m('th'),
-                        m('th', 'Title'),
-                        m('th', 'Author'),
-                        m('th', [
-                            m(playlistDropdownComponent.playlistDropdown, {
-                                playlistName: playlistName,
-                                url: '/',
-                                isLoggedIn: isLoggedIn
+            if (displayedSongs().length === 0) {
+                return m('h4', {
+                        style: {'margin-top': '35px'}
+                    }, 'Songs not found')
+            } else {
+                return m('.table-responsive', [
+                    m('table.table', [
+                        m('thead', [
+                            m('th'),
+                            m('th', 'Title'),
+                            m('th', 'Author'),
+                            m('th', [
+                                m(playlistDropdownComponent.playlistDropdown, {
+                                    playlistName: playlistName,
+                                    url: '/',
+                                    isLoggedIn: isLoggedIn
+                                })
+                            ])
+                        ]),
+                        m('tbody', [
+                            displayedSongs().map((s) => {
+                                s.label = s.label || m.prop('Add to Playlist');
+                                s.disabled = s.disabled || m.prop(false)
+                                return m('tr', [
+                                    m('td', [
+                                        m(addOrDeleteButtonComponent.addOrDeleteButton, {
+                                            songID: s._id,
+                                            text: 'Library',
+                                            url: '/',
+                                            inLibrary: inLibrary
+                                        })
+                                    ]),
+                                    m('td', [
+                                        m('a', {
+                                            href: '/' + s._id
+                                        }, s.title)
+                                    ]),
+                                    m('td', s.author),
+                                    m('td', [
+                                        m(addToPlaylistButton, {
+                                            playlistName: playlistName,
+                                            songID: s._id,
+                                            url: '/',
+                                            key: s._id,
+                                            label: s.label,
+                                            disabled: s.disabled
+                                        })
+                                    ])
+                                ])
                             })
                         ])
-                    ]),
-                    m('tbody', [
-                        displayedSongs().map((s) => {
-                            s.label = s.label || m.prop('Add to Playlist');
-                            s.disabled = s.disabled || m.prop(false)
-                            return m('tr', [
-                                m('td', [
-                                    m(addOrDeleteButtonComponent.addOrDeleteButton, {
-                                        songID: s._id,
-                                        text: 'Library',
-                                        url: '/',
-                                        inLibrary: inLibrary
-                                    })
-                                ]),
-                                m('td', [
-                                    m('a', {
-                                        href: '/' + s._id
-                                    }, s.title)
-                                ]),
-                                m('td', s.author),
-                                m('td', [
-                                    m(addToPlaylistButton, {
-                                        playlistName: playlistName,
-                                        songID: s._id,
-                                        url: '/',
-                                        key: s._id,
-                                        label: s.label,
-                                        disabled: s.disabled
-                                    })
-                                ])
-                            ])
-                        })
                     ])
                 ])
-            ])
+            }
         }
     }
 
     return {
         init: function() {
-            m.mount(document.getElementById('searchBox'), searchBox)
-            m.mount(document.getElementById('songlistTable'), searchComponent)
+            m.mount(document.getElementById('searchBox'), searchBoxComponent)
+            m.mount(document.getElementById('songlistTable'), searchResultComponent)
         }
     }
 })()

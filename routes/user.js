@@ -169,15 +169,11 @@ router.post('/library', function(req, res, next) {
                     })
                 } else {
                     req.flash('error', 'Choose Playlist')
-                    res.send({
-                        url: url
-                    })
+                    res.send({})
                 }
             })
     } else {
-        res.send({
-            url: '/user/login'
-        })
+        res.send({})
     }
 })
 
