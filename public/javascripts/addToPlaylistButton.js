@@ -17,8 +17,6 @@ var addToPlaylistButton = {
             onclick: function() {
                 if (!isLoggedIn) {
                     window.location.href = '/user/login'
-                } else if (!ctrl.playlistName) {
-                    document.getElementById('playlistDropdown').click()
                 } else {
                     ctrl.addToPlaylist()
                 }

@@ -28,6 +28,12 @@ emailVerification.configure({
             pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
         }
     },
+    verifyMailOptions: {
+        from: 'noreply@theotech.org',
+        subject: 'Please confirm account',
+        html: 'Click the following link to confirm your account:</p><p>${URL}</p>',
+        text: 'Please confirm your account by clicking the following link: ${URL}'
+    },
     hashingFunction: myHasher,
     passwordFieldName: 'password',
 }, function(err, options) {
@@ -82,14 +88,13 @@ router.post('/', function(req, res, next) {
             username: username
         }, function(err, tu) {
             if (err) return next(err)
-            console.log(tu)
             if (tu) {
                 res.render('signup', {
                     messages: [{
-                        msg: 'You have already signed up. Please check your email to verify your account.'
+                        msg: 'Username already exists.'
                     }],
                     info: 'btn-danger',
-                    resend: true
+                    resend: false
                 });
             } else {
                 emailVerification.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
@@ -159,7 +164,6 @@ router.post('/resend', function(req, res, next) {
 
 router.get('/email-verification/:URL', function(req, res, next) {
     var url = req.params.URL;
-    console.log(url)
     emailVerification.confirmTempUser(url, function(err, user) {
         if (user) {
             emailVerification.sendConfirmationEmail(user.email, function(err, info) {

@@ -9,7 +9,7 @@ block content
     //-         p #{messages.error}
     //- br
     //- #songlistTable
-    #searchBox
+    //- #searchBox
     //- #filterOption
     //- if messages.error
     //-     .alert.alert-danger
@@ -20,7 +20,7 @@ block content
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-        var isLoggedIn = !{JSON.stringify(isLoggedIn).replace(/<\//g, "<\\/")}
+        var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
         console.log(songs)
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/playlistDropdown.js')

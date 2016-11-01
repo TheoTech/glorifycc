@@ -103,7 +103,7 @@ router.route('/:song_id/edit')
             if (err) {
                 res.status(400).send('Error editing the song: ' + error)
             } else {
-                res.redirect('/songlist-db/')
+                res.redirect('/admin/songlist-db/')
             }
         })
     })

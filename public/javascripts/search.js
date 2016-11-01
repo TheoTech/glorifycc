@@ -1,19 +1,4 @@
 var search = (function() {
-    //
-    // songs: songs,
-    // inLibrary: [],
-    // playlists: [],
-    // messages: messages,
-    // langsExist: langsExist,
-    // isLoggedIn: false
-    //     var inLibrary = m.prop(currentInLibrary)
-    //     var playlistName = m.prop()
-    //     var displayedSongs = m.prop(songs)
-    //     var initial = 10
-    //     var langShown = m.prop('all')
-    //     var langFilter = m.prop([])
-    //     var searchString = m.prop()
-
     var displayedSongs = m.prop(songs)
     var playlistName = m.prop()
     var inLibrary = m.prop(currentInLibrary)
@@ -88,7 +73,7 @@ var search = (function() {
                                     ]),
                                     m('td', [
                                         m('a', {
-                                            href: '/' + s._id
+                                            href: '/song/' + s._id
                                         }, s.title)
                                     ]),
                                     m('td', s.author),

@@ -20,6 +20,7 @@
     .table td {
         text-align: center;
     }
+
     .table th {
         text-align: center;
     }
@@ -73,14 +74,28 @@
     }
 
     a.thumbnail.home {
-      width: 300px;
-      height: 300px;
-      margin-top: auto;
-      text-align: center;
+        width: 300px;
+        height: 300px;
+        margin-top: auto;
+        text-align: center;
     }
 
-    a > h3 {
-      margin-top: 110px;
+    /*a>h3 {
+        margin-top: 110px;
+    }*/
+
+    .circularIcon {
+        width: 70px;
+        height: 70px;
+        padding: 10px 16px;
+        font-size: 24px;
+        line-height: 1.33;
+        border-radius: 35px;
+        background-color: #272b30;
+    }
+
+    :hover {
+     background-position: 0px;
     }
     /***
     User Profile Sidebar by @keenthemes

@@ -49,24 +49,26 @@ router.get('/', function(req, res, next) {
 router.delete('/', function(req, res, next) {
     var songID = req.body.id
     var playlistName = req.body.name
-    Playlist.remove({
+    Playlist.findOne({
         owner: req.user._id,
         name: playlistName,
         song: songID
-    }, function(err) {
+    }, function(err, playlist) {
         if (err) return next(err)
+        playlist.remove()
         Playlist.find({
-            owner: req.user._id,
-            name: playlistName,
-            song: {
-                $exists: true
-            }
-        }, function(err, playlists) {
-            res.send({
-                songs: playlists.map((pl) => pl.song)
+                owner: req.user._id,
+                name: playlistName,
+                song: {
+                    $exists: true
+                }
             })
-        })
-
+            .populate('song')
+            .exec(function(err, playlists) {
+                res.send({
+                    songs: playlists.map((pl) => pl.song)
+                })
+            })
     })
 })
 
@@ -102,6 +104,7 @@ router.get('/:playlist_name', function(req, res, next) {
         })
         .populate('song')
         .exec(function(err, playlists) {
+            console.log(playlists)
             if (err) return next(err)
             res.render('playlistClicked', {
                 //pass the array of songs in the playlist

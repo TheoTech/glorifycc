@@ -71,6 +71,7 @@ router.post('/add', function(req, res, next) {
     }
 })
 
+
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
@@ -141,6 +142,7 @@ router.route('/:song_id')
             }
         })
     })
+
 
 router.route('/:song_id/add-translation')
     .all(function(req, res, next) {
@@ -259,7 +261,7 @@ router.route('/:song_id/edit')
             if (err) {
                 res.status(400).send('Error editing the song: ' + error)
             } else {
-                res.redirect('/user/privatesong')
+                res.redirect('/user/library')
             }
         })
     })

@@ -10,7 +10,7 @@ var songlist = (function() {
     var loadMoreAndApplyFilter = function(totalSongsDisplayed, langShown, langFilter, searchString) {
         m.request({
                 method: 'PUT',
-                url: '/',
+                url: '/discover',
                 data: {
                     totalSongsDisplayed: totalSongsDisplayed,
                     langShown: langShown,

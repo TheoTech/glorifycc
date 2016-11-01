@@ -4,7 +4,6 @@ block content
     include topnav
     #playlistClicked
 
-
     script.
         var songs = m.prop(!{JSON.stringify(songs).replace(/<\//g, "<\\/")})
         var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})

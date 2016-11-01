@@ -58,26 +58,26 @@ var home = (function() {
     return {
         init: function() {
             m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {
-                url: '',
-                langShown: langShown,
-                langFilter: langFilter,
-                loadMoreAndApplyFilter: loadMoreAndApplyFilter,
-                initial: initial,
-                searchString: searchString,
-                langsExist: langsExist
-            }))
-            // m.mount(document.getElementById('songlistTable'), m(songlistTable, {
-            //     langShown: langShown,
-            //     langFilter: langFilter,
-            //     loadMoreAndApplyFilter: loadMoreAndApplyFilter,
-            //     initial: initial,
-            //     displayedSongs: displayedSongs,
-            //     playlistName: playlistName,
-            //     inLibrary: inLibrary,
-            //     langsExist: langsExist,
-            //     searchString: searchString,
-            //     isLoggedIn: isLoggedIn
-            // }))
+                    url: '',
+                    langShown: langShown,
+                    langFilter: langFilter,
+                    loadMoreAndApplyFilter: loadMoreAndApplyFilter,
+                    initial: initial,
+                    searchString: searchString,
+                    langsExist: langsExist
+                }))
+                // m.mount(document.getElementById('songlistTable'), m(songlistTable, {
+                //     langShown: langShown,
+                //     langFilter: langFilter,
+                //     loadMoreAndApplyFilter: loadMoreAndApplyFilter,
+                //     initial: initial,
+                //     displayedSongs: displayedSongs,
+                //     playlistName: playlistName,
+                //     inLibrary: inLibrary,
+                //     langsExist: langsExist,
+                //     searchString: searchString,
+                //     isLoggedIn: isLoggedIn
+                // }))
         }
     }
 })()

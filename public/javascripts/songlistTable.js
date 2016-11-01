@@ -43,7 +43,7 @@ var songlistTable = {
                                     ]),
                                     m('td', [
                                         m('a', {
-                                            href: '/' + s._id
+                                            href: '/song/' + s._id
                                         }, s.title)
                                     ]),
                                     m('td', s.author),

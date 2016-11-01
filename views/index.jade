@@ -1,11 +1,88 @@
 extends layout
 
 block content
-    include topnav
+    nav.navbar.navbar-default
+        .container-fluid
+            .navbar-header
+                button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a.navbar-brand(href='/') Home
+
+            #bs-example-navbar-collapse-1.collapse.navbar-collapse
+                ul.nav.navbar-nav
+                    - if(login && user.username !== 'admin')
+                        li
+                            a(href="/user/library") Library
+                        li
+                            a(href="/user/playlist") Playlist
+
+                    - else if(login && user.username === 'admin')
+                        li
+                            a(href="/admin/songlist-db") Song Database
+                        //- li
+                        //-     a(href="/admin/userlist") User Database
+                    li
+                        a(href='/help') Help
+                ul.nav.navbar-nav.navbar-right
+                    if login
+                        li
+                            a Hi #{user.username}
+                        li
+                            a(href="/user/logout") Log Out
+                    else 
+                        li
+                            a(href="/user/login") Log In
+                        li
+                            a(href="/user/signup") Sign Up
+
     header#header(style="text-align: center; margin-bottom: 90px")
         img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
         p Find Public Domain and CC0 Worship Songs in Multiple Languages
         #searchBox(style='width: 30em; margin: auto')
+
+    hr
+    .container-fluid
+    h1 Worship Freely
+    hr
+
+    .row
+        .col-xs-12.col-sm-6.col-md-6
+            .thumbnail(style='text-align:center')
+                h4 Easily Export Slides
+                .circularIcon(style='margin:auto')
+                .caption
+                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                    p Easily create slides in multiple languages so people can worship together in their heart language.
+                    a.btn.btn-default(href='/help/createslide') Create Slides
+        .col-xs-12.col-sm-6.col-md-6
+            .thumbnail(style='text-align:center')
+                h4 Find Songs in Multiple Languages
+                .circularIcon(style='margin:auto')
+                .caption
+                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                    //- p Easily create slides in multiple languages so people can worship together in their heart language.
+                    a.btn.btn-default(href='/discover') Find Songs
+    .row
+        .col-xs-12.col-sm-6.col-md-6
+            .thumbnail(style='text-align:center')
+                h4 Show Your Songs with Global Church
+                .circularIcon(style='margin:auto')
+                .caption
+                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                    //- p Easily create slides in multiple languages so people can worship together in their heart language.
+                    //- button.btn.btn-default Create Slides   
+        .col-xs-12.col-sm-6.col-md-6
+            .thumbnail(style='text-align:center')
+                h4 Free for All CC0 Songs
+                .circularIcon(style='margin:auto')
+                .caption
+                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                    //- p Easily create slides in multiple languages so people can worship together in their heart language.
+                    //- button.btn.btn-default Find Songs         
+    hr
 
     h2 Why Does This Matter?
     p.
@@ -19,27 +96,29 @@ block content
 
     p Make Revelation 7 a reality in your church today, sign up with Glorify.cc.
 
-    h2 Get Started
-    .row
-        .col-xs-12.col-sm-6.col-md-4
-            a.thumbnail(href='#')
-                img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")
-                div.caption
-                    h3 Create lyrics slides in multiple languages
-                    p Easily create slides in multiple languages so people can worship together in their heart language.
-        .col-xs-12.col-sm-6.col-md-4
-            a.thumbnail(href='/songlist/songlist')
-                img.img-responsive(alt="discover songs" src="images/discover-feature-image.jpeg")
-                div.caption
-                    h3 Discover songs
-                    p Discover music you can freely use for corporate worship.
-        .col-xs-12.col-sm-6.col-md-4
-            a.thumbnail(href='#')
-                img.img-responsive(alt="share songs" src="images/share-feature-image.jpeg")
-                div.caption
-                    h3 Share your songs and contribute translations
-                    p Contribute music you've created under the CC0 license so that people around the world can freely translate and sing your songs.
-                    
+    hr
+    
+    if messages
+        .alert-info
+            p #{messages.info}
+    h2 Contact Us
+    form(role="form", method="post", action="/contactus")
+        .row
+            .form-group.col-xs-3
+                label Name:
+                input.form-control(name='name')
+        .row
+            .form-group.col-xs-3
+                label Email:
+                input.form-control(name='email')
+        .row
+            .form-group.col-xs-6
+                label Comments and Questions:
+                textarea.form-control(name='question' style='height:100px')
+        button.btn.btn-default Submit
+
+
+
     script(src='/dist/javascripts/searchBoxHome.js')
     script.
         m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)

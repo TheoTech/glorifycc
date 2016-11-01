@@ -5,8 +5,10 @@ var libraryTableComponent = (function() {
 
     var libraryTable = {
         view: function() {
-            return [
-                m('table.table', [
+            if (_.isEmpty(songs())) {
+                return m('h4', 'Your library is empty')
+            } else {
+                return m('table.table', [
                     m('thead', [
                         m('th'),
                         m('th'),
@@ -42,17 +44,17 @@ var libraryTableComponent = (function() {
                                     }()
                                 ]),
                                 m('td', [
-                                  function() {
-                                      if (s.private) {
-                                          return m('a', {
-                                              href: '/user/privatesong/' + s._id
-                                          }, s.title)
-                                      } else {
-                                        return m('a', {
-                                            href: '/' + s._id
-                                        }, s.title)
-                                      }
-                                  }()
+                                    function() {
+                                        if (s.private) {
+                                            return m('a', {
+                                                href: '/user/privatesong/' + s._id
+                                            }, s.title)
+                                        } else {
+                                            return m('a', {
+                                                href: '/song/' + s._id
+                                            }, s.title)
+                                        }
+                                    }()
                                 ]),
                                 m('td', s.author),
                                 m('td', [
@@ -69,7 +71,7 @@ var libraryTableComponent = (function() {
                         })
                     ])
                 ])
-            ]
+            }
         }
     }
 

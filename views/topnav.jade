@@ -15,7 +15,7 @@ nav.navbar.navbar-default
                         a(href="/user/library") Library
                     li
                         a(href="/user/playlist") Playlist
-                                        
+
                 - else if(login && user.username === 'admin')
                     li
                         a(href="/admin/songlist-db") Song Database
@@ -23,6 +23,8 @@ nav.navbar.navbar-default
                     //-     a(href="/admin/userlist") User Database
                 li
                     a(href='/help') Help
+            .navbar-form.navbar-left
+                #searchBox
             ul.nav.navbar-nav.navbar-right
                 if login
                     li
@@ -34,3 +36,7 @@ nav.navbar.navbar-default
                         a(href="/user/login") Log In
                     li
                         a(href="/user/signup") Sign Up
+
+script(src='/dist/javascripts/searchBoxHome.js')
+script.
+    m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)

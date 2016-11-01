@@ -66,17 +66,18 @@ block content
         var isTranslationExisted = !{JSON.stringify(isTranslationExisted).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
+        var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songButton.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/playlistDropdown.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/songPageButtons.js')
+    script(src='/dist/javascripts/songClicked.js')
     script.
         var url = '/songlist/' + song._id
         if(!song.copyright){
           url = '/user/privatesong/' + song._id
         }
-        m.mount(document.getElementById('song'), m(songPageButtonsComponent.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
+        m.mount(document.getElementById('song'), m(songClicked.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
         if (isTranslationExisted) {
-            m.mount(document.getElementById('translation'), m(songPageButtonsComponent.buttons, {_id: translation._id}))
+            m.mount(document.getElementById('translation'), m(songClicked.buttons, {_id: translation._id}))
         }

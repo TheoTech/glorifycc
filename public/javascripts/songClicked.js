@@ -1,90 +1,5 @@
-var songClicked = (function() {
-    var translation = [];
-    console.log(JSON.stringify(song))
-    var selectTranslation = function(lang) {
-        m.request({
-                method: 'PUT',
-                url: '/' + song._id,
-                data: {
-                    lang: lang
-                }
-            })
-            .then(function(res) {
-                translation = res.translation
-            })
-    }
-
-    var songClickedComponent = {
-        view: function() {
-            return m('.row', [
-                m('.col-xs-6', [
-                    m('h1', song.title),
-                    m('h3', 'by ' + song.author),
-                    m('p', song.translator ? 'Translated by ' + song.translatorm : ''),
-                    m('p', song.contributor ? 'Contributor: ' + song.contributor : ''),
-                    m('p', song.copyright ? 'Copyright: ' + song.copyright : '')
-                ]),
-                function(){
-                    if(translation){
-                      return m('p', 'hehehe')
-                    }
-                }(),
-                // rightTranslation ? m('.col-xs-6', [
-                //     m('h1', translation.title),
-                //     m('h3', translation.author),
-                //     m('p', translation.translator),
-                //     m('p', translation.contributor),
-                //     m('p', translation.copyright)
-                // ]), : m('span'),
-                m('br'),
-                m('br'),
-                m('.row', [
-                    m('.col-xs-offset-6.col-xs-6', [
-                        m('.form-group', [
-                            m('label', 'Language'),
-                            m('select.form-control', {
-                                onchange: function() {
-                                    selectTranslation(this.value)
-                                }
-                            }, [
-                                m('option', 'Select Translation')
-                            ])
-                        ])
-                    ])
-                ]),
-                m('.row', [
-                    m('.col-xs-6', [
-                        m('h4.capitalize', song.lang),
-                        song.lyric.map((line) => {
-                            return line === '' ? m('br') : [
-                                m('span', 'line'),
-                                m('br')
-                            ]
-                        })
-                    ])
-                    // m('.col-xs-6', [
-                    //     m('h4.capitalize', translation.lang),
-                    //     translation.lyric.map((line) => {
-                    //         return line === '' ? m('br') : [
-                    //             m('span', 'line'),
-                    //             m('br')
-                    //         ]
-                    //     })
-                    // ])
-                ])
-            ])
-        }
-    }
-    return {
-      init: function(dom){
-        m.mount(dom, songClickedComponent)
-      }
-    }
-})();
-
-
 //this is mithril component for buttons in the song clicked page
-var songPageButtonsComponent = (function() {
+var songClicked = (function() {
     var addToPlaylist = function(name, songID) {
         m.request({
             method: 'POST',
@@ -114,7 +29,6 @@ var songPageButtonsComponent = (function() {
     }
 
     var playlistName = m.prop();
-    // console.log(playlists)
     var buttons = {
         view: function(ctrl, args) {
             return [
@@ -127,7 +41,11 @@ var songPageButtonsComponent = (function() {
                 m('br'),
                 m('button.btn.btn-default', {
                     onclick: function() {
-                        $('#playlistList').modal('show');
+                        if (isLoggedIn) {
+                            $('#playlistList').modal('show');
+                        } else {
+                            window.location.href = '/user/login'
+                        }
                     }
                 }, 'Add to Playlist'),
                 m('#playlistList.modal.fade[role=dialog]', [

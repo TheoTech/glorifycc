@@ -14,6 +14,7 @@ block content
     script.
         var s = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+        var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
     script(src='/bower_components/mithril/mithril.min.js')
     script(src='/dist/javascripts/playlistDropdown.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')

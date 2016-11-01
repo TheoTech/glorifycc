@@ -9,6 +9,31 @@ var express = require('express'),
 var fs = require('file-system');
 var officegen = require('officegen');
 var async = require('async');
+var nodemailer = require('nodemailer')
+var config = require('config')
+
+router.post('/contactus', function(req, res, next) {
+    var name = req.body.name
+    var email = req.body.email
+    var question = req.body.question
+    var smtpTransport = nodemailer.createTransport('SMTP', {
+        service: 'SendGrid',
+        auth: {
+            user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
+            pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
+        }
+    });
+    var mailOptions = {
+        to: 'jonathanardewanta@hotmail.com',
+        from: email,
+        subject: 'Question',
+        text: question
+    };
+    smtpTransport.sendMail(mailOptions, function(err) {
+        req.flash('info', 'Your question has been successfully sent');
+        res.redirect('/')
+    });
+})
 
 
 router.get('/', function(req, res, next) {
@@ -61,7 +86,7 @@ router.get('/', function(req, res, next) {
         .limit(10)
 })
 
-router.put('/', function(req, res, next) {
+router.put('/discover', function(req, res, next) {
     var langShown = req.body.langShown
     var langFilter = req.body.langFilter
     var searchString = req.body.searchString
@@ -312,8 +337,19 @@ router.post('/filter', function(req, res, next) {
         })
 })
 
+router.get('/help', function(req, res, next) {
+    res.render('help', {})
+})
+
+router.get('/help/createslide', function(req, res, next) {
+    res.render('help-createSlide', {})
+})
+
+router.get('/help/addingsongs', function(req, res, next) {
+    res.render('help-addingSongs', {})
+})
+
 router.get('/search', function(req, res, next) {
-    var searchString = req.query.q
     // var messages = req.flash();
     // if (!searchString) {
     //     var messages = req.flash();
@@ -333,7 +369,7 @@ router.get('/search', function(req, res, next) {
     //         })
     //         .limit(10)
     // } else {
-    console.log(searchString)
+    var searchString = req.query.q
     var langShown = req.body.langShown
     var langFilter = req.body.langFilter
     var totalSongsDisplayed = req.body.totalSongsDisplayed
@@ -389,7 +425,6 @@ router.get('/search', function(req, res, next) {
                             playlists: playlists,
                             // messages: messages,
                             // langsExist: langsExist,
-                            isLoggedIn: true
                         })
                     })
                 })
@@ -400,19 +435,76 @@ router.get('/search', function(req, res, next) {
                     playlists: [],
                     // messages: messages,
                     // langsExist: langsExist,
-                    isLoggedIn: false
                 })
             }
         }
     }
 
-    async.waterfall([findOriginalSong], finalize)
-
-    // }
+    if (searchString) {
+        async.waterfall([findOriginalSong], finalize)
+    } else {
+        res.render('search', {
+            songs: [],
+            inLibrary: [],
+            playlists: [],
+            // messages: messages,
+            // langsExist: langsExist,
+        })
+    }
 })
 
+router.get('/discover', function(req, res, next) {
+    var messages = req.flash();
+    var langsExist;
+    var messages = req.flash()
+    Song.find({
+            private: false
+        }, function(err, songs, count) {
+            if (err) {
+                res.status(400).send('error getting song list ' + err)
+            }
+            //to get the what languages we need to include in the dropdown for filtering feature
+            langsExist = _.uniq(songs.map((s) => s.lang))
+            if (req.isAuthenticated()) {
+                User.findOne({
+                    _id: req.user._id
+                }, function(err, user) {
+                    if (err) next(err)
+                    Playlist.find({
+                        owner: req.user._id,
+                        song: {
+                            $exists: false
+                        }
+                    }, function(err, playlists) {
+                        if (err) next(err)
+                        res.render('songlist', {
+                            songs: songs,
+                            inLibrary: user.library,
+                            playlists: playlists,
+                            messages: messages,
+                            langsExist: langsExist,
+                            isLoggedIn: true
+                        })
+                    })
+                })
+            } else {
+                res.render('songlist', {
+                    songs: songs,
+                    inLibrary: [],
+                    playlists: [],
+                    messages: messages,
+                    langsExist: langsExist,
+                    isLoggedIn: false
+                })
+            }
+        })
+        .sort({
+            title: 1
+        })
+        .limit(10)
+})
 
-router.route('/:song_id')
+router.route('/song/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
             // v = req.query.v || ''
@@ -452,7 +544,10 @@ router.route('/:song_id')
             var isTranslationExisted = !_.isEmpty(rightTranslation)
             if (req.isAuthenticated()) {
                 Playlist.find({
-                    owner: req.user._id
+                    owner: req.user._id,
+                    song: {
+                        $exists: false
+                    }
                 }, function(err, playlists) {
                     User.findOne({
                         _id: req.user._id
@@ -481,36 +576,36 @@ router.route('/:song_id')
             }
         })
     })
-//choosing translations
-.put(function(req, res, next) {
-    var lang = req.body.lang
-    var leftColumnSongID = req.body.parentSongID
-    Song.findById(leftColumnSongID, function(err, song) {
-        if (err) return next(err)
-        if (!song.source) {
-            //then leftColumnSong is parent song in the Song Schema
-            //find one
-            Song.findOne({
-                source: leftColumnSongID,
-                lang: lang
-            }, function(err, translation) {
-                if (err) return next(err)
-                res.send({
-                    translation: translation
+    //choosing translations
+    .put(function(req, res, next) {
+        var lang = req.body.lang
+        var leftColumnSongID = req.body.parentSongID
+        Song.findById(leftColumnSongID, function(err, song) {
+            if (err) return next(err)
+            if (!song.source) {
+                //then leftColumnSong is parent song in the Song Schema
+                //find one
+                Song.findOne({
+                    source: leftColumnSongID,
+                    lang: lang
+                }, function(err, translation) {
+                    if (err) return next(err)
+                    res.send({
+                        translation: translation
+                    })
                 })
-            })
-        } else {
-            Song.findOne({
-                lang: lang,
-                $or: [{
-                    source: song.source,
-                }, {
-                    _id: song.source
-                }]
-            })
-        }
+            } else {
+                Song.findOne({
+                    lang: lang,
+                    $or: [{
+                        source: song.source,
+                    }, {
+                        _id: song.source
+                    }]
+                })
+            }
+        })
     })
-})
 
 router.route('/:song_id/add-translation')
     .all(function(req, res, next) {
