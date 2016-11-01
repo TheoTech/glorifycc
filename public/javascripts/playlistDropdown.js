@@ -75,9 +75,8 @@ var playlistDropdownComponent = (function() {
                             ]),
                             m('.modal-body', [
                                 m('label', 'Enter Playlist Name'),
-                                m('input.form-control[name=playlist type=text]', {
+                                m('input#newPlaylistInput.form-control[name=playlist type=text]', {
                                     value: 'New Playlist',
-                                    onchange: m.withAttr('value', args.playlistName),
                                     config: function(elem, isInit) {
                                         if (!isInit) {
                                             enter(elem)
@@ -85,13 +84,59 @@ var playlistDropdownComponent = (function() {
                                     }
                                 }),
                                 m('br'),
-                                m('button.btn.btn-success#create', {
+                                m('button.btn.btn-default#create', {
                                     "data-dismiss": "modal",
                                     onclick: function() {
+                                        args.playlistName($('input#newPlaylistInput').val())
                                         addPlaylist(args.playlistName(), args.url)
                                         $('#newPlaylist').modal('hide')
                                     }
                                 }, 'Create')
+                            ])
+                        ])
+                    ])
+                ]),
+                m('#choosePlaylist.modal.fade[role=dialog]', [
+                    m('.modal-dialog.modal-sm', [
+                        m('.modal-content', [
+                            m('.modal-header', [
+                                m('h4', {
+                                    style: {
+                                        'margin-left': '40px'
+                                    }
+                                }, 'Select Playlist', [
+                                    m('button#test.btn.btn-default.btn-sm.pull-right', {
+                                        'data-toggle': 'tooltip',
+                                        'data-placement': 'right',
+                                        title: 'Add New Playlist',
+                                        config: function(elem, isInit) {
+                                            if (!isInit) {
+                                                $(elem).tooltip()
+                                            }
+                                        },
+                                        onclick: function() {
+                                            $('#choosePlaylist').modal('hide')
+                                            $('#newPlaylist').modal('show')
+                                        }
+                                    }, [
+                                        m('span.glyphicon.glyphicon-plus')
+                                    ])
+                                ])
+                            ]),
+                            m('.modal-body', [
+                                currentPlaylists().map((pl) => {
+                                    return [
+                                        m('p', [
+                                            m('a', {
+                                                href: '#',
+                                                onclick: function() {
+                                                    args.playlistName(pl.name)
+                                                },
+                                                'data-dismiss': 'modal'
+                                            }, pl.name)
+                                        ])
+                                    ]
+                                })
                             ])
                         ])
                     ])

@@ -5,6 +5,7 @@ block content
     h1 My Playlist
     #searchBox
     br
+    #addNewPlaylistButton
     #playlist
 
     script.
@@ -13,4 +14,6 @@ block content
     script(src='/dist/javascripts/searchBox.js')
     script(src='/dist/javascripts/playlistTable.js')
     script.
-        playlistTableComponent.init(document.getElementById('playlist'))
+        m.mount(document.getElementById('playlist'), playlistTableComponent.playlistTable)
+        m.mount(document.getElementById('addNewPlaylistButton'), playlistTableComponent.addNewPlaylist)
+        

@@ -86,131 +86,7 @@ router.get('/', function(req, res, next) {
         .limit(10)
 })
 
-router.put('/discover', function(req, res, next) {
-    var langShown = req.body.langShown
-    var langFilter = req.body.langFilter
-    var searchString = req.body.searchString
-    var totalSongsDisplayed = req.body.totalSongsDisplayed
-    var songs2d = []
-    var findOriginalSong = function(done) {
-        var query = new RegExp('.*' + searchString + '.*')
-        if (searchString) {
-            Song.find({
-                    source: {
-                        $exists: false
-                    },
-                    $or: [{
-                        title: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        author: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        lyric: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }],
-                    private: false
-                },
-                function(err, songs) {
-                    done(err, songs)
-                })
-        } else {
-            Song.find({
-                    source: {
-                        $exists: false
-                    },
-                    private: false
-                },
-                function(err, songs) {
-                    done(err, songs)
-                })
-        }
-    }
 
-    var findTranslations = function(songs, done) {
-        if (_.isEmpty(songs)) {
-            done(null, [])
-        } else {
-            var task = songs.map((s, i, arr) => {
-                return function(done) {
-                    var temp = []
-                    temp.push(s)
-                    Song.find({
-                        source: s._id,
-                        private: false
-                    }, (err, translations) => {
-                        translations.forEach((t) => {
-                            temp.push(t)
-                        })
-                        songs2d.push(temp)
-                        if (i === arr.length - 1) {
-                            done(null, songs2d)
-                        } else {
-                            done()
-                        }
-                    })
-                }
-            });
-            async.waterfall(task, function(err, songs2d) {
-                done(null, songs2d)
-            });
-        }
-    }
-
-    var applyFilter = function(songs2d, done) {
-        if (!_.isEmpty(langFilter)) {
-            songs2d = songs2d.filter((songs) => {
-                var langArray = (songs.map((song) => song.lang))
-                for (var i = 0; i < langFilter.length; i++) {
-                    if (!_.includes(langArray, langFilter[i])) {
-                        return false
-                    }
-                }
-                return true
-            })
-        }
-        done(null, songs2d)
-    }
-
-    var concatSongs = function(songs2d, done) {
-        if (!_.isEmpty(songs2d)) {
-            songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
-                return _.concat(prev, curr)
-            }), ['title'])
-        }
-        done(null, songs2d)
-    }
-
-    var loadMore = function(songs2d, done) {
-        if (langShown !== 'all') {
-            songs2d = songs2d.filter((s) => s.lang === langShown)
-        }
-        if (songs2d.length >= totalSongsDisplayed) {
-            songs2d = songs2d.slice(0, totalSongsDisplayed)
-        }
-        done(null, songs2d)
-    }
-
-    var finalize = function(err, songs2d) {
-        if (err) {
-            res.status(500).send('Internal error' + err)
-            console.log(err)
-        } else {
-            res.send({
-                songs: songs2d
-            })
-        }
-    }
-
-    async.waterfall([findOriginalSong, findTranslations, applyFilter, concatSongs, loadMore], finalize)
-
-})
 
 router.post('/', function(req, res, next) {
     var id = req.body.id
@@ -454,6 +330,7 @@ router.get('/search', function(req, res, next) {
 })
 
 router.get('/discover', function(req, res, next) {
+    var playlistName = req.query.playlist
     var messages = req.flash();
     var langsExist;
     var messages = req.flash()
@@ -477,24 +354,24 @@ router.get('/discover', function(req, res, next) {
                         }
                     }, function(err, playlists) {
                         if (err) next(err)
-                        res.render('songlist', {
+                        res.render('discover', {
                             songs: songs,
                             inLibrary: user.library,
                             playlists: playlists,
                             messages: messages,
                             langsExist: langsExist,
-                            isLoggedIn: true
+                            playlistName: playlistName
                         })
                     })
                 })
             } else {
-                res.render('songlist', {
+                res.render('discover', {
                     songs: songs,
                     inLibrary: [],
                     playlists: [],
                     messages: messages,
                     langsExist: langsExist,
-                    isLoggedIn: false
+                    playlistName: playlistName
                 })
             }
         })
@@ -502,6 +379,132 @@ router.get('/discover', function(req, res, next) {
             title: 1
         })
         .limit(10)
+})
+
+router.put('/discover', function(req, res, next) {
+    var langShown = req.body.langShown
+    var langFilter = req.body.langFilter
+    var searchString = req.body.searchString
+    var totalSongsDisplayed = req.body.totalSongsDisplayed
+    var songs2d = []
+    var findOriginalSong = function(done) {
+        var query = new RegExp('.*' + searchString + '.*')
+        if (searchString) {
+            Song.find({
+                    source: {
+                        $exists: false
+                    },
+                    $or: [{
+                        title: {
+                            $regex: query,
+                            $options: 'si'
+                        }
+                    }, {
+                        author: {
+                            $regex: query,
+                            $options: 'si'
+                        }
+                    }, {
+                        lyric: {
+                            $regex: query,
+                            $options: 'si'
+                        }
+                    }],
+                    private: false
+                },
+                function(err, songs) {
+                    done(err, songs)
+                })
+        } else {
+            Song.find({
+                    source: {
+                        $exists: false
+                    },
+                    private: false
+                },
+                function(err, songs) {
+                    done(err, songs)
+                })
+        }
+    }
+
+    var findTranslations = function(songs, done) {
+        if (_.isEmpty(songs)) {
+            done(null, [])
+        } else {
+            var task = songs.map((s, i, arr) => {
+                return function(done) {
+                    var temp = []
+                    temp.push(s)
+                    Song.find({
+                        source: s._id,
+                        private: false
+                    }, (err, translations) => {
+                        translations.forEach((t) => {
+                            temp.push(t)
+                        })
+                        songs2d.push(temp)
+                        if (i === arr.length - 1) {
+                            done(null, songs2d)
+                        } else {
+                            done()
+                        }
+                    })
+                }
+            });
+            async.waterfall(task, function(err, songs2d) {
+                done(null, songs2d)
+            });
+        }
+    }
+
+    var applyFilter = function(songs2d, done) {
+        if (!_.isEmpty(langFilter)) {
+            songs2d = songs2d.filter((songs) => {
+                var langArray = (songs.map((song) => song.lang))
+                for (var i = 0; i < langFilter.length; i++) {
+                    if (!_.includes(langArray, langFilter[i])) {
+                        return false
+                    }
+                }
+                return true
+            })
+        }
+        done(null, songs2d)
+    }
+
+    var concatSongs = function(songs2d, done) {
+        if (!_.isEmpty(songs2d)) {
+            songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
+                return _.concat(prev, curr)
+            }), ['title'])
+        }
+        done(null, songs2d)
+    }
+
+    var loadMore = function(songs2d, done) {
+        if (langShown !== 'all') {
+            songs2d = songs2d.filter((s) => s.lang === langShown)
+        }
+        if (songs2d.length >= totalSongsDisplayed) {
+            songs2d = songs2d.slice(0, totalSongsDisplayed)
+        }
+        done(null, songs2d)
+    }
+
+    var finalize = function(err, songs2d) {
+        if (err) {
+            res.status(500).send('Internal error' + err)
+            console.log(err)
+        } else {
+            res.send({
+                songs: songs2d
+            })
+        }
+    }
+
+    async.waterfall([findOriginalSong, findTranslations, applyFilter, concatSongs, loadMore], finalize)
+
 })
 
 router.route('/song/:song_id')
