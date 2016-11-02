@@ -7,7 +7,7 @@ var addOrDeleteButtonComponent = (function() {
                 id: id
             }
         }).then(function(res) {
-            res.url ? window.location.href = res.url : inLibrary(res.inLibrary)
+            inLibrary(res.inLibrary)
         })
     }
 
@@ -19,53 +19,52 @@ var addOrDeleteButtonComponent = (function() {
                 id: id
             }
         }).then(function(res) {
-            res.url ? window.location.href = res.url : inLibrary(res.inLibrary)
+            inLibrary(res.inLibrary)
         })
     }
 
     var addOrDeleteButton = {
-        // controller: function(args) {
-        //     var ctrl = this
-        //     this.isInLibrary = _.includes(args.inLibrary(), args.songID)
-        // },
+        controller: function(args) {
+            this.buttonTitle = function() {
+                var isInLibrary = _.includes(args.inLibrary(), args.songID);
+                return isInLibrary ? 'Removed from Library...' : 'Added to Library...';
+            };
+            this.buttonTxt = function() {
+                var isInLibrary = _.includes(args.inLibrary(), args.songID);
+                return m(isInLibrary ? 'i.glyphicon.glyphicon-remove' : 'i.glyphicon.glyphicon-plus');
+            }
+            this.addOrDelete = function(){
+                var isInLibrary = _.includes(args.inLibrary(), args.songID);
+                if (isInLibrary) {
+                    deleteSong(args.songID, args.url, args.inLibrary)
+                } else {
+                    addSong(args.songID, args.url, args.inLibrary)
+                }
+            }
+            return this;
+        },
         view: function(ctrl, args) {
             return m('div', [
-                m('button#addOrDelete.btn.btn-default', {
-                    'data-toggle': 'tooltip',
-                    'data-placement': 'right',
-                    title: _.includes(args.inLibrary(), args.songID) ? 'Delete from Library' : 'Add to Library',
-                    onclick: function() {
-                        if(_.includes(args.inLibrary(), args.songID)){
-                          deleteSong(args.songID, args.url, args.inLibrary)
-                          $('p#' + args.songID).text('Remove from library...')
-                          setTimeout(() => {
-                              $('p#' + args.songID).text('')
-                              // m.redraw()
-                          }, 3000);
+                m('button.btn.btn-default', {
+                    title: ctrl.buttonTitle(),
+                    onclick: function(evt) {
+                        if (!isLoggedIn) {
+                            window.location.href = '/user/login'
                         } else {
-                          addSong(args.songID, args.url, args.inLibrary)
-                          $('p#' + args.songID).text('Add to library...')
-                          setTimeout(() => {
-                              $('p#' + args.songID).text('')
-                          }, 3000);
+                            ctrl.addOrDelete
+                            $(this).tooltip('fixTitle').tooltip('setContent');
+                            $(this).tooltip('show');
                         }
-
                     },
                     config: function(elem, isInit) {
                         if (!isInit) {
-                            $(elem).tooltip({
-                                trigger: 'hover'
-                            })
-                        } else {
-                            $(elem).tooltip('hide').attr('title', $(elem).title)
-                                .tooltip('fixTitle')
-                                .tooltip({
-                                    trigger: 'hover'
-                                })
+                            $(this).tooltip({
+                                trigger: 'focus'
+                            });
                         }
                     }
                 }, [
-                    m(_.includes(args.inLibrary(), args.songID) ? 'i.glyphicon.glyphicon-remove' : 'i.glyphicon.glyphicon-plus')
+                    ctrl.buttonTxt()
                 ]),
                 m('p', {
                     id: args.songID,

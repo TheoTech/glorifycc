@@ -90,24 +90,18 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     var id = req.body.id
-    if (req.isAuthenticated()) {
-        User.findOne({
-            _id: req.user._id
-        }, function(err, user) {
+    User.findOne({
+        _id: req.user._id
+    }, function(err, user) {
+        if (err) next(err)
+        user.library.push(id)
+        user.save(function(err) {
             if (err) next(err)
-            user.library.push(id)
-            user.save(function(err) {
-                if (err) next(err)
-                res.send({
-                    inLibrary: user.library
-                })
+            res.send({
+                inLibrary: user.library
             })
         })
-    } else {
-        res.send({
-            url: '/user/login'
-        })
-    }
+    })
 })
 
 router.delete('/', function(req, res, next) {
@@ -122,7 +116,6 @@ router.delete('/', function(req, res, next) {
         }
         user.save(function(err) {
             if (err) next(err)
-            console.log('delete success')
             res.send({
                 inLibrary: user.library
             })
@@ -330,7 +323,7 @@ router.get('/search', function(req, res, next) {
 })
 
 router.get('/discover', function(req, res, next) {
-    var playlistName = req.query.playlist
+    var playlistName = req.query.playlist || ''
     var messages = req.flash();
     var langsExist;
     var messages = req.flash()
