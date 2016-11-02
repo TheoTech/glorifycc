@@ -2,7 +2,7 @@ var searchBoxHome = function() {
     var searchString = m.prop('')
     var enter = function(elem, checkboxClass) {
         $(elem).keyup(function(e) {
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 $("#search-button").click()
             }
         })

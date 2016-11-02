@@ -8,7 +8,6 @@ var express = require('express'),
 
 var fs = require('file-system');
 var officegen = require('officegen');
-var async = require('async');
 var nodemailer = require('nodemailer')
 var config = require('config')
 
@@ -26,7 +25,7 @@ router.post('/contactus', function(req, res, next) {
     var mailOptions = {
         to: 'jonathanardewanta@hotmail.com',
         from: email,
-        subject: 'Question',
+        subject: 'Question about glorify.cc',
         text: question
     };
     smtpTransport.sendMail(mailOptions, function(err) {
@@ -219,25 +218,6 @@ router.get('/help/addingsongs', function(req, res, next) {
 })
 
 router.get('/search', function(req, res, next) {
-    // var messages = req.flash();
-    // if (!searchString) {
-    //     var messages = req.flash();
-    //     var langsExist;
-    //     var messages = req.flash()
-    //     Song.find({
-    //             private: false
-    //         }, function(err, songs, count) {
-    //             if (err) {
-    //                 res.status(400).send('error getting song list ' + err)
-    //             }
-    //             //to get the what languages we need to include in the dropdown for filtering feature
-    //             langsExist = _.uniq(songs.map((s) => s.lang))
-    //         })
-    //         .sort({
-    //             title: 1
-    //         })
-    //         .limit(10)
-    // } else {
     var searchString = req.query.q
     var langShown = req.body.langShown
     var langFilter = req.body.langFilter
@@ -291,9 +271,7 @@ router.get('/search', function(req, res, next) {
                         res.render('search', {
                             songs: songs2d,
                             inLibrary: user.library,
-                            playlists: playlists,
-                            // messages: messages,
-                            // langsExist: langsExist,
+                            playlists: playlists
                         })
                     })
                 })
@@ -301,9 +279,7 @@ router.get('/search', function(req, res, next) {
                 res.render('search', {
                     songs: songs2d,
                     inLibrary: [],
-                    playlists: [],
-                    // messages: messages,
-                    // langsExist: langsExist,
+                    playlists: []
                 })
             }
         }
@@ -315,9 +291,7 @@ router.get('/search', function(req, res, next) {
         res.render('search', {
             songs: [],
             inLibrary: [],
-            playlists: [],
-            // messages: messages,
-            // langsExist: langsExist,
+            playlists: []
         })
     }
 })
@@ -333,7 +307,7 @@ router.get('/discover', function(req, res, next) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
-            //to get the what languages we need to include in the dropdown for filtering feature
+            //to get what languages we need to include in the dropdown for filtering feature
             langsExist = _.uniq(songs.map((s) => s.lang))
             if (req.isAuthenticated()) {
                 User.findOne({
@@ -380,6 +354,8 @@ router.put('/discover', function(req, res, next) {
     var searchString = req.body.searchString
     var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
+
+    //find all parent songs
     var findOriginalSong = function(done) {
         var query = new RegExp('.*' + searchString + '.*')
         if (searchString) {
@@ -421,6 +397,7 @@ router.put('/discover', function(req, res, next) {
         }
     }
 
+    //find all children songs for every parent song
     var findTranslations = function(songs, done) {
         if (_.isEmpty(songs)) {
             done(null, [])
@@ -451,6 +428,7 @@ router.put('/discover', function(req, res, next) {
         }
     }
 
+    //apply 'show songs that have translations in' filter
     var applyFilter = function(songs2d, done) {
         if (!_.isEmpty(langFilter)) {
             songs2d = songs2d.filter((songs) => {
@@ -466,6 +444,7 @@ router.put('/discover', function(req, res, next) {
         done(null, songs2d)
     }
 
+    //turn 2d array to 1d array
     var concatSongs = function(songs2d, done) {
         if (!_.isEmpty(songs2d)) {
             songs2d = _.sortBy(songs2d.reduce((prev, curr) => {
@@ -475,6 +454,7 @@ router.put('/discover', function(req, res, next) {
         done(null, songs2d)
     }
 
+    //apply 'show songs in' filter
     var loadMore = function(songs2d, done) {
         if (langShown !== 'all') {
             songs2d = songs2d.filter((s) => s.lang === langShown)

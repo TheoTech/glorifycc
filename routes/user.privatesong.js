@@ -78,7 +78,7 @@ router.route('/:song_id')
         song_id = req.params.song_id
         song = {}
         Song.findOne({
-            contributor: req.user.username,
+            contributor: req.user.username, //this will protect the song from not authorized user
             _id: song_id,
             private: true
         }, function(err, s) {
@@ -86,6 +86,7 @@ router.route('/:song_id')
             next()
         })
     })
+    //
     .get(function(req, res, next) {
         Song.find({
             $or: [{

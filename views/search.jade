@@ -3,17 +3,6 @@ extends layout
 block content
     include topnav
     h1 Search Result
-    //- #searchBox
-    //- if messages.error
-    //-     .alert.alert-danger
-    //-         p #{messages.error}
-    //- br
-    //- #songlistTable
-    //- #searchBox
-    //- #filterOption
-    //- if messages.error
-    //-     .alert.alert-danger
-    //-         p #{messages.error}
     #songlistTable
 
     script.
@@ -25,25 +14,9 @@ block content
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/playlistDropdown.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
-    //- script(src='/dist/javascripts/showSongsIn.js')
-    //- script(src='/dist/javascripts/hasTranslationsIn.js')
-    //- script(src='/dist/javascripts/searchBox.js')
-    //- script(src='/dist/javascripts/songlistTable.js')
     script(src='/dist/javascripts/search.js')
     script.
         m.mount(search.init())
         $(".alert").fadeTo(2000, 500).slideUp(500, function(){
             $(".alert").slideUp(500);
         });
-    //- script.
-    //-     var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-    //-     var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-    //-     var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-    //- script(src='/dist/javascripts/addOrDeleteButton.js')
-    //- script(src='/dist/javascripts/playlistDropdown.js')
-    //- script(src='/dist/javascripts/addToPlaylistButton.js')
-    //- script(src='/dist/javascripts/songlistTable.js')
-    //- script(src='/dist/javascripts/searchBox.js')
-    //- script.
-    //-     songlistTableComponent.init(document.getElementById('songlistTable'))
-    //-     searchBoxComponent.init(document.getElementById('searchBox'))

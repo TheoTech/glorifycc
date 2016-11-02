@@ -75,9 +75,8 @@ router.put('/library', function(req, res, next) {
         }, function(err, playlist) {
             if (err) return next(err)
             if (playlist) {
-                req.flash('error', 'Playlist exists. Choose different name')
                 res.send({
-                    url: url
+                    playlistExists: true
                 })
             } else {
                 var newPlaylist = new Playlist({
