@@ -5,6 +5,7 @@ block content
     if msg
         .alert.alert-danger
             p #{msg}
+    #addSong
     .row
         .col-md-6
             h1 Add a Song
@@ -35,3 +36,8 @@ block content
                     textarea#lyric.form-control(name="lyric", rows='20')
 
                 button.btn.btn-primary(type="submit") Add Song
+
+
+    script(src='/dist/javascripts/addSong.js')
+    script.
+        addSong.addSongComponent
