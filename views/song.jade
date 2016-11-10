@@ -2,7 +2,7 @@ extends layout
 
 block content
     include topnav
-    
+
     .row
         .col-xs-6
             h1 #{song.title}
@@ -36,12 +36,14 @@ block content
             #song 
             h4.capitalize=song.lang
             <p> 
-            each line in song.lyric
-                - if (line === '')
-                    br
-                - else
-                    !{line}
-                    br
+            each stanza in song.lyric
+                each line in stanza
+                    - if (line === '')
+                        br
+                    - else
+                        !{line}
+                        br
+                br
             </p> 
 
         .col-xs-6  
@@ -49,12 +51,14 @@ block content
             if isTranslationExisted 
                 h4.capitalize #{rightTranslation.lang}
                 <p> 
-                each line in rightTranslation.lyric
-                    - if (line === '')
-                        br
-                    - else
-                        !{line}
-                        br
+                each stanza in rightTranslation.lyric
+                    each line in stanza
+                        - if (line === '')
+                            br
+                        - else
+                            !{line}
+                            br
+                    br
                 </p> 
             br 
             -if(login && user.username === 'admin')
@@ -75,7 +79,7 @@ block content
     script.
         var url = '/songlist/' + song._id
         if(!song.copyright){
-          url = '/user/privatesong/' + song._id
+            url = '/user/privatesong/' + song._id
         }
         m.mount(document.getElementById('song'), m(songClicked.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
         if (isTranslationExisted) {

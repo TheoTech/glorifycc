@@ -583,7 +583,7 @@ router.route('/song/:song_id')
         })
     })
 
-router.route('/:song_id/add-translation')
+router.route('/song/:song_id/add-translation')
     .all(function(req, res, next) {
         song_id = req.params.song_id;
         song = {}
@@ -593,67 +593,51 @@ router.route('/:song_id/add-translation')
         })
     })
     .get(isLoggedIn, function(req, res, next) {
-        var temp = '';
-        song.lyric.forEach(function(s) {
-            temp += s + '\n'
-        })
-        var messages = req.flash('error')
         res.render('addTranslation', {
-            song: song,
-            stringLyric: temp,
-            messages: messages,
-            hasErrors: messages.length > 0
+            song: song
         })
     })
     .post(function(req, res, next) {
-        req.checkBody('translationTitle', 'Title is required').notEmpty()
-        req.checkBody('translationLyric', 'Lyric is required').notEmpty()
+        req.checkBody('title', 'Title is empty').notEmpty()
+        req.checkBody('author', 'Author is empty').notEmpty()
+        req.checkBody('year', 'Year is empty').notEmpty()
         var messages = req.validationErrors()
-
-        if (messages) {
-            res.render('addTranslation', {
-                messages: messages
+        if (errors) {
+            res.send({
+                errorMessa: errors.map((error) => error.msg)
             })
         } else {
-            console.log('hehhee')
-            var lang = req.body.translationLang
-            var translationLyricArray = req.body.translationLyric.split(/\r?\n|\//)
+            var data = req.body()
             Song.findOne({
-                    source: song.id,
-                    lang: lang
-                }, function(err, translation) {
-                    if (err) {
-                        res.status(400).send('error ' + err)
-                    }
-                    var newSong = new Song({
-                            title: req.body.translationTitle,
-                            author: song.author,
-                            year: song.year,
-                            lang: lang,
-                            contributor: req.user.username,
-                            translator: req.body.translator,
-                            copyright: req.body.translationCopyright,
-                            lyric: translationLyricArray.slice(0),
-                            source: song.id,
-                            oriSong: song.title,
-                            timeAdded: Date.now()
-                        })
-                        // if (translation) {
-                        //     newSong.v = translation.v + 1
-                        // } else {
-                        //     newSong.v = 1;
-                        // }
-                    newSong.save(function(err) {
-                        if (err) {
-                            res.status(400).send('error saving new song ' + err)
-                        } else {
-                            res.redirect('/' + song_id)
-                        }
+                source: song._id,
+                lang: data.lang
+            }, function(err, translation) {
+                if (err) next(err)
+                if (translation) {
+                    res.send({
+                        errorMessages: ['Translation Exists']
                     })
-                })
-                .sort({
-                    _id: -1
-                }).limit(1)
+                } else {
+                    var newSong = new Song({
+                        title: data.title,
+                        author: data.author,
+                        year: data.year,
+                        lang: data.lang,
+                        lyric: data.lyric,
+                        contributor: req.user.username,
+                        copyright: data.copyright,
+                        timeAdded: Date.now(),
+                        private: false,
+                        source: song._id
+                    })
+                    newSong.save(function(err) {
+                        if (err) next(err)
+                        res.send({
+                            url: '/song/' + song._id
+                        })
+                    })
+                }
+            })
         }
         // if (stringArr_t.length != song.lyric.length) {
         //     req.flash('error', 'The number of lines in translation lyric must match the number of lines in original song lyric')

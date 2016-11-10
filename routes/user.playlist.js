@@ -5,7 +5,6 @@ var Playlist = require('../models/playlist')
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var Song = require('../models/song')
-var _ = require('lodash')
 var app = require('../app')
 var pdf = require('html-pdf')
 var fs = require('file-system')

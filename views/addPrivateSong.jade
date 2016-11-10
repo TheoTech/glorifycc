@@ -2,29 +2,14 @@ extends layout
 
 block content
     include topnav
-    if errors
-        .alert.alert-danger
-            each error in errors
-                p #{error.msg}
     .row
         .col-md-6
-            h1 Add a Song
-            form(role="form", method="post", action="")
-                .form-group
-                    label(for="title") Title
-                    input#title.form-control(name="title", type="text")
-                .form-group
-                    label(for="author") Author
-                    input#singer.form-control(name="author", type="text")
-                .form-group
-                    label(for="lang") Language
-                    select#language.form-control(name="lang")
-                        option(value="english") English
-                        option(value="mandarin") Mandarin
-                        option(value="spanish") Spanish
-                        option(value="portuguese") Portuguese
-                .form-group
-                    label(for="lyric") Lyric
-                    textarea#lyric.form-control(name="lyric", rows='20')
+            h1(style='display:inline-block') Add a Private Song
+            button.btn.btn-default.pull-right(style='display:inline-block; margin-top: 25px' data-toggle='modal' data-target='#copypaste') Copy/Paste Lyric
+            #privateSong
 
-                button.btn.btn-primary(type="submit") Add Song
+    script.
+        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/privateSongForm.js')
+    script.
+        m.mount(document.getElementById('privateSong'), privateSongForm(song, 'add', false).privateSongFormComponent)
