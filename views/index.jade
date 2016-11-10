@@ -13,13 +13,13 @@ block content
 
             #bs-example-navbar-collapse-1.collapse.navbar-collapse
                 ul.nav.navbar-nav
-                    - if(login && user.username !== 'admin')
+                    - if(login_server && user.username !== 'admin')
                         li
                             a(href="/user/library") Library
                         li
                             a(href="/user/playlist") Playlist
 
-                    - else if(login && user.username === 'admin')
+                    - else if(login_server && user.username === 'admin')
                         li
                             a(href="/admin/songlist-db") Song Database
                         //- li
@@ -27,7 +27,7 @@ block content
                     li
                         a(href='/help') Help
                 ul.nav.navbar-nav.navbar-right
-                    if login
+                    if login_server
                         li
                             a #{user.username}
                         li
@@ -54,8 +54,7 @@ block content
             .thumbnail(style='text-align:center')
                 h4 Easily Export Slides
                 .circularIcon(style='margin:auto')
-                    //- a#slide
-                    //- img(id="slide" src='slide.png')
+                    img(src='/images/desktop-computer.png' style='height: 40px; margin-top: 5px')
                 .caption
                     //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                     p Glorify can do the work of making slides for you! Just add the songs you want to export to your playlist and select the languages you want them in 
@@ -64,9 +63,8 @@ block content
             .thumbnail(style='text-align:center')
                 h4 Lyrics in Many Languages
                 .circularIcon(style='margin:auto')
-                    //- img(src='/images/language.png')
+                    img(src='/images/languages.png' style='height: 40px; margin-top: 5px')
                 .caption
-                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                     p Use Glorify to get song lyrics in various languages, and contribute translations to enable 
                     a.btn.btn-default(href='/discover') Find Songs
     .row
@@ -74,6 +72,7 @@ block content
             .thumbnail(style='text-align:center')
                 h4 Share your songs with the Global Church
                 .circularIcon(style='margin:auto')
+                    img(src='/images/business-organization.png' style='height: 40px; margin-top: 5px')
                 .caption
                     //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                     p Songwriters can share their worship songs with the Global Church on Glorify so that even more believers can worship freely.
@@ -82,6 +81,7 @@ block content
             .thumbnail(style='text-align:center')
                 h4 Free for all to worship
                 .circularIcon(style='margin:auto')
+                    img(src='/images/broken-link.png' style='height: 40px; margin-top: 5px')
                 .caption
                     //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                     p All songs and translations on this website are freely available as public domain or CC0 songs. Believers all over the globe can sing, share, and translate these songs.
