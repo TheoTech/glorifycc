@@ -1,12 +1,15 @@
-var privateSongForm = function(song, type, readonly) {
+//form component
+//song is object
+//url is the url for post method
+//readonly is a flag to set whether the input readonly or not
+//submitButton is a flag to determine whether to show submit button at the bottom of the form or not
+var privateSongForm = function(song, url, readonly, submitButton) {
     var title = m.prop(song.title)
     var author = m.prop(song.author)
-    var lang = m.prop(song.lang === '' ? 'english' : song.lang)
+    var lang = m.prop(song.year)
     var lyric = song.lyric
     var copypaste = []
     var errors = [];
-
-    var postURL = type === 'add' ? '/user/privatesong/add' : '/user/privatesong/' + song._id + '/edit'
 
     $(window).load(function() {
         if (song.title === '') {
@@ -17,7 +20,7 @@ var privateSongForm = function(song, type, readonly) {
     function addSong() {
         m.request({
                 method: 'post',
-                url: postURL,
+                url: url,
                 data: {
                     title: title(),
                     author: author(),

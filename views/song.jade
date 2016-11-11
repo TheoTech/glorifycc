@@ -33,37 +33,36 @@ block content
                         option(value='?lang=' + t.lang) #{t.lang}
     .row
         .col-xs-6
-            #song 
+            //- #song 
             h4.capitalize=song.lang
-            <p> 
-            each stanza in song.lyric
-                each line in stanza
+        .col-xs-6
+            if isTranslationExisted
+                h4.capitalize #{rightTranslation.lang}
+    -for (var i = 0; i < song.lyric.length; i++)
+        .row
+            .col-xs-6
+                <p>
+                each line in song.lyric[i]
                     - if (line === '')
                         br
                     - else
                         !{line}
                         br
-                br
-            </p> 
-
-        .col-xs-6  
-            #translation
-            if isTranslationExisted 
-                h4.capitalize #{rightTranslation.lang}
-                <p> 
-                each stanza in rightTranslation.lyric
-                    each line in stanza
+                </p> 
+            .col-xs-6
+                if isTranslationExisted
+                    <p> 
+                    each line in rightTranslation.lyric[i]
                         - if (line === '')
                             br
                         - else
                             !{line}
                             br
-                    br
-                </p> 
-            br 
-            -if(login && user.username === 'admin')
-                a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation 
-            //- -if(song.private)
+                    </p> 
+                    br 
+                    -if(login && user.username === 'admin')
+                        a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation 
+                -if(song.private)
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}

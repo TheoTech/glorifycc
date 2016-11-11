@@ -592,7 +592,7 @@ router.route('/song/:song_id/add-translation')
             next();
         })
     })
-    .get(isLoggedIn, function(req, res, next) {
+    .get(function(req, res, next) {
         res.render('addTranslation', {
             song: song
         })
@@ -601,19 +601,26 @@ router.route('/song/:song_id/add-translation')
         req.checkBody('title', 'Title is empty').notEmpty()
         req.checkBody('author', 'Author is empty').notEmpty()
         req.checkBody('year', 'Year is empty').notEmpty()
-        var messages = req.validationErrors()
+        var errors = req.validationErrors()
         if (errors) {
             res.send({
-                errorMessa: errors.map((error) => error.msg)
+                errorMessages: errors.map((error) => error.msg)
             })
         } else {
-            var data = req.body()
+            var data = req.body
+                //find for all cases, where song is parent song or child song
             Song.findOne({
-                source: song._id,
+                $or: [{
+                    source: song.source
+                }, {
+                    _id: song.source
+                }, {
+                    source: song._id
+                }],
                 lang: data.lang
             }, function(err, translation) {
                 if (err) next(err)
-                if (translation) {
+                if (translation || song.lang === data.lang) {
                     res.send({
                         errorMessages: ['Translation Exists']
                     })
@@ -639,18 +646,6 @@ router.route('/song/:song_id/add-translation')
                 }
             })
         }
-        // if (stringArr_t.length != song.lyric.length) {
-        //     req.flash('error', 'The number of lines in translation lyric must match the number of lines in original song lyric')
-        //     if (req.body.title_t === ''){
-        //       req.flash('error', 'The title cannot be empty')
-        //     }
-        //     res.redirect('/songlist/' + song.id + '/add-translation')
-        // } else if (req.body.title_t === ''){
-        //   req.flash('error', 'The title cannot be empty')
-        //     if (stringArr_t.length != song.lyric.length) {
-        //       req.flash('error', 'The translation lyric must have the same line with the song lyric')
-        //     }
-        //     res.redirect('/songlist/' + song.id + '/add-translation')
     })
 
 module.exports = router;
@@ -659,6 +654,6 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         next()
     } else {
-        res.redirect('/user/signup')
+        res.redirect('/user/login')
     }
 }

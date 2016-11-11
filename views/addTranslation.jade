@@ -21,4 +21,4 @@ block content
             translationObject.lyric.push([''])
         }
         m.mount(document.getElementById('original'), songForm(song, '', true, false).songFormComponent)
-        m.mount(document.getElementById('translation'), songForm(translationObject, 'add', false, true).songFormComponent)
+        m.mount(document.getElementById('translation'), songForm(translationObject, '/song/' + song._id + '/add-translation', false, true).songFormComponent)

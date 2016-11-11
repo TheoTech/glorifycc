@@ -15,8 +15,6 @@ var songForm = function(song, url, readonly, submitButton) {
     var copypaste = []
     var errors = [];
 
-    var postURL = type === 'add' ? '/songlist-db/add' : '/songlist-db/' + song._id + '/edit'
-
     $(window).load(function() {
         if (song.title === '') {
             $('#copypaste').modal('show');
