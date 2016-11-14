@@ -15,7 +15,9 @@ router.get('/songlist', function(req, res, next) {
     var langsExist;
     var messages = req.flash()
     Song.find({
-            private: false
+            copyright: {
+                $ne: 'private'
+            }
         }, function(err, songs, count) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)

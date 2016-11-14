@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    include importJS
+    h2 Available Language:
+    ol
+        each language in availableLanguages
+            li #{language.lang}
+
+    form(method='post')
+        .col-xs-3.form-group
+            select.form-control(name='lang')
+                each language in languageOptions
+                    option #{language}
+        button.btn.btn-default Add

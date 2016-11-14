@@ -3,6 +3,7 @@ var express = require('express'),
     Song = require('../models/song'),
     User = require('../models/user'),
     helperFunc = require('../lib/passport')
+    Language = require('../models/language')
 
 
 // router.use('/', isAdminLoggedIn, function(req, res, next, next){
@@ -19,18 +20,23 @@ router.get('/', function(req, res, next) {
 })
 
 router.get('/add', function(req, res, next) {
-    res.render('add', {
-        song: {
-            title: '',
-            author: '',
-            year: '',
-            lang: 'english',
-            copyright: 'CC0',
-            lyric: [
-                ['']
-            ]
-        }
+    Language.find(function(err, languages) {
+        if (err) next(err)
+        res.render('add', {
+            availableLanguages: languages.map((language) => language.lang),
+            song: {
+                title: '',
+                author: '',
+                year: '',
+                lang: 'english',
+                copyright: 'CC0',
+                lyric: [
+                    ['']
+                ]
+            }
+        })
     })
+
 })
 
 router.post('/add', function(req, res, next) {
@@ -63,8 +69,7 @@ router.post('/add', function(req, res, next) {
                     lyric: data.lyric,
                     contributor: req.user.username,
                     copyright: data.copyright,
-                    timeAdded: Date.now(),
-                    private: false
+                    timeAdded: Date.now()
                 })
                 newSong.save(function(err) {
                     if (err) {

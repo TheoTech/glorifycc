@@ -90,7 +90,7 @@ var songForm = function(song, url, readonly, submitButton) {
             m('.modal-dialog', [
                 m('.modal-content', [
                     m('.modal-body', [
-                        m('label', 'Lyric:'),
+                        m('label', 'Lyrics:'),
                         m('textarea.form-control', {
                             rows: '25',
                             placeholder: 'Write the lyric with new line as a separator between stanzas',
@@ -210,7 +210,7 @@ var songForm = function(song, url, readonly, submitButton) {
                                 }
                             }
                         }, [
-                            LANGUAGE_OPTIONS.map((lang) => {
+                            availableLanguages.map((lang) => {
                                 return m('option', lang)
                             })
                         ])
@@ -230,7 +230,16 @@ var songForm = function(song, url, readonly, submitButton) {
                             }
                         }, [
                             m('option', 'CC0'),
-                            m('option', 'public')
+                            m('option', 'public'),
+                            m('option', {
+                                'title': 'your songs will not be seen by other users',
+                                'data-toggle': "tooltip",
+                                config: function(elem, isInit) {
+                                    if (!isInit) {
+                                        $(elem).tooltip()
+                                    }
+                                }
+                            }, 'private')
                         ])
                     ]),
                     m('#stanzas', [

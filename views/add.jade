@@ -11,6 +11,7 @@ block content
 
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
+        var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
     script.
         m.mount(document.getElementById('addSong'), songForm(song, '/songlist-db/add', false, true).songFormComponent)

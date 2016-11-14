@@ -27,6 +27,8 @@ var userplaylist = require('./routes/user.playlist');
 var userlist = require('./routes/userlist');
 var privatesong = require('./routes/user.privatesong');
 var songlist = require('./routes/songlist')
+var song = require('./routes/song')
+var language = require('./routes/language')
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -106,6 +108,8 @@ app.use('/userlist', userlist)
 app.use('/user/signup', usersignup)
 app.use('/user/playlist', userplaylist)
 app.use('/user/privatesong', privatesong)
+app.use('/song', song)
+app.use('/language', language)
 
 app.get('/api', function(req, res, next) {
     app.render('songs-in-pdf', function(err, html) {
