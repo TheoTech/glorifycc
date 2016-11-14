@@ -15,17 +15,20 @@ var pdf = require('html-pdf');
 var fs = require('file-system');
 var nodemailer = require('nodemailer')
 var config = require('config')
+var _ = require('lodash')
 
 var app = module.exports = express();
 
 var index = require('./routes/index');
-var adminsonglistdb = require('./routes/admin.songlist-db');
+var songlistdb = require('./routes/songlist-db');
 var user = require('./routes/user');
 var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
 var userlist = require('./routes/userlist');
 var privatesong = require('./routes/user.privatesong');
 var songlist = require('./routes/songlist')
+var song = require('./routes/song')
+var language = require('./routes/language')
 
 
 var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
@@ -73,6 +76,11 @@ app.use(validator({
             msg: msg,
             value: value
         };
+    },
+    customValidators: {
+        arrayNotEmpty: function(arr) {
+            return _.isEmpty(arr)
+        }
     }
 }));
 
@@ -95,19 +103,21 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use('/', index);
 app.use('/songlist', songlist);
 app.use('/user', user)
-app.use('/admin/songlist-db', adminsonglistdb)
+app.use('/songlist-db', songlistdb)
 app.use('/userlist', userlist)
 app.use('/user/signup', usersignup)
 app.use('/user/playlist', userplaylist)
 app.use('/user/privatesong', privatesong)
+app.use('/song', song)
+app.use('/language', language)
 
 app.get('/api', function(req, res, next) {
     app.render('songs-in-pdf', function(err, html) {
-      pdf.create(html).toStream(function(err, stream){
-          stream.pipe(fs.createWriteStream('./foo.pdf'));
+        pdf.create(html).toStream(function(err, stream) {
+            stream.pipe(fs.createWriteStream('./foo.pdf'));
         });
-      });
-      res.download('./foo.pdf')
+    });
+    res.download('./foo.pdf')
         // pdf.create(html).toBuffer(function(err, buffer){
         //     console.log('This is a buffer:', Buffer.isBuffer(buffer));
         //     res.download(buffer);

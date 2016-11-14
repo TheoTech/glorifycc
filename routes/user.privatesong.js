@@ -8,25 +8,31 @@ var Song = require('../models/song');
 
 
 router.get('/add', function(req, res, next) {
-    res.render('addPrivateSong', {})
+    res.render('addPrivateSong', {
+        song: {
+            title: '',
+            author: '',
+            lang: 'english',
+            lyric: [
+                ['']
+            ]
+        }
+    })
 })
 
 
 router.post('/add', function(req, res, next) {
-    var title = req.body.title
-    var lyricArray = req.body.lyric.split(/\r?\n|\//)
     req.checkBody('title', 'Title cannot be empty').notEmpty();
     req.checkBody('author', 'Author cannot be empty').notEmpty();
-    req.checkBody('lyric', 'Lyric cannot be empty').notEmpty();
-
     var errors = req.validationErrors()
     if (errors) {
-        res.render('addPrivateSong', {
-            errors: errors
+        res.send({
+            errorMessages: errors.map((error) => error.msg)
         })
     } else {
+        var data = req.body;
         Song.findOne({
-            title: title,
+            title: data.title,
             private: true,
             contributor: req.user.username
         }, function(err, song) {
@@ -34,18 +40,17 @@ router.post('/add', function(req, res, next) {
                 res.status(400).send('error ' + err)
             }
             if (song) {
-                res.render('addPrivateSong', {
-                    errors: ['Song Exists'],
-                    song: song
-                });
+                res.send({
+                    errorMessages: ['Song Exists']
+                })
             } else {
                 var newSong = new Song({
                     contributor: req.user.username,
                     owner: req.user._id,
-                    title: title,
-                    author: req.body.author,
-                    lang: req.body.lang,
-                    lyric: lyricArray,
+                    title: data.title,
+                    author: data.author,
+                    lang: data.lang,
+                    lyric: data.lyric,
                     timeAdded: Date.now(),
                     private: true,
                     copyright: 'Private'
@@ -61,7 +66,9 @@ router.post('/add', function(req, res, next) {
                             user.library.push(newSong._id)
                             user.save(function(err) {
                                 if (err) return next(err)
-                                res.redirect('/user/library')
+                                res.send({
+                                    url: '/user/library'
+                                })
                             })
                         })
                     }
@@ -241,30 +248,34 @@ router.route('/:song_id/edit')
         })
     })
     .get(function(req, res, next) {
-        var lyric = song.lyric.reduce((prev, curr, i) => {
-            if (i === 0) {
-                return curr
-            } else {
-                return prev + '\n' + curr
-            }
-        }, '')
         res.render('editPrivate', {
-            song: song,
-            lyric: lyric
+            song: song
         })
     })
     .post(function(req, res, next) {
-        song.title = req.body.title
-        song.author = req.body.author
-        song.lang = req.body.lang
-        song.lyric = (req.body.lyric || '').split(/\r?\n|\//)
-        song.save(function(err) {
-            if (err) {
-                res.status(400).send('Error editing the song: ' + error)
-            } else {
-                res.redirect('/user/library')
-            }
-        })
+        req.checkBody('title', 'Title is empty').notEmpty()
+        req.checkBody('author', 'Author is empty').notEmpty()
+        var errors = req.validationErrors()
+        if (errors) {
+            res.send({
+                errorMessages: errors.map((error) => error.msg)
+            })
+        } else {
+            var data = req.body
+            song.title = data.title
+            song.author = data.author
+            song.lang = data.lang
+            song.lyric = data.lyric
+            song.save(function(err) {
+                if (err) {
+                    res.status(400).send('Error editing the song: ' + error)
+                } else {
+                    res.send({
+                        url: '/user/library'
+                    })
+                }
+            })
+        }
     })
 
 

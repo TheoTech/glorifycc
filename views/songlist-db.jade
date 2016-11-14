@@ -6,7 +6,7 @@ block content
     p
         a#delete.btn.btn-default(href="#") Delete
         | 
-        a.btn.btn-default(href="/admin/songlist-db/add") Add New Song
+        a.btn.btn-default(href="/songlist-db/add") Add New Song
     br
     h4 Songs
     table.table
@@ -25,7 +25,7 @@ block content
                     td
                         input(type="checkbox", id=song.id)
                     td 
-                        a(href='/#{song.id}', font-size="5em") #{song.title}
+                        a(href='/song/#{song.id}', font-size="5em") #{song.title}
                     td #{song.author}
                     td #{song.year}
                     td.capitalize #{song.lang}
@@ -33,7 +33,7 @@ block content
                     td #{song.contributor}
                     td.capitalize #{song.copyright}
                     td 
-                        a.btn.btn-default(href='/admin/songlist-db/#{song.id}/edit') Edit
+                        a.btn.btn-default(href='/songlist-db/#{song.id}/edit') Edit
     
     script.
         $('#delete').on('click', function(e) {
@@ -46,7 +46,7 @@ block content
                 var $thisInput = $(this);
 
                 $.ajax({
-                    url: '/admin/songlist-db/' + val,
+                    url: '/songlist-db/' + val,
                     type: 'DELETE'
                 }).done(function() {
                     $thisInput.parents('tr').remove();

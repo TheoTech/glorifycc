@@ -12,11 +12,10 @@ var songSchema = new Schema({
     translator: String,
     contributor: String,
     copyright: String,
-    lyric: [String],
+    lyric: [[String]],
     source: Schema.Types.ObjectId,
     oriSong: String,
-    timeAdded: Date,
-    private: Boolean
+    timeAdded: Date
 })
 
 module.exports = mongoose.model('Song', songSchema)

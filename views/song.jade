@@ -2,7 +2,7 @@ extends layout
 
 block content
     include topnav
-    
+
     .row
         .col-xs-6
             h1 #{song.title}
@@ -33,33 +33,36 @@ block content
                         option(value='?lang=' + t.lang) #{t.lang}
     .row
         .col-xs-6
-            #song 
+            //- #song 
             h4.capitalize=song.lang
-            <p> 
-            each line in song.lyric
-                - if (line === '')
-                    br
-                - else
-                    !{line}
-                    br
-            </p> 
-
-        .col-xs-6  
-            #translation
-            if isTranslationExisted 
+        .col-xs-6
+            if isTranslationExisted
                 h4.capitalize #{rightTranslation.lang}
-                <p> 
-                each line in rightTranslation.lyric
+    -for (var i = 0; i < song.lyric.length; i++)
+        .row
+            .col-xs-6
+                <p>
+                each line in song.lyric[i]
                     - if (line === '')
                         br
                     - else
                         !{line}
                         br
                 </p> 
-            br 
-            -if(login && user.username === 'admin')
-                a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation 
-            //- -if(song.private)
+            .col-xs-6
+                if isTranslationExisted
+                    <p> 
+                    each line in rightTranslation.lyric[i]
+                        - if (line === '')
+                            br
+                        - else
+                            !{line}
+                            br
+                    </p> 
+                    br 
+                    -if(login && user.username === 'admin')
+                        a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation 
+                -if(song.private)
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
@@ -75,7 +78,7 @@ block content
     script.
         var url = '/songlist/' + song._id
         if(!song.copyright){
-          url = '/user/privatesong/' + song._id
+            url = '/user/privatesong/' + song._id
         }
         m.mount(document.getElementById('song'), m(songClicked.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
         if (isTranslationExisted) {

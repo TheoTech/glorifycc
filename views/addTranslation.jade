@@ -3,61 +3,23 @@ extends layout
 block content
     include topnav
     - var langCapitalized = song.lang.charAt(0).toUpperCase() + song.lang.slice(1)
-    if messages[0]
-        .alert.alert-danger
-            each msg in messages
-                p #{msg.msg}
+    .row
+        .col-md-6
+            h1 Original Song
+            #original
+        .col-md-6
+            h1(style='display:inline-block') Translation
+            button.btn.btn-default.pull-right(style='display:inline-block; margin-top: 25px' data-toggle='modal' data-target='#copypaste') Copy/Paste Lyric
+            #translation
 
-    form(role='form', method="post", action="")
-        .row
-            .col-md-6
-                h1 Original Song
-            .col-md-6
-                h1 Translation
-                if hasErrors
-                    .alert.alert-danger 
-                        each msg in messages
-                            p #{msg}      
-        .row
-            .col-md-6
-                .form-group
-                    label(for="lang") Language
-                    input#language.form-control(name="lang", value=langCapitalized, readonly)         
-                .form-group
-                    label(for="title") Title
-                    input#title.form-control(name="title", type="text", value=song.title, readonly)
-            .col-md-6
-                .form-group
-                    label(for="translationLang") Language
-                    select#language.form-control(name="translationLang")
-                        option(value="english") English
-                        option(value="mandarin") Mandarin
-                        option(value="spanish") Spanish
-                        option(value="portuguese") Portuguese
-                .form-group
-                    label(for="translationTitle") Title
-                    input#title.form-control(name="translationTitle", type="text")
-
-        .row
-            .col-md-offset-6.col-md-6
-                .form-group
-                    label(for="title") Translated by
-                    input#title.form-control(name="translator", type="text", value=song.translator)  
-        .row
-            .col-md-6
-                .form-group
-                    label.capitalize(for="copyright") Copyright
-                    input.capitalize.form-control(name="copyright", value=song.copyright, readonly)
-                .form-group
-                    label(for="lyric") Lyric
-                    textarea#lyric.form-control(name="lyric", rows='20' readonly) #{stringLyric}
-            .col-md-6
-                .form-group
-                    label(for="translationCopyright") Copyright
-                    select#copyright.form-control(name="translationCopyright")
-                        option Public
-                        option CC0
-                .form-group
-                    label(for="translationLyric") Lyric
-                    textarea#lyric.form-control(name="translationLyric", rows='20')
-        button.btn.btn-primary(type="submit") Submit Translation
+    script.
+        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
+        var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/songForm.js')
+    script.
+        var translationObject = {title: '', author: '', year: '', lang: 'english', copyright: 'CC0', lyric: []}
+        for (var i = 0; i < song.lyric.length; i++) {
+            translationObject.lyric.push([''])
+        }
+        m.mount(document.getElementById('original'), songForm(song, '', true, false).songFormComponent)
+        m.mount(document.getElementById('translation'), songForm(translationObject, '/song/' + song._id + '/add-translation', false, true).songFormComponent)
