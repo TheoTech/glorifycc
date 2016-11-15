@@ -242,6 +242,10 @@ router.route('/:playlist_name/export3')
                 name: playlistName,
                 song: {
                     $exists: true
+                },
+                translationsChecked: {
+                    $exists: true,
+                    $ne: []
                 }
             })
             .populate('translationsChecked')
@@ -296,28 +300,63 @@ router.route('/:playlist_name/export3')
                         type: 'solid',
                         color: '000000'
                     };
-                    for (var i = 0; i < songObj.minLine; i++) {
+                    var titleMargin = 175
+                    songObj.songs.forEach((song, i) => {
+                        pObj = slide.addText(song.title, {
+                            x: 'c', //x position
+                            y: titleMargin, //y position
+                            cx: '100%', //width
+                            cy: 50,
+                            font_size: 50,
+                            align: 'center',
+                            color: {
+                                type: 'solid',
+                                color: 'ffffff'
+                            }
+                        });
+                        titleMargin += 70;
+                        pObj = slide.addText('(' + song.lang + ')', {
+                            x: 'c', //x position
+                            y: titleMargin, //y position
+                            cx: '100%', //width
+                            cy: 20,
+                            font_size: 30,
+                            align: 'center',
+                            color: {
+                                type: 'solid',
+                                color: 'ffffff'
+                            }
+                        });
+                        titleMargin += 100;
+                    })
+                    for (var i = 0; i < songObj.songs[0].lyric.length; i++) {
                         //make new slide for every lyric line
                         slide = pptx.makeNewSlide();
                         slide.back = {
                             type: 'solid',
                             color: '000000'
                         };
-                        for (var j = 0; j < songObj.songs.length; j++) {
-                            //print the lyric line for each translation
-                            pObj = slide.addText(songObj.songs[j].lyric[i], {
-                                x: 'c', //x position
-                                y: 250 + j * 100, //y position
-                                cx: '100%', //width
-                                cy: 50, //height
-                                font_size: 40,
-                                align: 'center',
-                                color: {
-                                    type: 'solid',
-                                    color: 'ffffff'
-                                }
-                            });
+                        var margin = 50;
+                        for (var x = 0; x < songObj.songs.length; x++) {
+                            for (var j = 0; j < songObj.songs[x].lyric[i].length; j++) {
+                                //print the lyric line for each translation
+                                pObj = slide.addText(songObj.songs[x].lyric[i][j], {
+                                    x: 'c', //x position
+                                    y: margin, //y position
+                                    cx: '100%', //width
+                                    cy: 40,
+                                    font_size: 40,
+                                    align: 'center',
+                                    color: {
+                                        type: 'solid',
+                                        color: 'ffffff'
+                                    }
+                                });
+                                margin += 50;
+                            }
+                            margin += 150
                         }
+
                     }
                 })
                 callback();
@@ -346,3 +385,69 @@ router.route('/:playlist_name/export3')
     })
 
 module.exports = router;
+
+
+// filename = Date.now()
+// var pptx = officegen('pptx');
+//
+// var slide;
+// var pObj;
+//
+// pptx.on('finalize', function(written) {
+//     console.log('Finish to create a PowerPoint file.\nTotal bytes created: ' + written + '\n');
+// });
+//
+// pptx.on('error', function(err) {
+//     console.log(err);
+// });
+//
+// pptx.setDocTitle('');
+//
+// function generateSlides(callback) {
+//     songs2d.forEach((songObj) => {
+//         slide = pptx.makeNewSlide();
+//         slide.back = {
+//             type: 'solid',
+//             color: '000000'
+//         };
+//         for (var i = 0; i < songObj.minLine; i++) {
+//             //make new slide for every lyric line
+//             slide = pptx.makeNewSlide();
+//             slide.back = {
+//                 type: 'solid',
+//                 color: '000000'
+//             };
+//             for (var j = 0; j < songObj.songs.length; j++) {
+//                 //print the lyric line for each translation
+//                 pObj = slide.addText(songObj.songs[j].lyric[i], {
+//                     x: 'c', //x position
+//                     y: 250 + j * 100, //y position
+//                     cx: '100%', //width
+//                     cy: 50, //height
+//                     font_size: 40,
+//                     align: 'center',
+//                     color: {
+//                         type: 'solid',
+//                         color: 'ffffff'
+//                     }
+//                 });
+//             }
+//         }
+//     })
+//     callback();
+// }
+//
+//
+// function finalize() {
+//     var out = fs.createWriteStream(filename + '.pptx');
+//     out.on('error', function(err) {
+//         console.log(err);
+//     });
+//     res.writeHead(200, {
+//         "Content-Type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+//         'Content-disposition': 'attachment; filename=' + filename + '.pptx'
+//     });
+//     pptx.generate(res);
+// }
+//
+// async.series([generateSlides], finalize);
