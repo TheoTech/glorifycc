@@ -168,9 +168,20 @@ router.route('/:song_id/add-translation')
                     })
                     newSong.save(function(err) {
                         if (err) next(err)
-                        res.send({
-                            url: '/song/' + song._id
-                        })
+                        else if (data.copyright === 'private') {
+                            User.findById(req.user._id, function(err, user) {
+                                user.library.push(newSong._id)
+                                user.save(function(err) {
+                                    res.send({
+                                        url: '/song/' + song._id
+                                    })
+                                })
+                            })
+                        } else {
+                            res.send({
+                                url: '/song/' + song._id
+                            })
+                        }
                     })
                 }
             })

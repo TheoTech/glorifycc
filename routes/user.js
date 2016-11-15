@@ -47,6 +47,7 @@ router.get('/library', isLoggedIn, function(req, res, next) {
     User.findById(req.user._id)
         .populate('library')
         .exec(function(err, user) {
+            console.log(user)
             if (err) return next(err)
             Playlist.find({
                 owner: user._id
@@ -129,43 +130,47 @@ router.post('/library', function(req, res, next) {
                         song: song_id,
                         translationsChecked: []
                     })
-                    Song.findById(song_id, function(err, song) {
-                        //find all the family of that song (song + translations)
-                        Song.find({
-                                $or: [{
-                                    $and: [{
-                                        source: song.source
-                                    }, {
-                                        source: {
-                                            $exists: true
-                                        }
-                                    }, {
-                                        lang: {
-                                            $ne: song.lang
-                                        }
-                                    }]
-                                }, {
-                                    _id: song.source
-                                }, {
-                                    source: song._id
-                                }, {
-                                    _id: song._id
-                                }]
-                            }, function(err, translations) {
-                                console.log(translations.map((t) => t.lang))
-                                newPlaylistSong.availableTranslations = translations.map((t) => t._id)
-                                newPlaylistSong.save(function(err) {
-                                    if (err) {
-                                        res.status(400).send('failed ' + err)
-                                    } else {
-                                        res.send({})
-                                    }
-                                })
-                            })
-                            .sort({
-                                lang: 1
-                            })
-                    })
+                    newPlaylistSong.save(function(err) {
+                            if (err) next(err)
+                            res.send({})
+                        })
+                        // Song.findById(song_id, function(err, song) {
+                        //     //find all the family of that song (song + translations)
+                        //     Song.find({
+                        //             $or: [{
+                        //                 $and: [{
+                        //                     source: song.source
+                        //                 }, {
+                        //                     source: {
+                        //                         $exists: true
+                        //                     }
+                        //                 }, {
+                        //                     lang: {
+                        //                         $ne: song.lang
+                        //                     }
+                        //                 }]
+                        //             }, {
+                        //                 _id: song.source
+                        //             }, {
+                        //                 source: song._id
+                        //             }, {
+                        //                 _id: song._id
+                        //             }]
+                        //         }, function(err, translations) {
+                        //             console.log(translations.map((t) => t.lang))
+                        //             newPlaylistSong.availableTranslations = translations.map((t) => t._id)
+                        //             newPlaylistSong.save(function(err) {
+                        //                 if (err) {
+                        //                     res.status(400).send('failed ' + err)
+                        //                 } else {
+                        //                     res.send({})
+                        //                 }
+                        //             })
+                        //         })
+                        //         .sort({
+                        //             lang: 1
+                        //         })
+                        // })
                 } else {
                     req.flash('error', 'Choose Playlist')
                     res.send({})

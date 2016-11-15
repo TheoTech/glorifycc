@@ -3,7 +3,7 @@ var express = require('express'),
     Song = require('../models/song'),
     User = require('../models/user'),
     helperFunc = require('../lib/passport')
-    Language = require('../models/language')
+Language = require('../models/language')
 
 
 // router.use('/', isAdminLoggedIn, function(req, res, next, next){
@@ -74,6 +74,18 @@ router.post('/add', function(req, res, next) {
                 newSong.save(function(err) {
                     if (err) {
                         res.status(400).send('error saving new song ' + err)
+                    } else if (data.copyright === 'private') {
+                        User.findById(req.user._id, function(err, user) {
+                            console.log(user)
+                            console.log(newSong._id)
+                            user.library.push(newSong._id)
+                            user.save(function(err) {
+                                if (err) next(err)
+                                res.send({
+                                    url: '/songlist-db'
+                                })
+                            })
+                        })
                     } else {
                         res.send({
                             url: '/songlist-db'
@@ -104,8 +116,12 @@ router.route('/:song_id/edit')
         })
     })
     .get(function(req, res, next) {
-        res.render('edit', {
-            song: song
+        Language.find(function(err, languages) {
+            if (err) next(err)
+            res.render('edit', {
+                availableLanguages: languages.map((language) => language.lang),
+                song: song
+            })
         })
     })
     .post(function(req, res, next) {
@@ -119,7 +135,6 @@ router.route('/:song_id/edit')
             })
         } else {
             var data = req.body
-            console.log(data)
             song.title = data.title
             song.author = data.author
             song.year = data.year

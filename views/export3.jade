@@ -3,7 +3,7 @@ extends layout
 block content
     include topnav
     h1 Preview
-    //Note: songs2d = [{songs: [Song Schema that the user checked]}, {minLine: the smallest lyric line}]    
+    //Note: songs2d = [[Song Schema that the user checked]]
     each songsObj in songs2d
         -var i = 0
         -var j = 0
@@ -16,24 +16,31 @@ block content
                         th(style='text-align: center') #{songsObj.songs[i].title}
                         -i++
                 tbody
-                    tr
-                        td
-                            -for(var x = 0; x < songsObj.minLine; x++)
-                                - if (songsObj.songs[j].lyric[x] === '')
-                                    br
-                                - else
-                                    !{songsObj.songs[j].lyric[x]}
-                                    br
-                        -j++
-                        -while(j % 3 !== 0 && j < songsObj.songs.length)            
+                    -for(var index = 0; index < songsObj.songs[0].lyric.length; index++)
+                        tr
                             td
-                                -for(var x = 0; x < songsObj.minLine; x++)
-                                    - if (songsObj.songs[j].lyric[x] === '')
-                                        br
-                                    - else
-                                        !{songsObj.songs[j].lyric[x]}
-                                        br
+                                -for(var x = 0; x < songsObj.songs[j].lyric[index].length; x++)
+                                    !{songsObj.songs[j].lyric[index][x]}
+                                    br
+                                    //- - if (songsObj.songs[j].lyric[index][x] === '')
+                                    //-     br
+                                    //- - else
+                                    //-     !{songsObj.songs[j].lyric[index][x]}
+                                    //-     br
+                                br
                             -j++
+                            -while(j % 3 !== 0 && j < songsObj.songs.length)            
+                                td
+                                    -for(var x = 0; x < songsObj.songs[j].lyric[index].length; x++)
+                                        !{songsObj.songs[j].lyric[index][x]}
+                                        br
+                                        //- - if (songsObj.songs[j].lyric[index][x] === '')
+                                        //-     br
+                                        //- - else
+                                        //-     !{songsObj.songs[j].lyric[index][x]}
+                                        //-     br
+                                -j++
+                            -j = 0
 
     <a class="btn btn-default btn-lg" href="export3?type=pdf" role="button" aria-haspopup="true" aria-expanded="false">
     <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Export to PDF </button>

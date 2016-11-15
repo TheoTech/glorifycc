@@ -10,6 +10,7 @@ var pdf = require('html-pdf')
 var fs = require('file-system')
 var officegen = require('officegen');
 var async = require('async')
+var _ = require('lodash')
 
 
 router.get('/', function(req, res, next) {
@@ -103,13 +104,54 @@ router.get('/:playlist_name', function(req, res, next) {
         })
         .populate('song')
         .exec(function(err, playlists) {
-            console.log(playlists)
             if (err) return next(err)
-            res.render('playlistClicked', {
-                //pass the array of songs in the playlist
-                songs: playlists.map((pl) => pl.song),
-                playlistName: playlistName
-            })
+            var task = playlists.map((playlist, i, arr) => {
+                return function(done) {
+                    Song.find({
+                            $or: [{
+                                $and: [{
+                                    source: playlist.song.source
+                                }, {
+                                    source: {
+                                        $exists: true
+                                    }
+                                }, {
+                                    lang: {
+                                        $ne: playlist.song.lang
+                                    }
+                                }]
+                            }, {
+                                _id: playlist.song.source
+                            }, {
+                                source: playlist.song._id
+                            }, {
+                                _id: playlist.song._id
+                            }]
+                        }, function(err, translations) {
+                            playlist.availableTranslations = translations.map((t) => t._id)
+                            playlist.save(function(err) {
+                                if (err) {
+                                    res.status(400).send('failed ' + err)
+                                } else if (i === arr.length - 1) {
+                                    done(null)
+                                } else {
+                                    done()
+                                }
+                            })
+                        })
+                        .sort({
+                            lang: 1
+                        })
+                }
+            });
+            async.waterfall(task, function(err) {
+                res.render('playlistClicked', {
+                    //pass the array of songs in the playlist
+                    songs: playlists.map((pl) => pl.song),
+                    playlistName: playlistName
+                })
+            });
+
         })
 })
 
@@ -206,12 +248,12 @@ router.route('/:playlist_name/export3')
             .exec(function(err, playlists) {
                 if (err) return next(err)
                 songs2d = playlists.map((playlist) => {
-                    return {
-                        songs: playlist.translationsChecked,
-                        minLine: _.min(playlist.translationsChecked.map((t) => t.lyric.length))
-                    }
-                })
-                console.log('test: ' + songs2d)
+                        return {
+                            songs: playlist.translationsChecked
+                                // minLine: _.min(playlist.translationsChecked.map((t) => t.lyric.length))
+                        }
+                    })
+                    // songs2d = playlists.map((playlist) => playlist.translationsChecked)
                 next()
             })
     })
@@ -297,7 +339,6 @@ router.route('/:playlist_name/export3')
             async.series([generateSlides], finalize);
 
         } else {
-            console.log(songs2d)
             res.render('export3', {
                 songs2d: songs2d
             })
