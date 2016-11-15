@@ -4,7 +4,6 @@ var passport = require('passport');
 var User = require('../models/user');
 var Playlist = require('../models/playlist')
 var Song = require('../models/song')
-var ExportSong = require('../models/exportSong')
 var _ = require('lodash')
 var helperFunc = require('../lib/passport')
 var async = require('async')
