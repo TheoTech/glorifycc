@@ -3,7 +3,10 @@
 ## Website link: https://glorify.cc/
 
 # dev setup
-To run this on your local machine, you need to have mongodb running separately, and the file `config/default.json` in your project directory which looks like the following only with your SendGrid credentials filled in:
+To run this on your local machine:
+1. Download and install Node.js and MongoDB
+2. run `npm install -g gulp` to install gulp
+3. Add the file `config/default.json` in your project directory which looks like the following only with your SendGrid credentials filled in:
 ```json
 {
   "emailVerification": {
@@ -16,3 +19,6 @@ To run this on your local machine, you need to have mongodb running separately, 
   }
 }
 ```
+4. Start `mongod` which must run separately
+5. From the glorifycc directory, run `gulp` to start up the server
+6. Go to http://localhost:8000 to test the webapp
