@@ -49,7 +49,10 @@ router.get('/library', isLoggedIn, function(req, res, next) {
         .exec(function(err, user) {
             if (err) return next(err)
             Playlist.find({
-                owner: user._id
+                owner: user._id,
+                song: {
+                    $exists: false
+                }
             }, function(err, playlists) {
                 if (err) return next(err)
                 res.render('library', {
