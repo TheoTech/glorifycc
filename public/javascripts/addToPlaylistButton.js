@@ -4,11 +4,11 @@ var addToPlaylistButton = {
             value: args.label(),
             disabled: args.disabled(),
             onclick: function() {
-                console.log(args.playlistName())
                 if (!isLoggedIn) {
                     window.location.href = '/user/login'
                 } else if (!args.playlistName()) {
                     $('#choosePlaylist').modal('show')
+                    args.addButtonDOM($(this))
                 } else {
                     ctrl.addToPlaylist()
                 }
@@ -22,8 +22,7 @@ var addToPlaylistButton = {
                     url: '/user/library',
                     data: {
                         name: args.playlistName(),
-                        id: args.songID,
-                        url: args.url
+                        id: args.songID
                     }
                 })
                 .then((res) => {

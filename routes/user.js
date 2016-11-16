@@ -5,7 +5,7 @@ var User = require('../models/user');
 var Playlist = require('../models/playlist')
 var Song = require('../models/song')
 var _ = require('lodash')
-var helperFunc = require('../lib/passport')
+var helperFunc = require('../lib/helperFunc')
 var async = require('async')
 var crypto = require('crypto')
 var nodemailer = require('nodemailer')
@@ -111,8 +111,6 @@ router.post('/library', function(req, res, next) {
     var name = req.body.name
     var song_id = req.body.id
     var playlistOwner = req.user._id
-    var url = req.body.url
-    console.log(url)
     if (req.isAuthenticated()) {
         Playlist.findOne({
                 owner: playlistOwner,

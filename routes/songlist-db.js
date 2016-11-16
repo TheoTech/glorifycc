@@ -2,8 +2,8 @@ var express = require('express'),
     router = express.Router(),
     Song = require('../models/song'),
     User = require('../models/user'),
-    helperFunc = require('../lib/passport')
-Language = require('../models/language')
+    helperFunc = require('../lib/helperFunc'),
+    Language = require('../models/language')
 
 
 // router.use('/', isAdminLoggedIn, function(req, res, next, next){

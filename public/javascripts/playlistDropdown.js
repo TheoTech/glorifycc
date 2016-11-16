@@ -1,6 +1,6 @@
 var playlistDropdownComponent = (function() {
     var currentPlaylists = m.prop(playlists)
-    var addPlaylist = function(name, url, playlistName) {
+    var addPlaylist = function(name, url, playlistName, addButtonDOM) {
         m.request({
                 method: 'PUT',
                 url: '/user/library',
@@ -18,6 +18,7 @@ var playlistDropdownComponent = (function() {
                     currentPlaylists(res.playlists)
                     playlistName(name)
                     $('#newPlaylist').modal('hide')
+                    addButtonDOM().trigger('click')
                 }
             })
     }
@@ -55,7 +56,7 @@ var playlistDropdownComponent = (function() {
                         }, 'Playlist Exists'),
                         m('button#create.btn.btn-default#create', {
                             onclick: function() {
-                                addPlaylist($('input#newPlaylistInput').val(), args.url, args.playlistName);
+                                addPlaylist($('input#newPlaylistInput').val(), args.url, args.playlistName, args.addButtonDOM);
                             }
                         }, 'Create')
                     ])
@@ -100,6 +101,7 @@ var playlistDropdownComponent = (function() {
                                         href: '#',
                                         onclick: function() {
                                             args.playlistName(pl.name)
+                                            args.addButtonDOM().trigger('click')
                                         },
                                         'data-dismiss': 'modal'
                                     }, pl.name)
