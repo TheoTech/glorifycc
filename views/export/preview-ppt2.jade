@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+    include ../topnav
+    h1 Preview
+    #exportOption
+    //Note: songs2d = [[Song Schema that the user checked]]
+    each songs in songs2d
+        h1 #{songs[0].title}#{songs[1].title}.pptx
+        div(style='font-size: 12px; text-align: center; height: 330px; width: 500px; margin: auto; background-color: black;')
+            each song in songs
+                div(style='padding: 15px;')
+                each line in song.lyric[0]
+                    p #{line}
+        br
+        hr(style='height:2px; background-color:#000000;')       
+
+    include exportButton  
+
+    script(src='/dist/javascripts/exportOption.js')
+    script.
+        m.mount(document.getElementById('exportOption'), exportOption(2))
