@@ -154,12 +154,3 @@ router.route('/:song_id/edit')
     })
 
 module.exports = router;
-
-function isAdminLoggedIn(req, res, next) {
-    if (helperFunc.isAdmin()) {
-        console.log('hehhe')
-        next()
-    } else {
-        res.redirect('/')
-    }
-}

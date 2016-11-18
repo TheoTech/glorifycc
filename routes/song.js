@@ -168,7 +168,7 @@ router.route('/:song_id/add-translation')
                     })
                     newSong.save(function(err) {
                         if (err) next(err)
-                        else if (data.copyright === 'private') {
+                        if (data.copyright === 'private') {
                             User.findById(req.user._id, function(err, user) {
                                 user.library.push(newSong._id)
                                 user.save(function(err) {

@@ -22,5 +22,19 @@ block content
         for (var i = 0; i < song.lyric.length; i++) {
             translationObject.lyric.push([''])
         }
-        m.mount(document.getElementById('original'), songForm(song, '', true, false, 'song').songFormComponent)
-        m.mount(document.getElementById('translation'), songForm(translationObject, '/song/' + song._id + '/add-translation', false, true, 'translation').songFormComponent)
+        var songObj = {
+            song: song, 
+            url: '', 
+            readonly: true, 
+            submitButton: false, 
+            formID: 'song'
+        }
+        var translationObj = {
+            song: translationObject, 
+            url: '/song/' + song._id + '/add-translation', 
+            readonly: false, 
+            submitButton: true, 
+            formID: 'translation'
+        }
+        m.mount(document.getElementById('original'), songForm(songObj).songFormComponent)
+        m.mount(document.getElementById('translation'), songForm(translationObj).songFormComponent)

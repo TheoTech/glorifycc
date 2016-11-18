@@ -1,67 +1,36 @@
-function exportOption(initialType) {
+function exportOption(defaultLanguagePerSlide) {
     var queryString = '';
-    var type = initialType;
+    var languagePerSlide = defaultLanguagePerSlide;
+
+    function radio(queryStr, numberOfLanguage, label, name) {
+        return m('.radio', [
+            m('label', [
+                m('input', {
+                    'type': 'radio',
+                    'name': name,
+                    onclick: function() {
+                        queryString = queryStr
+                        console.log(queryString)
+                    },
+                    config: function(elem, isInit) {
+                        if (!isInit) {
+                            if (languagePerSlide === numberOfLanguage) {
+                                $(elem).prop('checked', 'checked')
+                                queryString = queryStr
+                            }
+                        }
+                    }
+                })
+            ], label)
+        ])
+    }
 
     function pdfOption() {
-        if (type !== 0) {
+        if (languagePerSlide !== 0) {
             return m('div', [
-                m('.radio', [
-                    m('label', [
-                        m('input', {
-                            'type': 'radio',
-                            'name': 'optradio2',
-                            onclick: function() {
-                                queryString = '?type=1'
-                            },
-                            config: function(elem, isInit) {
-                                if (!isInit) {
-                                    if (type === 1) {
-                                        $(elem).prop('checked', 'checked')
-                                        queryString = '?type=1'
-                                    }
-                                }
-                            }
-                        })
-                    ], '1 language per slide')
-                ]),
-                m('.radio', [
-                    m('label', [
-                        m('input', {
-                            'type': 'radio',
-                            'name': 'optradio2',
-                            onclick: function() {
-                                queryString = '?type=2'
-                            },
-                            config: function(elem, isInit) {
-                                if (type === 2) {
-                                    if (!isInit) {
-                                        $(elem).prop('checked', 'checked')
-                                        queryString = '?type=2'
-                                    }
-                                }
-                            }
-                        })
-                    ], '2 languages per slide')
-                ]),
-                m('.radio', [
-                    m('label', [
-                        m('input', {
-                            'type': 'radio',
-                            'name': 'optradio2',
-                            onclick: function() {
-                                queryString = '?type=3'
-                            },
-                            config: function(elem, isInit) {
-                                if (type === 3) {
-                                    if (!isInit) {
-                                        $(elem).prop('checked', 'checked')
-                                        queryString = '?type=3'
-                                    }
-                                }
-                            }
-                        })
-                    ], '3 or more languages per slide')
-                ])
+                radio('?language=1', 1, '1 language per slide', 'optradio2'),
+                radio('?language=2', 2, '2 languages per slide', 'optradio2'),
+                radio('?language=3', 3, '3 or more languages per slide', 'optradio2')
             ])
         }
     }
@@ -77,11 +46,11 @@ function exportOption(initialType) {
                                 'name': 'optradio',
                                 onclick: function() {
                                     queryString = '';
-                                    type = 0;
+                                    languagePerSlide = 0;
                                 },
                                 config: function(elem, isInit) {
                                     if (!isInit) {
-                                        if (type === 0) {
+                                        if (languagePerSlide === 0) {
                                             $(elem).prop('checked', 'checked')
                                         }
                                     }
@@ -95,11 +64,11 @@ function exportOption(initialType) {
                                 'type': 'radio',
                                 'name': 'optradio',
                                 onclick: function() {
-                                    type = 1;
+                                    languagePerSlide = 1;
                                 },
                                 config: function(elem, isInit) {
                                     if (!isInit) {
-                                        if (type !== 0) {
+                                        if (languagePerSlide !== 0) {
                                             $(elem).prop('checked', 'checked')
                                         }
                                     }
@@ -111,9 +80,10 @@ function exportOption(initialType) {
                 pdfOption(),
                 m('button.btn.btn-default', {
                     onclick: function() {
+                        // console.log(queryString)
                         window.location.href = 'export3' + queryString
                     }
-                }, 'Apply')
+                }, 'See Preview')
             ]
         }
     }

@@ -10,8 +10,9 @@ var fs = require('file-system');
 var officegen = require('officegen');
 var nodemailer = require('nodemailer')
 var config = require('config')
+var passportFunction = require('../lib/passport')
 
-router.get('/updateschema', function(req, res, next) {
+router.get('/updateschema', passportFunction.isAdmin, function(req, res, next) {
     // var songs = [{
     //     "lyric": [
     //         "A mighty fortress is our God,",

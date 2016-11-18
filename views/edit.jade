@@ -13,4 +13,11 @@ block content
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
     script.
-        m.mount(document.getElementById('editSong'), songForm(song, '/songlist-db/' + song._id + '/edit', false, true).songFormComponent)
+        var obj = {
+            song: song, 
+            url: '/songlist-db/' + song._id + '/edit', 
+            readonly: false, 
+            submitButton: true, 
+            formID: ''
+        }
+        m.mount(document.getElementById('editSong'), songForm(obj).songFormComponent)
