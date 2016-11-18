@@ -13,13 +13,13 @@ block content
 
             #bs-example-navbar-collapse-1.collapse.navbar-collapse
                 ul.nav.navbar-nav
-                    - if(login_server && user.username !== 'admin')
+                    - if(login && user.username !== 'admin')
                         li
                             a(href="/user/library") Library
                         li
                             a(href="/user/playlist") Playlist
 
-                    - else if(login_server && user.username === 'admin')
+                    - else if(login && user.username === 'admin')
                         li
                             a(href="/admin/songlist-db") Song Database
                         //- li
@@ -27,7 +27,7 @@ block content
                     li
                         a(href='/help') Help
                 ul.nav.navbar-nav.navbar-right
-                    if login_server
+                    if login
                         li
                             a #{user.username}
                         li
