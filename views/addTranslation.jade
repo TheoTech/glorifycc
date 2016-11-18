@@ -9,7 +9,7 @@ block content
             #original
         .col-md-6
             h1(style='display:inline-block') Translation
-            button.btn.btn-default.pull-right(style='display:inline-block; margin-top: 25px' data-toggle='modal' data-target='#copypaste') Copy/Paste Lyric
+            button.btn.btn-default.pull-right(style='display:inline-block; margin-top: 25px' data-toggle='modal' data-target='#copypastetranslation') Copy/Paste Lyric
             #translation
 
     script.
@@ -18,8 +18,23 @@ block content
     script(src='/dist/javascripts/songForm.js')
     script.
         var translationObject = {title: '', author: '', year: '', lang: 'english', copyright: 'CC0', lyric: []}
+        //to show multiple stanza boxes on the form
         for (var i = 0; i < song.lyric.length; i++) {
             translationObject.lyric.push([''])
         }
-        m.mount(document.getElementById('original'), songForm(song, '', true, false).songFormComponent)
-        m.mount(document.getElementById('translation'), songForm(translationObject, '/song/' + song._id + '/add-translation', false, true).songFormComponent)
+        var songObj = {
+            song: song, 
+            url: '', 
+            readonly: true, 
+            submitButton: false, 
+            formID: 'song'
+        }
+        var translationObj = {
+            song: translationObject, 
+            url: '/song/' + song._id + '/add-translation', 
+            readonly: false, 
+            submitButton: true, 
+            formID: 'translation'
+        }
+        m.mount(document.getElementById('original'), songForm(songObj).songFormComponent)
+        m.mount(document.getElementById('translation'), songForm(translationObj).songFormComponent)

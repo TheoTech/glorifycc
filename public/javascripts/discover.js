@@ -5,6 +5,7 @@ var discover = (function() {
     var langShown = m.prop('all')
     var langFilter = m.prop([])
     var searchString = m.prop()
+    var addButtonDOM = m.prop()
 
     var loadMoreAndApplyFilter = function(totalSongsDisplayed, langShown, langFilter, searchString) {
         m.request({
@@ -31,7 +32,7 @@ var discover = (function() {
 
     return {
         init: function() {
-            m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {
+            m.mount(document.getElementById('discoverBox'), m(searchBoxComponent.searchBox, {
                 url: '',
                 langShown: langShown,
                 langFilter: langFilter,
@@ -50,7 +51,8 @@ var discover = (function() {
                 inLibrary: inLibrary,
                 langsExist: langsExist,
                 searchString: searchString,
-                isLoggedIn: isLoggedIn
+                isLoggedIn: isLoggedIn,
+                addButtonDOM: addButtonDOM
             }))
         }
     }

@@ -10,6 +10,62 @@ var fs = require('file-system');
 var officegen = require('officegen');
 var nodemailer = require('nodemailer')
 var config = require('config')
+var passportFunction = require('../lib/passport')
+
+router.get('/updateschema', passportFunction.isAdmin, function(req, res, next) {
+    // var songs = [{
+    //     "lyric": [
+    //         "A mighty fortress is our God,",
+    //         "A bulwark never failing;",
+    //         "Our helper He, amid the flood",
+    //         "Of mortal ills prevailing.",
+    //         "For still our ancient foe",
+    //         "Doth seek to work us woe;",
+    //         "His craft and pow'r are great,",
+    //         "And, armed with cruel hate,",
+    //         "On earth is not his equal.",
+    //         '',
+    //         "Joy to the World , the Lord is come!",
+    //         "Let earth receive her King",
+    //         "Let every heart prepare Him room",
+    //         "And Heaven and nature sing",
+    //         "And Heaven and nature sing",
+    //         "And Heaven, and Heaven, and nature sing",
+    //         "",
+    //         "Joy to the World, the Savior reigns!",
+    //         "Let men their songs employ",
+    //         "While fields and floods, rocks, hills and plains",
+    //         "Repeat the sounding joy",
+    //         "Repeat the sounding joy",
+    //         "Repeat, repeat, the sounding joy"
+    //     ],
+    //     private: false
+    // }]
+    var stanza = [];
+    var newLyric = [];
+    Song.find(function(err, songs) {
+        songs.forEach((song, i, arr) => {
+            song.lyric.forEach((line) => {
+                if (line !== '') {
+                    stanza.push(line)
+                } else {
+                    newLyric.push(stanza)
+                    stanza = [];
+                }
+            })
+            newLyric.push(stanza)
+            stanza = [];
+            song.lyric = newLyric;
+            delete song.private
+            song.save(function(err) {
+                if (err) next(err)
+                if (i === arr.length - 1) {
+                    res.send('migration success')
+                }
+            })
+        })
+    })
+})
 
 router.post('/contactus', function(req, res, next) {
     var name = req.body.name

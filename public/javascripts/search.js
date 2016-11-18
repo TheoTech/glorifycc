@@ -3,6 +3,7 @@ var search = (function() {
     var playlistName = m.prop()
     var inLibrary = m.prop(currentInLibrary)
     var searchString = m.prop('')
+    var addButtonDOM = m.prop()
     var enter = function(elem, checkboxClass) {
         $(elem).keyup(function(e) {
             if (e.keyCode == 13) {
@@ -10,32 +11,6 @@ var search = (function() {
             }
         })
     }
-
-    var searchBoxComponent = {
-        view: function(ctrl, args) {
-            return m('#searchInput.input-group', [
-                m('input.form-control[type=text]', {
-                    placeholder: 'Title, Lyric or Author',
-                    onchange: m.withAttr('value', searchString),
-                    config: function(elem, isInit, context) {
-                        if (!isInit) {
-                            enter(elem);
-                        }
-                    }
-                }),
-                m('span.input-group-btn', [
-                    m('button#search-button.btn.btn-success', {
-                        onclick: function() {
-                            window.location.href = '/search?q=' + searchString()
-                        }
-                    }, [
-                        m('i.glyphicon.glyphicon-search')
-                    ])
-                ])
-            ])
-        }
-    }
-
 
     var searchResultComponent = {
         view: function() {
@@ -54,7 +29,8 @@ var search = (function() {
                                 m(playlistDropdownComponent.playlistDropdown, {
                                     playlistName: playlistName,
                                     url: '/',
-                                    isLoggedIn: isLoggedIn
+                                    isLoggedIn: isLoggedIn,
+                                    addButtonDOM: addButtonDOM
                                 })
                             ])
                         ]),
@@ -84,7 +60,8 @@ var search = (function() {
                                             url: '/',
                                             key: s._id,
                                             label: s.label,
-                                            disabled: s.disabled
+                                            disabled: s.disabled,
+                                            addButtonDOM: addButtonDOM
                                         })
                                     ])
                                 ])
@@ -97,9 +74,8 @@ var search = (function() {
     }
 
     return {
-        init: function() {
-            m.mount(document.getElementById('searchBox'), searchBoxComponent)
-            m.mount(document.getElementById('songlistTable'), searchResultComponent)
+        init: function(dom) {
+            m.mount(dom, searchResultComponent)
         }
     }
 })()

@@ -2,6 +2,7 @@ var libraryTableComponent = (function() {
     var songID = m.prop()
     var playlistName = m.prop()
     var songs = m.prop(s)
+    console.log(songs())
 
     var libraryTable = {
         view: function() {

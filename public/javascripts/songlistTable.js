@@ -2,8 +2,10 @@ var songlistTable = {
     view: function(ctrl, args) {
         if (args.displayedSongs().length === 0) {
             return m('h4', {
-                    style: {'margin-top': '35px'}
-                }, 'Songs not found')
+                style: {
+                    'margin-top': '35px'
+                }
+            }, 'Songs not found')
         } else {
             return [
                 m(showSongsIn, {
@@ -25,6 +27,7 @@ var songlistTable = {
                                     playlistName: args.playlistName,
                                     url: '/',
                                     isLoggedIn: args.isLoggedIn
+                                    // addButtonDOM: args.addButtonDOM
                                 })
                             ])
                         ]),
@@ -51,10 +54,10 @@ var songlistTable = {
                                         m(addToPlaylistButton, {
                                             playlistName: args.playlistName,
                                             songID: s._id,
-                                            url: '/',
                                             key: s._id,
                                             label: s.label,
                                             disabled: s.disabled
+                                            // addButtonDOM: args.addButtonDOM
                                         })
                                     ])
                                 ])

@@ -1,30 +1,41 @@
 //form component
-//song is object
-//url is the url for post method
-//readonly is a flag to set whether the input readonly or not
-//submitButton is a flag to determine whether to show submit button at the bottom of the form or not
-var songForm = function(song, url, readonly, submitButton) {
-    var title = m.prop(song.title)
-    var author = m.prop(song.author)
-    var year = m.prop(song.year)
-    var lang = m.prop(song.lang)
-    var copyright = m.prop(song.copyright)
-    var lyric = song.lyric;
+/*
+  obj = {
+    song: ,
+    url: ,
+    readonly: ,
+    submitButton: ,
+    formID:
+  }
+  song is object
+  url is the url for post method
+  readonly is a flag to set whether the input readonly or not
+  submitButton is a flag to determine whether to show submit button at the bottom of the form or not
+  formID is the id for differentiation all element in orisong form and translation form
+*/
+function songForm(obj) {
+    var title = m.prop(obj.song.title)
+    var author = m.prop(obj.song.author)
+    var year = m.prop(obj.song.year)
+    var lang = m.prop(obj.song.lang)
+    var copyright = m.prop(obj.song.copyright)
+    var lyric = obj.song.lyric;
 
     //copypaste stores the current data for copy and paste box
     var copypaste = []
     var errors = [];
 
     $(window).load(function() {
-        if (song.title === '') {
-            $('#copypaste').modal('show');
+        //if the user wants to add a new song, show the modal for copy paste immediately on page load
+        if (obj.song.title === '') {
+            $('#copypaste' + obj.formID).modal('show');
         }
     });
 
     function addSong() {
         m.request({
                 method: 'post',
-                url: url,
+                url: obj.url,
                 data: {
                     title: title(),
                     author: author(),
@@ -37,6 +48,7 @@ var songForm = function(song, url, readonly, submitButton) {
             .then(function(res) {
                 if (res.errorMessages) {
                     errors = res.errorMessages;
+                    $('#alert').show().delay(2000).fadeOut()
                     $('body').scrollTop(0);
                 } else {
                     window.location.href = res.url
@@ -53,14 +65,16 @@ var songForm = function(song, url, readonly, submitButton) {
                             return prev + '\n' + curr
                         })
                     }(),
-                    rows: '5',
+                    rows: '5', //the default size of stanza textbox
                     config: function(elem, isInit) {
                         if (!isInit) {
-                            if (readonly) {
+                            if (obj.readonly) {
                                 $(elem).prop('readonly', true)
                             }
                             $(elem).bind('input propertychange', function() {
+                                //make an array of string
                                 var newStanza = $(elem).val() ? $(elem).val().split(/\r?\n|\//) : ''
+                                    //update the object
                                 lyric.splice(args.index, 1, newStanza)
                             });
                         }
@@ -86,7 +100,9 @@ var songForm = function(song, url, readonly, submitButton) {
     }
 
     function copypasteModal() {
-        return m('#copypaste.modal.fade[role=dialog]', [
+        return m('.modal.fade[role=dialog]', {
+            id: 'copypaste' + obj.formID
+        }, [
             m('.modal-dialog', [
                 m('.modal-content', [
                     m('.modal-body', [
@@ -109,15 +125,14 @@ var songForm = function(song, url, readonly, submitButton) {
                         }),
                         m('button.btn.btn-default', {
                             onclick: function() {
-                                $('#copypaste').modal('hide')
-                                $('#copypaste').find('textarea').val('')
+                                $('#copypaste' + obj.formID).modal('hide')
+                                $('#copypaste' + obj.formID).find('textarea').val('')
                             }
                         }, 'Cancel'),
                         m('button.btn.btn-default', {
                             onclick: function() {
                                 var isConfirmed = true;
-                                $('#stanzas').children().each(function() {
-                                    console.log($(this))
+                                $('#stanzas' + obj.formID).children().each(function() {
                                     if ($(this).find('textarea').val().replace(/\s/g, '') !== '') {
                                         isConfirmed = confirm('Do you want to overwrite your existing lyric ?')
                                         return;
@@ -125,8 +140,8 @@ var songForm = function(song, url, readonly, submitButton) {
                                 })
                                 if (isConfirmed) {
                                     lyric = copypaste
-                                    $('#copypaste').modal('hide')
-                                    $('#copypaste').find('textarea').val('')
+                                    $('#copypaste' + obj.formID).modal('hide')
+                                    $('#copypaste' + obj.formID).find('textarea').val('')
                                 }
                             }
                         }, 'Done')
@@ -138,7 +153,13 @@ var songForm = function(song, url, readonly, submitButton) {
 
     function displayError() {
         if (!_.isEmpty(errors)) {
-            return m('#alert.alert.alert-danger', [
+            return m('#alert.alert.alert-danger', {
+                config: function(elem, isInit) {
+                    if(!isInit){
+                      $(elem).delay(3000).fadeOut()
+                    }
+                }
+            }, [
                 errors.map((error) => {
                     return m('p', error)
                 })
@@ -162,7 +183,7 @@ var songForm = function(song, url, readonly, submitButton) {
                             onchange: m.withAttr('value', title),
                             config: function(elem, isInit) {
                                 if (!isInit) {
-                                    if (readonly) {
+                                    if (obj.readonly) {
                                         $(elem).prop('readonly', true)
                                     }
                                 }
@@ -176,7 +197,7 @@ var songForm = function(song, url, readonly, submitButton) {
                             onchange: m.withAttr('value', author),
                             config: function(elem, isInit) {
                                 if (!isInit) {
-                                    if (readonly) {
+                                    if (obj.readonly) {
                                         $(elem).prop('readonly', true)
                                     }
                                 }
@@ -190,7 +211,7 @@ var songForm = function(song, url, readonly, submitButton) {
                             onchange: m.withAttr('value', year),
                             config: function(elem, isInit) {
                                 if (!isInit) {
-                                    if (readonly) {
+                                    if (obj.readonly) {
                                         $(elem).prop('readonly', true)
                                     }
                                 }
@@ -204,7 +225,7 @@ var songForm = function(song, url, readonly, submitButton) {
                             config: function(elem, isInit) {
                                 if (!isInit) {
                                     $(elem).val(lang())
-                                    if (readonly) {
+                                    if (obj.readonly) {
                                         $(elem).prop('disabled', true)
                                     }
                                 }
@@ -222,8 +243,7 @@ var songForm = function(song, url, readonly, submitButton) {
                             config: function(elem, isInit) {
                                 if (!isInit) {
                                     $(elem).val(copyright())
-                                    if (readonly) {
-                                        console.log('hehehe')
+                                    if (obj.readonly) {
                                         $(elem).prop('disabled', true)
                                     }
                                 }
@@ -242,7 +262,9 @@ var songForm = function(song, url, readonly, submitButton) {
                             }, 'private')
                         ])
                     ]),
-                    m('#stanzas', [
+                    m('div', {
+                        id: 'stanzas' + obj.formID
+                    }, [
                         lyric.map((stanza, i, arr) => {
                             return m(addStanza, {
                                 stanza: stanza,
@@ -253,7 +275,7 @@ var songForm = function(song, url, readonly, submitButton) {
                     ])
                 ]),
                 function() {
-                    if (submitButton) {
+                    if (obj.submitButton) {
                         return m('button.btn.btn-primary', {
                             onclick: function() {
                                 addSong()

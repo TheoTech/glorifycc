@@ -5,7 +5,7 @@ var User = require('../models/user');
 var Playlist = require('../models/playlist')
 var Song = require('../models/song')
 var _ = require('lodash')
-var helperFunc = require('../lib/passport')
+var helperFunc = require('../lib/helperFunc')
 var async = require('async')
 var crypto = require('crypto')
 var nodemailer = require('nodemailer')
@@ -46,6 +46,7 @@ router.get('/library', isLoggedIn, function(req, res, next) {
     User.findById(req.user._id)
         .populate('library')
         .exec(function(err, user) {
+            console.log(user)
             if (err) return next(err)
             Playlist.find({
                 owner: user._id
@@ -110,8 +111,6 @@ router.post('/library', function(req, res, next) {
     var name = req.body.name
     var song_id = req.body.id
     var playlistOwner = req.user._id
-    var url = req.body.url
-    console.log(url)
     if (req.isAuthenticated()) {
         Playlist.findOne({
                 owner: playlistOwner,
@@ -128,43 +127,47 @@ router.post('/library', function(req, res, next) {
                         song: song_id,
                         translationsChecked: []
                     })
-                    Song.findById(song_id, function(err, song) {
-                        //find all the family of that song (song + translations)
-                        Song.find({
-                                $or: [{
-                                    $and: [{
-                                        source: song.source
-                                    }, {
-                                        source: {
-                                            $exists: true
-                                        }
-                                    }, {
-                                        lang: {
-                                            $ne: song.lang
-                                        }
-                                    }]
-                                }, {
-                                    _id: song.source
-                                }, {
-                                    source: song._id
-                                }, {
-                                    _id: song._id
-                                }]
-                            }, function(err, translations) {
-                                console.log(translations.map((t) => t.lang))
-                                newPlaylistSong.availableTranslations = translations.map((t) => t._id)
-                                newPlaylistSong.save(function(err) {
-                                    if (err) {
-                                        res.status(400).send('failed ' + err)
-                                    } else {
-                                        res.send({})
-                                    }
-                                })
-                            })
-                            .sort({
-                                lang: 1
-                            })
-                    })
+                    newPlaylistSong.save(function(err) {
+                            if (err) next(err)
+                            res.send({})
+                        })
+                        // Song.findById(song_id, function(err, song) {
+                        //     //find all the family of that song (song + translations)
+                        //     Song.find({
+                        //             $or: [{
+                        //                 $and: [{
+                        //                     source: song.source
+                        //                 }, {
+                        //                     source: {
+                        //                         $exists: true
+                        //                     }
+                        //                 }, {
+                        //                     lang: {
+                        //                         $ne: song.lang
+                        //                     }
+                        //                 }]
+                        //             }, {
+                        //                 _id: song.source
+                        //             }, {
+                        //                 source: song._id
+                        //             }, {
+                        //                 _id: song._id
+                        //             }]
+                        //         }, function(err, translations) {
+                        //             console.log(translations.map((t) => t.lang))
+                        //             newPlaylistSong.availableTranslations = translations.map((t) => t._id)
+                        //             newPlaylistSong.save(function(err) {
+                        //                 if (err) {
+                        //                     res.status(400).send('failed ' + err)
+                        //                 } else {
+                        //                     res.send({})
+                        //                 }
+                        //             })
+                        //         })
+                        //         .sort({
+                        //             lang: 1
+                        //         })
+                        // })
                 } else {
                     req.flash('error', 'Choose Playlist')
                     res.send({})
