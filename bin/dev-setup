@@ -23,7 +23,6 @@ var sampleSong = new Song({
     'Will be forever mine.']
   ],
   source: null,
-  oriSong: null,
   timeAdded: new Date()
 });
 
@@ -46,7 +45,6 @@ var translatedSong = new Song({
     'verso :( ]']
   ],
   source: null, // will be changed
-  oriSong: 'Amazing Grace',
   timeAdded: new Date()
 });
 
@@ -56,7 +54,7 @@ sampleSong.save().then(
   function(song) {
     console.log('Saved sample song "' + song.title + '" with id ' + song.id);
     translatedSong.source = song.id;
-    return translatedSong.save(translatedSong)
+    return translatedSong.save()
   }, function(err) {
     console.log("Unable to store sample song. Reason:");
     console.log(err);
