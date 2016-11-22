@@ -7,6 +7,7 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
             m('label', [
                 m('input', {
                     'type': 'radio',
+                    //disable the radio button if the max number of songs is less than the option
                     'disabled': maxNumberOfSongs < numberOfLanguage ? true : false,
                     'name': name,
                     onclick: function() {

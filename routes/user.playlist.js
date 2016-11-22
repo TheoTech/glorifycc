@@ -259,6 +259,7 @@ router.route('/:playlist_name/export3')
                     return playlist.translationsChecked
 
                 })
+                //this var is to check whether we should disable the export option on the ui
                 maxNumberOfSongs = songs2d.reduce((prev, curr) => {
                     if (prev.length > curr.length) {
                         return prev.length
@@ -270,7 +271,6 @@ router.route('/:playlist_name/export3')
             })
     })
     .get(function(req, res, next) {
-        console.log(maxNumberOfSongs)
         if (languagePerSlide == 1) {
             var newSongsArr = create2dArrayOfOneSong(songs2d)
             res.render('export/preview-ppt1', {
