@@ -32,9 +32,11 @@ block content
                                         br
                                 -j++
                             -j = 0
-                            
+
     include exportButton
     
+    script.
+        var maxNumberOfSongs = !{JSON.stringify(maxNumberOfSongs).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/exportOption.js')
     script.
-        m.mount(document.getElementById('exportOption'), exportOption(0))
+        m.mount(document.getElementById('exportOption'), exportOption(0, maxNumberOfSongs))

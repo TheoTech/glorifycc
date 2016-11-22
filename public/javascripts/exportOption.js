@@ -1,4 +1,4 @@
-function exportOption(defaultLanguagePerSlide) {
+function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
     var queryString = '';
     var languagePerSlide = defaultLanguagePerSlide;
 
@@ -7,10 +7,10 @@ function exportOption(defaultLanguagePerSlide) {
             m('label', [
                 m('input', {
                     'type': 'radio',
+                    'disabled': maxNumberOfSongs < numberOfLanguage ? true : false,
                     'name': name,
                     onclick: function() {
                         queryString = queryStr
-                        console.log(queryString)
                     },
                     config: function(elem, isInit) {
                         if (!isInit) {
@@ -80,7 +80,6 @@ function exportOption(defaultLanguagePerSlide) {
                 pdfOption(),
                 m('button.btn.btn-default', {
                     onclick: function() {
-                        // console.log(queryString)
                         window.location.href = 'export3' + queryString
                     }
                 }, 'See Preview')
