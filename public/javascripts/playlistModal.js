@@ -1,12 +1,11 @@
-var playlistDropdownComponent = (function() {
+var playlistModal = (function() {
     var currentPlaylists = m.prop(playlists)
-    var addPlaylist = function(name, url, playlistName, addButtonDOM) {
+    var addPlaylist = function(name, playlistName, addButtonDOM) {
         m.request({
                 method: 'PUT',
                 url: '/user/library',
                 data: {
-                    name: name,
-                    url: url
+                    name: name
                 }
             })
             .then(function(res) {
@@ -23,6 +22,26 @@ var playlistDropdownComponent = (function() {
             })
     }
 
+    var addToPlaylist = (args) => {
+        m.request({
+                method: 'POST',
+                url: '/user/library',
+                data: {
+                    name: args.playlistName(),
+                    id: args.songID
+                }
+            })
+            .then((res) => {
+                args.label('Added to ' + args.playlistName());
+                args.disabled(true);
+                setTimeout(() => {
+                    args.label('Add to Playlist');
+                    args.disabled(false);
+                    m.redraw()
+                }, 3000);
+            })
+    }
+
     var enter = function(elem) {
         $(elem).keyup(function(e) {
             if (e.keyCode == 13) {
@@ -31,8 +50,10 @@ var playlistDropdownComponent = (function() {
         })
     }
 
-    function createNewPlaylistModal(args) {
-        return m('#newPlaylist.modal.fade[role=dialog]', [
+    function createNewPlaylist(args) {
+        return m('.modal.fade[role=dialog]', {
+            id: 'newPlaylist' + args.modalName
+        }, [
             m('.modal-dialog.modal-sm', [
                 m('.modal-content', [
                     m('.modal-header', [
@@ -56,7 +77,7 @@ var playlistDropdownComponent = (function() {
                         }, 'Playlist Exists'),
                         m('button#create.btn.btn-default#create', {
                             onclick: function() {
-                                addPlaylist($('input#newPlaylistInput').val(), args.url, args.playlistName, args.addButtonDOM);
+                                addPlaylist($('input#newPlaylistInput').val(), args.playlistName, args.addButtonDOM);
                             }
                         }, 'Create')
                     ])
@@ -65,8 +86,10 @@ var playlistDropdownComponent = (function() {
         ])
     }
 
-    function choosePlaylistModal(args) {
-        return m('#choosePlaylist.modal.fade[role=dialog]', [
+    function choosePlaylist(args) {
+        return m('.modal.fade[role=dialog]', {
+            id: 'choosePlaylist' + args.modalName
+        }, [
             m('.modal-dialog.modal-sm', [
                 m('.modal-content', [
                     m('.modal-header', [
@@ -85,8 +108,8 @@ var playlistDropdownComponent = (function() {
                                     }
                                 },
                                 onclick: function() {
-                                    $('#choosePlaylist').modal('hide')
-                                    $('#newPlaylist').modal('show')
+                                    $('#choosePlaylist' + args.modalName).modal('hide')
+                                    $('#newPlaylist' + args.modalName).modal('show')
                                 }
                             }, [
                                 m('span.glyphicon.glyphicon-plus')
@@ -101,6 +124,7 @@ var playlistDropdownComponent = (function() {
                                         href: '#',
                                         onclick: function() {
                                             args.playlistName(pl.name)
+                                            console.log()
                                             args.addButtonDOM().trigger('click')
                                         },
                                         'data-dismiss': 'modal'
@@ -114,58 +138,17 @@ var playlistDropdownComponent = (function() {
         ])
     }
 
-    function dropdown(args) {
-        return m('#playlistDropdown.btn-group', [
-            m('button.btn.btn-default.dropdown-toggle[type=button]', {
-                'data-toggle': "dropdown",
-                'aria-haspopup': "true",
-                'aria-expanded': "false",
-                style: {
-                    border: 0
-                },
-                onclick: function() {
-                    //isLoggedIn is defined on the index.jade
-                    if (!isLoggedIn) {
-                        window.location.href = '/user/login'
-                    }
-                }
-            }, args.playlistName() ? 'Selected Playlist: ' + args.playlistName() : 'Select Playlist', [
-                m('span.caret')
-            ]),
-            m('ul.dropdown-menu', [
-                m('li', [
-                    m('a', {
-                        href: '#',
-                        'data-toggle': 'modal',
-                        'data-target': '#newPlaylist'
-                    }, 'New Playlist')
-                ]),
-                m('li.divider'),
-                currentPlaylists().map((pl) => {
-                    return m('li', [
-                        m('a', {
-                            href: '#',
-                            onclick: function() {
-                                args.playlistName(pl.name)
-                            }
-                        }, pl.name)
-                    ])
-                })
-            ])
-        ])
-    }
-
-    var playlistDropdown = {
+    var playlistModalComponent = {
         view: function(ctrl, args) {
             return m('div', [
-                dropdown(args),
-                createNewPlaylistModal(args),
-                choosePlaylistModal(args)
+                choosePlaylist(args),
+                createNewPlaylist(args)
             ])
         }
     }
 
     return {
-        playlistDropdown: playlistDropdown
+        playlistModalComponent: playlistModalComponent,
+        addToPlaylist: addToPlaylist
     }
 })()

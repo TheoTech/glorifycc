@@ -82,13 +82,13 @@ router.post('/add', function(req, res, next) {
                             user.save(function(err) {
                                 if (err) next(err)
                                 res.send({
-                                    url: '/songlist-db'
+                                    url: '/user/library'
                                 })
                             })
                         })
                     } else {
                         res.send({
-                            url: '/songlist-db'
+                            url: '/user/library'
                         })
                     }
                 })
