@@ -23,7 +23,7 @@ var songlistTable = {
                             m('th', 'Title'),
                             m('th', 'Author'),
                             m('th', [
-                                m(selectPLaylist(), {
+                                m(selectPlaylist(), {
                                     playlistName: args.playlistName,
                                     addButtonDOM: args.addButtonDOM
                                 })
