@@ -1,4 +1,4 @@
-function selectPLaylist() {
+function selectPlaylist() {
     function button(args) {
         return m('button.btn.btn-default', {
             onclick: function() {
