@@ -29,7 +29,7 @@ var search = (function() {
                                 m('th', 'Title'),
                                 m('th', 'Author'),
                                 m('th', [
-                                    m(selectPLaylist(), {
+                                    m(selectPlaylist(), {
                                         playlistName: playlistName,
                                         addButtonDOM: addButtonDOM
                                     })
