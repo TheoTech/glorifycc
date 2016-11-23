@@ -10,9 +10,9 @@ function addToPlaylistButton() {
                             window.location.href = '/user/login'
                         } else if (!args.playlistName()) {
                             $('#choosePlaylist').modal('show')
-                            args.addButtonDOM($(this))
+                            //store the clicked button so we can trigger click it after user picks the playlist
+                            args.addButtonDOM($(this)) 
                         } else {
-                            console.log(args.playlistModal)
                             args.playlistModal.addToPlaylist(args)
                         }
                     }
