@@ -22,13 +22,12 @@ var songlistTable = {
                             m('th'),
                             m('th', 'Title'),
                             m('th', 'Author'),
-                            m('th')
-                                // m(playlistDropdownComponent.playlistDropdown, {
-                                //     playlistName: args.playlistName,
-                                //     url: '/',
-                                //     isLoggedIn: args.isLoggedIn
-                                //     // addButtonDOM: args.addButtonDOM
-                                // })
+                            m('th', [
+                                m(selectPlaylist(), {
+                                    playlistName: args.playlistName,
+                                    addButtonDOM: args.addButtonDOM
+                                })
+                            ])
                         ]),
                         m('tbody', [
                             args.displayedSongs().map((s) => {
@@ -49,20 +48,26 @@ var songlistTable = {
                                         }, s.title)
                                     ]),
                                     m('td', s.author),
-                                    // m('td', [
-                                    //     m(addToPlaylistButton().addOrDeleteButtonComponent, {
-                                    //         playlistName: args.playlistName,
-                                    //         songID: s._id,
-                                    //         label: s.label,
-                                    //         disabled: s.disabled
-                                    //         // addButtonDOM: args.addButtonDOM
-                                    //     })
-                                    // ])
+                                    m('td', [
+                                        m(addToPlaylistButton(), {
+                                            playlistName: args.playlistName,
+                                            songID: s._id,
+                                            label: s.label,
+                                            disabled: s.disabled,
+                                            addButtonDOM: args.addButtonDOM,
+                                            playlistModal: playlistModal
+                                        })
+                                    ])
                                 ])
                             })
                         ])
                     ])
-                ])
+                ]),
+                m(playlistModal.playlistModalComponent, {
+                    playlistName: args.playlistName,
+                    addButtonDOM: args.addButtonDOM,
+                    modalName: ''
+                })
             ]
         }
     }
