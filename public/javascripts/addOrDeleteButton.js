@@ -31,9 +31,10 @@ var addOrDeleteButtonComponent = (function() {
     */
     var addOrDeleteButton = {
         controller: function(args) {
+            console.log(args.inLibrary())
             this.buttonTitle = function() {
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
-                return isInLibrary ? 'Removed from Library...' : 'Added to Library...';
+                return isInLibrary ? 'Removing from Library...' : 'Adding to Library...';
             };
             this.buttonTxt = function() {
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
@@ -58,17 +59,20 @@ var addOrDeleteButtonComponent = (function() {
                             window.location.href = '/user/login'
                         } else {
                             ctrl.addOrDelete()
-                            // $(this).tooltip('fixTitle');
-                            // $(this).tooltip('show');
+                            $(this).tooltip('fixTitle');
+                            $(this).tooltip('show')
+                            setTimeout(() => {
+                              $(this).tooltip('hide')
+                            }, 2000);
+                        }
+                    },
+                    config: function(elem, isInit) {
+                        if (!isInit) {
+                            $(elem).tooltip({
+                                trigger: 'manual'
+                            });
                         }
                     }
-                    // config: function(elem, isInit) {
-                    //     if (!isInit) {
-                    //         $(this).tooltip({
-                    //             trigger: 'hover focus'
-                    //         });
-                    //     }
-                    // }
                 }, [
                     ctrl.buttonTxt()
                 ]),
