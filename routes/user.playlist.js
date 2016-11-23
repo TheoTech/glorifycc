@@ -240,6 +240,7 @@ router.route('/:playlist_name/export3')
         playlistName = req.params.playlist_name
         languagePerSlide = req.query.language;
         songs2d = {};
+        maxNumberOfSongs = 0;
         Playlist.find({
                 owner: req.user._id,
                 name: playlistName,
@@ -258,6 +259,14 @@ router.route('/:playlist_name/export3')
                     return playlist.translationsChecked
 
                 })
+                //this var is to check whether we should disable the export option on the ui
+                maxNumberOfSongs = songs2d.reduce((prev, curr) => {
+                    if (prev.length > curr.length) {
+                        return prev.length
+                    } else {
+                        return curr.length
+                    }
+                })
                 next()
             })
     })
@@ -265,28 +274,32 @@ router.route('/:playlist_name/export3')
         if (languagePerSlide == 1) {
             var newSongsArr = create2dArrayOfOneSong(songs2d)
             res.render('export/preview-ppt1', {
-                songs2d: newSongsArr
+                songs2d: newSongsArr,
+                maxNumberOfSongs: maxNumberOfSongs
             })
         } else if (languagePerSlide == 2) {
             var newSongsArr = create2dArrayOfTwoSongs(songs2d)
             res.render('export/preview-ppt2', {
-                songs2d: newSongsArr
+                songs2d: newSongsArr,
+                maxNumberOfSongs: maxNumberOfSongs
             })
         } else if (languagePerSlide == 3) {
             res.render('export/preview-ppt3', {
-                songs2d: songs2d
+                songs2d: songs2d,
+                maxNumberOfSongs: maxNumberOfSongs
             })
         } else {
             res.render('export/preview-pdf', {
-                songs2d: songs2d
+                songs2d: songs2d,
+                maxNumberOfSongs: maxNumberOfSongs
             })
         }
     })
     .post(function(req, res, next) {
         var filename;
         if (languagePerSlide == 1) {
-            // var newSongsArr = create2dArrayOfTwoSongs(songs2d)
-            // generateSlideByStanza(res, newSongsArr, playlistName, 2)
+            var newSongsArr = create2dArrayOfOneSong(songs2d)
+            generateSlideByStanza(res, newSongsArr, playlistName, 1)
         } else if (languagePerSlide == 2) {
             var newSongsArr = create2dArrayOfTwoSongs(songs2d)
             generateSlideByStanza(res, newSongsArr, playlistName, 2)
@@ -420,6 +433,116 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
     })
 }
 
+
+
+// function generateSlideByLine(res, songs2d, playlistName) {
+//     //files is an array to store the filename for each pptx file
+//     var files = [];
+//     songs2d.forEach((songs, index, arr) => {
+//         var pptx = officegen('pptx');
+//         filename = '';
+//         var slide;
+//         var pObj;
+//         pptx.setDocTitle('');
+//         slide = pptx.makeNewSlide(); //create a new slide
+//         slide.back = {
+//             type: 'solid',
+//             color: '000000' //background color black
+//         };
+//         var titleMargin = 175 //y position
+//         songs.forEach((song) => {
+//             filename += song.title;
+//             //add text with white color, and center horizontally
+//             pObj = slide.addText(song.title, {
+//                 x: 'c', //x position
+//                 y: titleMargin, //y position
+//                 cx: '100%', //width
+//                 cy: 50,
+//                 font_size: 50,
+//                 align: 'center',
+//                 color: {
+//                     type: 'solid',
+//                     color: 'ffffff'
+//                 }
+//             });
+//             titleMargin += 70; //add y space for the second title
+//             pObj = slide.addText('(' + song.lang + ')', {
+//                 x: 'c', //x position
+//                 y: titleMargin, //y position
+//                 cx: '100%', //width
+//                 cy: 20,
+//                 font_size: 30,
+//                 align: 'center',
+//                 color: {
+//                     type: 'solid',
+//                     color: 'ffffff'
+//                 }
+//             });
+//             titleMargin += 100;
+//         })
+//         songs[]
+//         songs.forEach((song) => {
+//
+//         })
+//         for (var i = 0; i < songs[0].lyric.length; i++) {
+//             //make new slide for every new stanza with background color black
+//             slide = pptx.makeNewSlide();
+//             slide.back = {
+//                 type: 'solid',
+//                 color: '000000'
+//             };
+//             var margin = stanzasPerSlide === 1 ? 175 : 50;
+//             for (var x = 0; x < songs.length; x++) {
+//                 for (var j = 0; j < songs[x].lyric[i].length; j++) {
+//                     //print stanza
+//                     pObj = slide.addText(songs[x].lyric[i][j], {
+//                         x: 'c', //x position
+//                         y: margin, //y position
+//                         cx: '100%', //width
+//                         cy: 40,
+//                         font_size: 40,
+//                         align: 'center',
+//                         color: {
+//                             type: 'solid',
+//                             color: 'ffffff'
+//                         }
+//                     });
+//                     margin += 50;
+//                 }
+//                 margin += 150
+//             }
+//         }
+//         var out = fs.createWriteStream(filename + '.pptx');
+//         pptx.generate(out, {
+//             'finalize': function(written) {
+//                 //callback function after it finishes generating ppt
+//                 console.log('Finish to create a PowerPoint file.\nTotal bytes created: ' + written + '\n');
+//                 files.push(filename)
+//                 if (index === arr.length - 1) {
+//                     setTimeout(() => {
+//                         var zip = archiver('zip')
+//                         files.forEach((file) => {
+//                             //zip it
+//                             zip.file(file + '.pptx')
+//                         })
+//                         zip.finalize()
+//                         res.writeHead(200, {
+//                             'Content-Type': 'application/zip',
+//                             'Content-disposition': 'attachment; filename=' + playlistName + '.zip'
+//                         });
+//                         //pipe it to client
+//                         zip.pipe(res)
+//                     }, 1000);
+//                 }
+//             },
+//             'error': function(err) {
+//                 console.log(err);
+//             }
+//         });
+//     })
+// }
+
+
 //this function map the original 2darray to be 2d array of exactly two songs
 //takes the original 2darray and return the new mapped 2darray
 function create2dArrayOfTwoSongs(songs2d) {
@@ -451,70 +574,70 @@ function create2dArrayOfOneSong(songs2d) {
     })
 }
 
-
-
-
-// filename = Date.now()
-// var pptx = officegen('pptx');
+// function generateSlidesByLine(){
+//   filename = Date.now()
+//   var pptx = officegen('pptx');
 //
-// var slide;
-// var pObj;
+//   var slide;
+//   var pObj;
 //
-// pptx.on('finalize', function(written) {
-//     console.log('Finish to create a PowerPoint file.\nTotal bytes created: ' + written + '\n');
-// });
+//   pptx.on('finalize', function(written) {
+//       console.log('Finish to create a PowerPoint file.\nTotal bytes created: ' + written + '\n');
+//   });
 //
-// pptx.on('error', function(err) {
-//     console.log(err);
-// });
+//   pptx.on('error', function(err) {
+//       console.log(err);
+//   });
 //
-// pptx.setDocTitle('');
+//   pptx.setDocTitle('');
 //
-// function generateSlides(callback) {
-//     songs2d.forEach((songObj) => {
-//         slide = pptx.makeNewSlide();
-//         slide.back = {
-//             type: 'solid',
-//             color: '000000'
-//         };
-//         for (var i = 0; i < songObj.minLine; i++) {
-//             //make new slide for every lyric line
-//             slide = pptx.makeNewSlide();
-//             slide.back = {
-//                 type: 'solid',
-//                 color: '000000'
-//             };
-//             for (var j = 0; j < songObj.songs.length; j++) {
-//                 //print the lyric line for each translation
-//                 pObj = slide.addText(songObj.songs[j].lyric[i], {
-//                     x: 'c', //x position
-//                     y: 250 + j * 100, //y position
-//                     cx: '100%', //width
-//                     cy: 50, //height
-//                     font_size: 40,
-//                     align: 'center',
-//                     color: {
-//                         type: 'solid',
-//                         color: 'ffffff'
-//                     }
-//                 });
-//             }
-//         }
-//     })
-//     callback();
+//   function generateSlides(callback) {
+//       songs2d.forEach((songObj) => {
+//           slide = pptx.makeNewSlide();
+//           slide.back = {
+//               type: 'solid',
+//               color: '000000'
+//           };
+//           for (var i = 0; i < songObj.minLine; i++) {
+//               //make new slide for every lyric line
+//               slide = pptx.makeNewSlide();
+//               slide.back = {
+//                   type: 'solid',
+//                   color: '000000'
+//               };
+//               for (var j = 0; j < songObj.songs.length; j++) {
+//                   //print the lyric line for each translation
+//                   pObj = slide.addText(songObj.songs[j].lyric[i], {
+//                       x: 'c', //x position
+//                       y: 250 + j * 100, //y position
+//                       cx: '100%', //width
+//                       cy: 50, //height
+//                       font_size: 40,
+//                       align: 'center',
+//                       color: {
+//                           type: 'solid',
+//                           color: 'ffffff'
+//                       }
+//                   });
+//               }
+//           }
+//       })
+//       callback();
+//   }
+//
+//
+//   function finalize() {
+//       var out = fs.createWriteStream(filename + '.pptx');
+//       out.on('error', function(err) {
+//           console.log(err);
+//       });
+//       res.writeHead(200, {
+//           "Content-Type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+//           'Content-disposition': 'attachment; filename=' + filename + '.pptx'
+//       });
+//       pptx.generate(res);
+//   }
+//
+//   async.series([generateSlides], finalize);
+//
 // }
-//
-//
-// function finalize() {
-//     var out = fs.createWriteStream(filename + '.pptx');
-//     out.on('error', function(err) {
-//         console.log(err);
-//     });
-//     res.writeHead(200, {
-//         "Content-Type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-//         'Content-disposition': 'attachment; filename=' + filename + '.pptx'
-//     });
-//     pptx.generate(res);
-// }
-//
-// async.series([generateSlides], finalize);
