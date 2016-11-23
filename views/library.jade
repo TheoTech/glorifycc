@@ -15,15 +15,15 @@ block content
         var s = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
-    script(src='/bower_components/mithril/mithril.min.js')
-    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/selectPLaylist.js')
+    script(src='/dist/javascripts/playlistModal.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/deleteButton.js')
-    script(src='/dist/javascripts/searchBox.js')
+    //- script(src='/dist/javascripts/searchBox.js')
     script(src='/dist/javascripts/libraryTable.js')
     script.
         libraryTableComponent.init(document.getElementById('library'))
-        m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: '/user/library'}))
+        //- m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: '/user/library'}))
 
         
         
