@@ -242,7 +242,7 @@ router.route('/:playlist_name/export3')
         songs2d = {};
         maxNumberOfSongs = 0;
         Playlist.find({
-                // owner: req.user._id,
+                owner: req.user._id,
                 name: playlistName,
                 song: {
                     $exists: true
