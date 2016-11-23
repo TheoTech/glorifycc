@@ -23,11 +23,9 @@ var songlistTable = {
                             m('th', 'Title'),
                             m('th', 'Author'),
                             m('th', [
-                                m(playlistDropdownComponent.playlistDropdown, {
+                                m(selectPlaylist(), {
                                     playlistName: args.playlistName,
-                                    url: '/',
-                                    isLoggedIn: args.isLoggedIn
-                                    // addButtonDOM: args.addButtonDOM
+                                    addButtonDOM: args.addButtonDOM
                                 })
                             ])
                         ]),
@@ -51,20 +49,25 @@ var songlistTable = {
                                     ]),
                                     m('td', s.author),
                                     m('td', [
-                                        m(addToPlaylistButton, {
+                                        m(addToPlaylistButton(), {
                                             playlistName: args.playlistName,
                                             songID: s._id,
-                                            key: s._id,
                                             label: s.label,
-                                            disabled: s.disabled
-                                            // addButtonDOM: args.addButtonDOM
+                                            disabled: s.disabled,
+                                            addButtonDOM: args.addButtonDOM,
+                                            playlistModal: playlistModal
                                         })
                                     ])
                                 ])
                             })
                         ])
                     ])
-                ])
+                ]),
+                m(playlistModal.playlistModalComponent, {
+                    playlistName: args.playlistName,
+                    addButtonDOM: args.addButtonDOM,
+                    modalName: ''
+                })
             ]
         }
     }

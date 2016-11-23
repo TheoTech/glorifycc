@@ -69,7 +69,6 @@ router.get('/library', isLoggedIn, function(req, res, next) {
 //adding new playlist
 router.put('/library', function(req, res, next) {
     var name = req.body.name
-    var url = req.body.url
     if (req.isAuthenticated()) {
         var owner = req.user._id
         Playlist.findOne({
@@ -114,71 +113,27 @@ router.post('/library', function(req, res, next) {
     var name = req.body.name
     var song_id = req.body.id
     var playlistOwner = req.user._id
-    if (req.isAuthenticated()) {
-        Playlist.findOne({
+    Playlist.findOne({
+        owner: playlistOwner,
+        name: name
+    }, function(err, playlist) {
+        if (err) return next(err)
+        if (playlist) {
+            var newPlaylistSong = new Playlist({
                 owner: playlistOwner,
-                name: name
+                name: name,
+                song: song_id,
+                translationsChecked: []
             })
-            .populate('owner')
-            .exec(function(err, playlist) {
-                var newPlaylist
-                if (err) return next(err)
-                if (playlist) {
-                    var newPlaylistSong = new Playlist({
-                        owner: playlistOwner,
-                        name: name,
-                        song: song_id,
-                        translationsChecked: []
-                    })
-                    newPlaylistSong.save(function(err) {
-                            if (err) next(err)
-                            res.send({})
-                        })
-                        // Song.findById(song_id, function(err, song) {
-                        //     //find all the family of that song (song + translations)
-                        //     Song.find({
-                        //             $or: [{
-                        //                 $and: [{
-                        //                     source: song.source
-                        //                 }, {
-                        //                     source: {
-                        //                         $exists: true
-                        //                     }
-                        //                 }, {
-                        //                     lang: {
-                        //                         $ne: song.lang
-                        //                     }
-                        //                 }]
-                        //             }, {
-                        //                 _id: song.source
-                        //             }, {
-                        //                 source: song._id
-                        //             }, {
-                        //                 _id: song._id
-                        //             }]
-                        //         }, function(err, translations) {
-                        //             console.log(translations.map((t) => t.lang))
-                        //             newPlaylistSong.availableTranslations = translations.map((t) => t._id)
-                        //             newPlaylistSong.save(function(err) {
-                        //                 if (err) {
-                        //                     res.status(400).send('failed ' + err)
-                        //                 } else {
-                        //                     res.send({})
-                        //                 }
-                        //             })
-                        //         })
-                        //         .sort({
-                        //             lang: 1
-                        //         })
-                        // })
-                } else {
-                    req.flash('error', 'Choose Playlist')
-                    res.send({})
-                }
+            newPlaylistSong.save(function(err) {
+                if (err) next(err)
+                res.send({})
             })
-    } else {
-        res.send({})
-    }
+        } else {
+            req.flash('error', 'Choose Playlist')
+            res.send({})
+        }
+    })
 })
 
 //delete song from library

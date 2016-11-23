@@ -119,13 +119,18 @@ router.route('/:song_id/add-translation')
         })
     })
     .get(function(req, res, next) {
-        Language.find(function(err, languages) {
-            if (err) next(err)
-            res.render('addTranslation', {
-                song: song,
-                availableLanguages: languages.map((language) => language.lang)
+        if (req.isAuthenticated()) {
+            Language.find(function(err, languages) {
+                if (err) next(err)
+                res.render('addTranslation', {
+                    song: song,
+                    availableLanguages: languages.map((language) => language.lang)
+                })
             })
-        })
+        } else {
+            res.redirect('/user/login')
+        }
+
     })
     .post(function(req, res, next) {
         req.checkBody('title', 'Title is empty').notEmpty()

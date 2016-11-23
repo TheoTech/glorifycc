@@ -27,42 +27,35 @@ block content
         .col-xs-offset-6.col-xs-6
             .form-group
                 label(for="language") Language
-                select#myselect.form-control.capitalize(name="language", default="none", onChange= 'window.location.href=this.value')
-                    option(selected) [Choose Translation]
-                    for t in translations
-                        option(value='?lang=' + t.lang) #{t.lang}
+                select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
+                    optgroup
+                        option(value='/song/#{song._id}/add-translation') Add Translation
+                    optgroup
+                        for t in translations
+                            option(value='?lang=' + t.lang) #{t.lang}
     .row
         .col-xs-6
-            //- #song 
+            #song
             h4.capitalize=song.lang
         .col-xs-6
             if isTranslationExisted
+                #translation
                 h4.capitalize #{rightTranslation.lang}
     -for (var i = 0; i < song.lyric.length; i++)
         .row
             .col-xs-6
-                <p>
                 each line in song.lyric[i]
-                    - if (line === '')
-                        br
-                    - else
-                        !{line}
-                        br
-                </p> 
+                    span #{line}
+                    br
+                br            
             .col-xs-6
                 if isTranslationExisted
-                    <p> 
                     each line in rightTranslation.lyric[i]
-                        - if (line === '')
-                            br
-                        - else
-                            !{line}
-                            br
-                    </p> 
-                    br 
-                    -if(login && user.username === 'admin')
-                        a.btn.btn-primary(href='#{song.id}/add-translation') Add Translation 
-                -if(song.private)
+                        span #{line}
+                        br
+                br
+    #songPlaylistModal  
+    #translationPlaylistModal           
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
@@ -70,17 +63,10 @@ block content
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/playlistModal.js')
     script(src='/dist/javascripts/songButton.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/playlistDropdown.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
+    script(src='/dist/javascripts/buttons.js')
     script(src='/dist/javascripts/songClicked.js')
-    script.
-        var url = '/songlist/' + song._id
-        if(!song.copyright){
-            url = '/user/privatesong/' + song._id
-        }
-        m.mount(document.getElementById('song'), m(songClicked.buttons, {_id: song._id, label: m.prop('Add to Playlist'), disabled: m.prop(false)}))
-        if (isTranslationExisted) {
-            m.mount(document.getElementById('translation'), m(songClicked.buttons, {_id: translation._id}))
-        }
+        

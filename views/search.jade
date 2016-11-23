@@ -10,8 +10,9 @@ block content
         var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/playlistModal.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/playlistDropdown.js')
+    script(src='/dist/javascripts/selectPLaylist.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/search.js')
     script.

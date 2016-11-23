@@ -23,6 +23,12 @@ var addOrDeleteButtonComponent = (function() {
         })
     }
 
+    /*
+      args = {songID: args._id,
+              url: '/',
+              inLibrary: inLibrary
+    }
+    */
     var addOrDeleteButton = {
         controller: function(args) {
             this.buttonTitle = function() {
@@ -47,22 +53,22 @@ var addOrDeleteButtonComponent = (function() {
             return m('div', [
                 m('button.btn.btn-default', {
                     title: ctrl.buttonTitle(),
-                    onclick: function(evt) {
+                    onclick: function() {
                         if (!isLoggedIn) {
                             window.location.href = '/user/login'
                         } else {
-                            ctrl.addOrDelete
-                            $(this).tooltip('fixTitle').tooltip('setContent');
-                            $(this).tooltip('show');
-                        }
-                    },
-                    config: function(elem, isInit) {
-                        if (!isInit) {
-                            $(this).tooltip({
-                                trigger: 'focus'
-                            });
+                            ctrl.addOrDelete()
+                            // $(this).tooltip('fixTitle');
+                            // $(this).tooltip('show');
                         }
                     }
+                    // config: function(elem, isInit) {
+                    //     if (!isInit) {
+                    //         $(this).tooltip({
+                    //             trigger: 'hover focus'
+                    //         });
+                    //     }
+                    // }
                 }, [
                     ctrl.buttonTxt()
                 ]),
