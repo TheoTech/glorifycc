@@ -155,6 +155,12 @@ router.route('/:song_id/add-translation')
                         errorMessages: ['Translation Exists']
                     })
                 } else {
+                    var stanzaOffset = song.lyric.length - data.lyric.length
+                    if (stanzaOffset > 0) {
+                        for (var i = 0; i < stanzaOffset; i++) {
+                            song.lyric.push([''])
+                        }
+                    }
                     var newSong = new Song({
                         title: data.title,
                         author: data.author,
