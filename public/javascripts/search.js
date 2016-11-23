@@ -43,7 +43,6 @@ var search = (function() {
                                         m('td', [
                                             m(addOrDeleteButtonComponent.addOrDeleteButton, {
                                                 songID: s._id,
-                                                text: 'Library',
                                                 url: '/',
                                                 inLibrary: inLibrary
                                             })

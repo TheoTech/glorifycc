@@ -19,7 +19,8 @@ var songClicked = (function() {
         addButtonDOM: addButtonDOM,
         playlistName: songPlaylistName,
         playlistModal: playlistModal,
-        modalName: 'song'
+        modalName: 'song',
+        inLibrary: inLibrary
     }))
     if (isTranslationExisted) {
         m.mount(document.getElementById('translation'), m(buttons(), {
@@ -27,7 +28,8 @@ var songClicked = (function() {
             addButtonDOM: addButtonDOM,
             playlistName: translationPlaylistName,
             playlistModal: playlistModal,
-            modalName: 'translation'
+            modalName: 'translation',
+            inLibrary: inLibrary
         }))
     }
 })()

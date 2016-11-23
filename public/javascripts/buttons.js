@@ -8,9 +8,9 @@ var buttons = function() {
         view: function(ctrl, args) {
             return [
                 m(addOrDeleteButtonComponent.addOrDeleteButton, {
-                    songID: args._id,
+                    songID: args.songID,
                     url: '/',
-                    inLibrary: inLibrary
+                    inLibrary: args.inLibrary
                 }),
                 m('button.btn.btn-default', {
                     disabled: args.disabled(),

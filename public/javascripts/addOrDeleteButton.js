@@ -25,8 +25,8 @@ var addOrDeleteButtonComponent = (function() {
 
     /*
       args = {songID: args._id,
-      url: '/',
-      inLibrary: inLibrary
+              url: '/',
+              inLibrary: inLibrary
     }
     */
     var addOrDeleteButton = {
@@ -57,15 +57,15 @@ var addOrDeleteButtonComponent = (function() {
                         if (!isLoggedIn) {
                             window.location.href = '/user/login'
                         } else {
-                            ctrl.addOrDelete
-                            // $(this).tooltip('fixTitle').tooltip('setContent');
+                            ctrl.addOrDelete()
+                            // $(this).tooltip('fixTitle');
                             // $(this).tooltip('show');
                         }
                     }
                     // config: function(elem, isInit) {
                     //     if (!isInit) {
                     //         $(this).tooltip({
-                    //             trigger: 'focus'
+                    //             trigger: 'hover focus'
                     //         });
                     //     }
                     // }
