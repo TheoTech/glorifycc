@@ -31,13 +31,12 @@ var song = require('./routes/song')
 var language = require('./routes/language')
 
 
-var MongoURI = process.env.MONGOURI || 'mongodb://localhost/song-database';
-mongoose.Promise = global.Promise;
-mongoose.connect(MongoURI, function(err, database) {
+var mongoConfig = require('./lib/mongoConfig');
+mongoose.connect(mongoConfig.uri, function(err, database) {
     if (err) {
-        console.log('Error connecting to: ' + MongoURI + '. ' + err);
+        console.log('Error connecting to: ' + mongoConfig.uri + '. ' + err);
     } else {
-        console.log('MongoDB connected successfully to ' + MongoURI);
+        console.log('MongoDB connected successfully to ' + mongoConfig.uri);
     }
 });
 require('./lib/passport');

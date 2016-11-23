@@ -24,4 +24,5 @@ To run this on your local machine:
 
 4. Start `mongod` which must run separately
 5. From the glorifycc directory, run `gulp` to start up the server
-6. Go to http://localhost:8000 to test the webapp
+6. Run `node bin/dev-setup` to populate your local database
+7. Go to http://localhost:8000 to test the webapp
