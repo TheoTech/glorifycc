@@ -5,7 +5,7 @@ var User = require('../models/user');
 var Playlist = require('../models/playlist')
 var Song = require('../models/song')
 var _ = require('lodash')
-var helperFunc = require('../lib/helperFunc')
+var passportFunction = require('../lib/passport')
 var async = require('async')
 var crypto = require('crypto')
 var nodemailer = require('nodemailer')
@@ -215,7 +215,7 @@ router.delete('/library', function(req, res, next) {
 
 
 router.get('/logout', isLoggedIn, function(req, res, next) {
-    helperFunc.adminLogout()
+    passportFunction.adminLogout()
     req.logout();
     res.redirect('/')
 })

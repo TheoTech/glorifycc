@@ -281,13 +281,43 @@ router.get('/search', function(req, res, next) {
     var langFilter = req.body.langFilter
     var totalSongsDisplayed = req.body.totalSongsDisplayed
     var songs2d = []
-    var findOriginalSong = function(done) {
+
+    function findSongsLoggedIn(done) {
         var query = new RegExp('.*' + searchString + '.*')
         Song.find({
                     $or: [{
                         title: {
                             $regex: query,
+                            $options: 'si' //s option to allow dot character to match all characters including new line
+                        }
+                    }, {
+                        author: {
+                            $regex: query,
                             $options: 'si'
+                        }
+                    }, {
+                        lyric: {
+                            $regex: query,
+                            $options: 'si'
+                        }
+                    }],
+                    contributor: req.user.username
+                },
+                function(err, songs) {
+                    done(null, songs)
+                })
+            .sort({
+                title: 1
+            })
+    }
+
+    function findSongsNotLoggedIn(done) {
+        var query = new RegExp('.*' + searchString + '.*')
+        Song.find({
+                    $or: [{
+                        title: {
+                            $regex: query,
+                            $options: 'si' //s option to allow dot character to match all characters including new line
                         }
                     }, {
                         author: {
@@ -312,41 +342,24 @@ router.get('/search', function(req, res, next) {
             })
     }
 
-    var finalize = function(err, songs2d) {
+    function finalize(err, songs2d) {
         if (err) {
             res.status(500).send('Internal error' + err)
         } else {
-            if (req.isAuthenticated()) {
-                User.findOne({
-                    _id: req.user._id
-                }, function(err, user) {
-                    if (err) next(err)
-                    Playlist.find({
-                        owner: req.user._id,
-                        song: {
-                            $exists: false
-                        }
-                    }, function(err, playlists) {
-                        if (err) next(err)
-                        res.render('search', {
-                            songs: songs2d,
-                            inLibrary: user.library,
-                            playlists: playlists
-                        })
-                    })
-                })
-            } else {
-                res.render('search', {
-                    songs: songs2d,
-                    inLibrary: [],
-                    playlists: []
-                })
-            }
+            res.render('search', {
+                songs: songs2d,
+                inLibrary: [],
+                playlists: []
+            })
         }
     }
 
     if (searchString) {
-        async.waterfall([findOriginalSong], finalize)
+        if (req.isAuthenticated()) {
+            async.waterfall([findSongsLoggedIn], finalize)
+        } else {
+            async.waterfall([findSongsNotLoggedIn], finalize)
+        }
     } else {
         res.render('search', {
             songs: [],
