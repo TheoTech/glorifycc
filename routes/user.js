@@ -46,7 +46,6 @@ router.get('/library', isLoggedIn, function(req, res, next) {
     User.findById(req.user._id)
         .populate('library')
         .exec(function(err, user) {
-            console.log(user)
             if (err) return next(err)
             Playlist.find({
                 owner: user._id,

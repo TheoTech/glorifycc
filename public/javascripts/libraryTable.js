@@ -1,7 +1,6 @@
 var libraryTableComponent = (function() {
     var songID = m.prop()
     var playlistName = m.prop()
-    var songs = m.prop(s)
     var addButtonDOM = m.prop()
 
     var libraryTable = {
@@ -38,7 +37,7 @@ var libraryTableComponent = (function() {
                                     ]),
                                     m('td', [
                                         function() {
-                                            if (s.private) {
+                                            if (s.copyright === 'private') {
                                                 return m('a.btn.btn-default', {
                                                     href: 'privatesong/' + s._id + '/edit'
                                                 }, 'Edit')
@@ -47,7 +46,7 @@ var libraryTableComponent = (function() {
                                     ]),
                                     m('td', [
                                         function() {
-                                            if (s.private) {
+                                            if (s.copyright === 'private') {
                                                 return m('a', {
                                                     href: '/user/privatesong/' + s._id
                                                 }, s.title)

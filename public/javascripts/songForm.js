@@ -73,7 +73,7 @@ function songForm(obj) {
                             }
                             $(elem).bind('input propertychange', function() {
                                 //make an array of string
-                                var newStanza = $(elem).val() ? $(elem).val().split(/\r?\n|\//) : ''
+                                var newStanza = $(elem).val() ? $(elem).val().split(/\r?\n/) : ''
                                     //update the object
                                 lyric.splice(args.index, 1, newStanza)
                             });
@@ -113,12 +113,13 @@ function songForm(obj) {
                             config: function(elem, isInit) {
                                 if (!isInit) {
                                     $(elem).bind('input propertychange', function() {
-                                        copypaste = $(elem).val() ? $(elem).val().split(/\n\n/) : ''
+                                        copypaste = $(elem).val() ? $(elem).val().split(/\n\n|\/\//) : ''
                                         if (copypaste !== '') {
                                             copypaste = copypaste.map((cp) => {
                                                 return cp.split(/\n|\//)
                                             })
                                         }
+                                        console.log(JSON.stringify(copypaste[0]))
                                     });
                                 }
                             }
