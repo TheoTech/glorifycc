@@ -239,7 +239,7 @@ router.route('/:playlist_name/export3')
     .all(function(req, res, next) {
         playlistName = req.params.playlist_name
         languagePerSlide = req.query.language;
-        songs2d = {};
+        songs2d = [];
         maxNumberOfSongs = 0;
         Playlist.find({
                 owner: req.user._id,
