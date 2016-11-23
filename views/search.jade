@@ -7,7 +7,7 @@ block content
 
     script.
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+        var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/playlistModal.js')
