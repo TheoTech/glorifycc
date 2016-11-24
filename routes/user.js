@@ -164,6 +164,12 @@ router.route('/library')
         })
     })
 
+router.get('/logout', passportFunction.loggedIn, function(req, res, next) {
+    passportFunction.adminLogout()
+    req.logout();
+    res.redirect('/')
+})
+
 router.route('/login')
     .all(passportFunction.notLoggedIn)
     .get(function(req, res, next) {
@@ -178,13 +184,6 @@ router.route('/login')
         failureRedirect: '/user/login',
         failureFlash: true //turn the flag to true to enable flash message
     }))
-
-
-router.get('/logout', passportFunction.notLoggedIn, function(req, res, next) {
-    passportFunction.adminLogout()
-    req.logout();
-    res.redirect('/')
-})
 
 router.route('/forgot')
     .all(passportFunction.notLoggedIn)

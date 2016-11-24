@@ -11,7 +11,6 @@ var passportFunction = require('../lib/passport')
 router.route('/:song_id')
     .all(function(req, res, next) {
         lang = req.query.lang || ''
-            // v = req.query.v || ''
         song_id = req.params.song_id
         song = {}
         Song.findById(song_id, function(err, s) {
@@ -20,9 +19,19 @@ router.route('/:song_id')
         })
     })
     .get(function(req, res, next) {
-        if (song.contributor !== req.user.username && song.contributor !== 'admin') {
-            res.render('noaccess')
+        if (song.copyright === 'private') {
+            if (!req.isAuthenticated()) {
+                res.render('noaccess')
+            } else if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
+                res.render('noaccess')
+            } else {
+                findSong()
+            }
         } else {
+            findSong()
+        }
+
+        function findSong() {
             Song.find({
                 $or: [{
                     $and: [{
@@ -83,7 +92,6 @@ router.route('/:song_id')
                 }
             })
         }
-
     })
     //choosing translations
     .put(function(req, res, next) {
@@ -127,7 +135,7 @@ router.route('/:song_id/add-translation')
     })
     .get(function(req, res, next) {
         if (req.isAuthenticated()) {
-            if (song.contributor !== req.user.username && song.contributor !== 'admin') {
+            if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
                 res.render('noaccess')
             } else {
                 Language.find(function(err, languages) {
@@ -221,7 +229,7 @@ router.route('/:song_id/edit')
         })
     })
     .get(function(req, res, next) {
-        if (song.contributor !== req.user.username && song.contributor !== 'admin') {
+        if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
             res.render('noaccess')
         } else {
             Language.find(function(err, languages) {
