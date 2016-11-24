@@ -12,7 +12,7 @@ var nodemailer = require('nodemailer')
 var config = require('config')
 var passportFunction = require('../lib/passport')
 
-router.get('/updateschema', passportFunction.isAdmin, function(req, res, next) {
+router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, next) {
     // var songs = [{
     //     "lyric": [
     //         "A mighty fortress is our God,",

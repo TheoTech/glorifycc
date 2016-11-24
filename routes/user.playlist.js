@@ -13,9 +13,12 @@ var async = require('async')
 var _ = require('lodash')
 var zip = require('express-zip')
 var archiver = require('archiver')
+var passportFunction = require('../lib/passport')
 
+router.use('/', passportFunction.loggedIn)
 
 router.get('/', function(req, res, next) {
+    console.log('hahahhahahahahhaha')
     Playlist.find({
         owner: req.user._id,
         song: {
@@ -23,28 +26,12 @@ router.get('/', function(req, res, next) {
         }
     }, function(err, playlists) {
         if (err) return next(err)
+        console.log('hehehehehhehehehehe')
         res.render('playlist', {
             playlists: playlists
         })
     })
 })
-
-
-// router.post('/', function(req, res, next) {
-//     var name = req.body.name
-//     Playlist.findOne({
-//             owner: req.user._id,
-//             name: name
-//         })
-//         .populate('songs')
-//         .exec(function(err, playlist) {
-//             if (err) return next(err)
-//             res.send({
-//                 songs: playlist.songs,
-//                 name: playlist.name
-//             })
-//         })
-// })
 
 
 //delete song from playlist

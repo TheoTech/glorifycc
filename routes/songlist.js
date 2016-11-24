@@ -1,11 +1,9 @@
-var express = require('express'),
-    router = express.Router(),
-    Song = require('../models/song'),
-    User = require('../models/user'),
-    _ = require('lodash'),
-    Playlist = require('../models/playlist'),
-    async = require('async');
-
+var express = require('express')
+var router = express.Router()
+var Song = require('../models/song')
+var User = require('../models/user')
+var _ = require('lodash')
+var Playlist = require('../models/playlist')
 var fs = require('file-system');
 var officegen = require('officegen');
 var async = require('async');
