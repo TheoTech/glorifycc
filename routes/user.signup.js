@@ -29,7 +29,7 @@ emailVerification.configure({
         }
     },
     verifyMailOptions: {
-        from: 'glorify@theotech.org',
+        from: process.env.OUR_EMAIL || config.get('ourEmail')
         subject: 'Please confirm account',
         html: 'Click the following link to confirm your account:</p><p>${URL}</p>',
         text: 'Please confirm your account by clicking the following link: ${URL}'
