@@ -1,11 +1,11 @@
-var express = require('express')
-var router = express.Router()
-var Song = require('../models/song')
-var User = require('../models/user')
-var _ = require('lodash')
-var Playlist = require('../models/playlist')
-var Language = require('../models/language')
-var passportFunction = require('../lib/passport')
+var express = require('express');
+var router = express.Router();
+var Song = require('../models/song');
+var User = require('../models/user');
+var _ = require('lodash');
+var Playlist = require('../models/playlist');
+var Language = require('../models/language');
+var passportFunction = require('../lib/passport');
 
 
 router.route('/:song_id')
@@ -24,7 +24,7 @@ router.route('/:song_id')
                 //if the song is private and the user is not logged in, show no access
                 res.render('noaccess')
             } else if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
-                //if the song is private and it is no the user's contributed song and the user is not admin, show no access
+                // if the user is not the song contributor and not the admin, then dont show the song
                 res.render('noaccess')
             } else {
                 //otherwise show the song

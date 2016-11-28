@@ -2,26 +2,20 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
-var Playlist = require('../models/playlist')
-var Song = require('../models/song')
-var _ = require('lodash')
-var passportFunction = require('../lib/passport')
-var async = require('async')
-var crypto = require('crypto')
-var nodemailer = require('nodemailer')
-var config = require('config')
+var Playlist = require('../models/playlist');
+var Song = require('../models/song');
+var _ = require('lodash');
+var passportFunction = require('../lib/passport');
+var async = require('async');
+var crypto = require('crypto');
+var smtp = require('../lib/smtp');
 
-//nodemailer obj
-var smtpTransport = nodemailer.createTransport('SMTP', {
-    service: 'SendGrid',
-    auth: {
-        user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
-        pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
-    }
-})
-
-
-//this route is to handle /library
+/*
+  The library route will provide the data to show the user the songs they have added to their library.
+  These are songs they may want to use in the future, but haven't necessarily put into a playlist for use.
+  It gives them a smaller view into the database of songs, of just the songs they are interested in instead
+  of everything.
+*/
 router.route('/library')
     //protect the route from the user that hasn't logged in yet
     .all(passportFunction.loggedIn)
@@ -104,7 +98,10 @@ router.route('/library')
                     owner: playlistOwner,
                     name: name,
                     song: song_id,
-                    translationsChecked: [] //translationsChecked is to store the songs from last export action
+                    //The user checks off songs the want to export.
+                    //We store those songs in this array. This is so that if they refresh,
+                    //they do not lose their selections.
+                    translationsChecked: []
                 })
                 newPlaylistSong.save(function(err) {
                     if (err) next(err)
@@ -213,9 +210,9 @@ router.route('/forgot')
                     text: 'Someone has requested to reset the password for your account at glorify.cc\n\n' +
                         'If you did not request this, you can ignore this message.\n\n' +
                         'Otherwise, please follow this link to reset your password:\n' +
-                        'http://' + req.headers.host + '/user/reset/' + token
+                        (process.env.NODE_ENV ? 'https' : 'http') + '://' + req.headers.host + '/user/reset/' + token
                 };
-                smtpTransport.sendMail(mailOptions, function(err) {
+                smtp.smtpTransport.sendMail(mailOptions, function(err) {
                     req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
                     done(err, 'done');
                 });
@@ -231,7 +228,6 @@ router.route('/reset/:token')
     .all(passportFunction.notLoggedIn)
     .get(function(req, res, next) {
         User.findOne({
-            //find the user with resetPasswordToken equals the token and is not expired yet
             resetPasswordToken: req.params.token,
             resetPasswordExpires: {
                 $gt: Date.now()
@@ -287,7 +283,7 @@ router.route('/reset/:token')
                         text: 'Hello,\n\n' +
                             'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
                     };
-                    smtpTransport.sendMail(mailOptions, function(err) {
+                    smtp.smtpTransport.sendMail(mailOptions, function(err) {
                         req.flash('success', 'Success! Your password has been changed.');
                         done(err);
                     });
