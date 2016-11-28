@@ -79,7 +79,7 @@ router.post('/contactus', function(req, res, next) {
         }
     });
     var mailOptions = {
-        to: 'spfio@theotech.org',
+        to: 'glorify@theotech.org',
         from: email,
         subject: 'Question about glorify.cc',
         text: question
