@@ -287,8 +287,14 @@ router.get('/search', function(req, res, next) {
                             $regex: query,
                             $options: 'si'
                         }
-                    }],
-                    contributor: req.user.username
+                    }, {
+                        copyright: 'private',
+                        contributor: req.user.username
+                    }, {
+                        copyright: {
+                            $ne: 'private'
+                        }
+                    }]
                 },
                 function(err, songs) {
                     done(null, songs)
