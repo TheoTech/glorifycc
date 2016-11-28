@@ -210,7 +210,7 @@ router.route('/forgot')
                     text: 'Someone has requested to reset the password for your account at glorify.cc\n\n' +
                         'If you did not request this, you can ignore this message.\n\n' +
                         'Otherwise, please follow this link to reset your password:\n' +
-                        (process.env.NODE_ENV ? 'https' : 'http') + '://' + req.headers.host + '/user/reset/' + token
+                        (process.env.NODE_ENV === 'production' ? 'https' : 'http') + '://' + req.headers.host + '/user/reset/' + token
                 };
                 smtp.smtpTransport.sendMail(mailOptions, function(err) {
                     req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');

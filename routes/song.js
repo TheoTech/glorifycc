@@ -21,14 +21,14 @@ router.route('/:song_id')
     .get(function(req, res, next) {
         if (song.copyright === 'private') {
             if (!req.isAuthenticated()) {
-                //if the song is private and the user is not logged in, show no access
+                //if the user is not logged in, dont show the song
                 res.render('noaccess')
-            } else if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
-                // if the user is not the song contributor and not the admin, then dont show the song
-                res.render('noaccess')
-            } else {
-                //otherwise show the song
+            } else if (song.contributor === req.user.username || passportFunction.isAdmin) {
+                // if the user is the song contributor or the admin, then show the song
                 findSong()
+            } else {
+                //otherwise dont show the song
+                res.render('noaccess')
             }
         } else {
             //if it is not a private song then show the song
