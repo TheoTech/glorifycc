@@ -31,7 +31,6 @@ var addOrDeleteButtonComponent = (function() {
     */
     var addOrDeleteButton = {
         controller: function(args) {
-            console.log(args.inLibrary())
             this.buttonTitle = function() {
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
                 return isInLibrary ? 'Removing from Library...' : 'Adding to Library...';
@@ -59,6 +58,9 @@ var addOrDeleteButtonComponent = (function() {
                             window.location.href = '/user/login'
                         } else {
                             ctrl.addOrDelete()
+
+                            //we set the trigger to be manual so we need to
+                            //manually show and hide the tooltip
                             $(this).tooltip('fixTitle');
                             $(this).tooltip('show')
                             setTimeout(() => {
