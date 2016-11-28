@@ -1,18 +1,16 @@
-var express = require('express'),
-    router = express.Router(),
-    Song = require('../models/song'),
-    User = require('../models/user'),
-    _ = require('lodash'),
-    Playlist = require('../models/playlist'),
-    async = require('async');
-
+var express = require('express');
+var router = express.Router();
+var Song = require('../models/song');
+var User = require('../models/user');
+var _ = require('lodash');
+var Playlist = require('../models/playlist');
+var async = require('async');
 var fs = require('file-system');
 var officegen = require('officegen');
-var nodemailer = require('nodemailer')
-var config = require('config')
-var passportFunction = require('../lib/passport')
+var passportFunction = require('../lib/passport');
+var smtp = require('../lib/smtp');
 
-router.get('/updateschema', passportFunction.isAdmin, function(req, res, next) {
+router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, next) {
     // var songs = [{
     //     "lyric": [
     //         "A mighty fortress is our God,",
@@ -71,20 +69,13 @@ router.post('/contactus', function(req, res, next) {
     var name = req.body.name
     var email = req.body.email
     var question = req.body.question
-    var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
-        auth: {
-            user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
-            pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
-        }
-    });
     var mailOptions = {
         to: 'glorify@theotech.org',
         from: email,
         subject: 'Question about glorify.cc',
         text: question
     };
-    smtpTransport.sendMail(mailOptions, function(err) {
+    smtp.smtpTransport.sendMail(mailOptions, function(err) {
         req.flash('info', 'Your question has been successfully sent');
         res.redirect('/')
     });
@@ -573,11 +564,3 @@ router.put('/discover', function(req, res, next) {
 })
 
 module.exports = router;
-
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        next()
-    } else {
-        res.redirect('/user/login')
-    }
-}

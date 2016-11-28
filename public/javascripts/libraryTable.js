@@ -39,23 +39,15 @@ var libraryTableComponent = (function() {
                                         function() {
                                             if (s.copyright === 'private') {
                                                 return m('a.btn.btn-default', {
-                                                    href: 'privatesong/' + s._id + '/edit'
+                                                    href: '/song/' + s._id + '/edit'
                                                 }, 'Edit')
                                             }
                                         }()
                                     ]),
                                     m('td', [
-                                        function() {
-                                            if (s.copyright === 'private') {
-                                                return m('a', {
-                                                    href: '/user/privatesong/' + s._id
-                                                }, s.title)
-                                            } else {
-                                                return m('a', {
-                                                    href: '/song/' + s._id
-                                                }, s.title)
-                                            }
-                                        }()
+                                        m('a', {
+                                            href: '/song/' + s._id
+                                        }, s.title)
                                     ]),
                                     m('td', s.author),
                                     m('td', [

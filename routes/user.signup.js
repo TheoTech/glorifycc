@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var emailVerification = require('email-verification')(mongoose);
 var bcrypt = require('bcrypt-nodejs');
 var config = require('config')
+var passportFunction = require('../lib/passport')
 
 var TempUser = mongoose.model('Tempuser',
     new mongoose.Schema(),
@@ -52,6 +53,8 @@ emailVerification.generateTempUserModel(User, function(err, tempUserModel) {
     }
     console.log('generated temp user model: ' + (typeof tempUserModel === 'function'));
 });
+
+router.use('/', passportFunction.notLoggedIn)
 
 router.get('/', function(req, res, next) {
     res.render('signup', {})

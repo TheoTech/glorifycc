@@ -18,7 +18,7 @@ nav.navbar.navbar-default
 
                 - else if(login && user.username === 'admin')
                     li
-                        a(href="/admin/songlist-db") Song Database
+                        a(href="/songlist-db") Song Database
                     //- li
                     //-     a(href="/admin/userlist") User Database
                 li
@@ -28,7 +28,7 @@ nav.navbar.navbar-default
             ul.nav.navbar-nav.navbar-right
                 if login
                     li
-                        a Hi #{user.username}
+                        a #{user.username}
                     li
                         a(href="/user/logout") Log Out
                 else 

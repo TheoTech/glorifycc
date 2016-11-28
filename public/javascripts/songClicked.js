@@ -22,7 +22,7 @@ var songClicked = (function() {
         modalName: 'song',
         inLibrary: inLibrary
     }))
-    if (isTranslationExisted) {
+    if (translationExists) {
         m.mount(document.getElementById('translation'), m(buttons(), {
             songID: translation._id,
             addButtonDOM: addButtonDOM,

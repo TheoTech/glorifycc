@@ -13,7 +13,7 @@ block content
                 p Contributor: #{song.contributor}
             if song.copyright
                 p Copyright: #{song.copyright}
-        if isTranslationExisted
+        if translationExists
             .col-xs-6
                 h1 #{rightTranslation.title}
                 h3 by #{song.author}
@@ -38,7 +38,7 @@ block content
             #song
             h4.capitalize=song.lang
         .col-xs-6
-            if isTranslationExisted
+            if translationExists
                 #translation
                 h4.capitalize #{rightTranslation.lang}
     -for (var i = 0; i < song.lyric.length; i++)
@@ -49,7 +49,7 @@ block content
                     br
                 br            
             .col-xs-6
-                if isTranslationExisted
+                if translationExists
                     each line in rightTranslation.lyric[i]
                         span #{line}
                         br
@@ -59,7 +59,7 @@ block content
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
-        var isTranslationExisted = !{JSON.stringify(isTranslationExisted).replace(/<\//g, "<\\/")}
+        var translationExists = !{JSON.stringify(translationExists).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}

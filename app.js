@@ -25,7 +25,6 @@ var user = require('./routes/user');
 var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
 var userlist = require('./routes/userlist');
-var privatesong = require('./routes/user.privatesong');
 var songlist = require('./routes/songlist')
 var song = require('./routes/song')
 var language = require('./routes/language')
@@ -88,8 +87,6 @@ app.use(function(req, res, next) {
     res.locals.session = req.session;
     res.locals.login = req.isAuthenticated();
     res.locals.user = req.user;
-    res.locals.isAdmin = false;
-    // res.locals.isDownloadFinished = false;
     next();
 })
 
@@ -106,7 +103,6 @@ app.use('/songlist-db', songlistdb)
 app.use('/userlist', userlist)
 app.use('/user/signup', usersignup)
 app.use('/user/playlist', userplaylist)
-app.use('/user/privatesong', privatesong)
 app.use('/song', song)
 app.use('/language', language)
 

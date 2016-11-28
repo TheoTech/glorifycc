@@ -33,7 +33,7 @@ block content
                     td #{song.contributor}
                     td.capitalize #{song.copyright}
                     td 
-                        a.btn.btn-default(href='/songlist-db/#{song.id}/edit') Edit
+                        a.btn.btn-default(href='/song/#{song.id}/edit') Edit
     
     script.
         $('#delete').on('click', function(e) {
