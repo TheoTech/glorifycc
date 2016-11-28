@@ -41,20 +41,22 @@ block content
             if isTranslationExisted
                 #translation
                 h4.capitalize #{rightTranslation.lang}
-    -for (var i = 0; i < song.lyric.length; i++)
+    -var higher = (song.lyric.length > data.lyric.length) ? song.lyric.length : data.lyric.length 
+    -for (var i = 0; i < higher; i++)
         .row
             .col-xs-6
-                each line in song.lyric[i]
-                    span #{line}
-                    br
-                br            
+                if song.lyric[i]
+                    each line in song.lyric[i]
+                        span #{line}
+                        br
+                    br            
             .col-xs-6
-                if isTranslationExisted
+                -if(isTranslationExisted && rightTranslation.lyricp[i])
                     each line in rightTranslation.lyric[i]
                         span #{line}
                         br
                 br
-    #songPlaylistModal  
+    #songPlaylistModal
     #translationPlaylistModal           
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
