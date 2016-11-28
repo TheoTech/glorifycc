@@ -205,7 +205,7 @@ router.route('/forgot')
             function(token, user, done) {
                 var mailOptions = {
                     to: user.email,
-                    from: 'noreply@theotech.org',
+                    from: process.env.OUR_EMAIL || config.get('ourEmail'),
                     subject: 'Reset Password',
                     text: 'Someone has requested to reset the password for your account at glorify.cc\n\n' +
                         'If you did not request this, you can ignore this message.\n\n' +
@@ -278,7 +278,7 @@ router.route('/reset/:token')
                 function(user, done) {
                     var mailOptions = {
                         to: user.email,
-                        from: 'noreply@theotech.org',
+                        from: process.env.OUR_EMAIL || config.get('ourEmail'),
                         subject: 'Your password has been changed',
                         text: 'Hello,\n\n' +
                             'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'

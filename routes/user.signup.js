@@ -30,7 +30,7 @@ emailVerification.configure({
         }
     },
     verifyMailOptions: {
-        from: 'glorify@theotech.org',
+        from: process.env.OUR_EMAIL || config.get('ourEmail'),
         subject: 'Please confirm account',
         html: 'Click the following link to confirm your account:</p><p>${URL}</p>',
         text: 'Please confirm your account by clicking the following link: ${URL}'
@@ -146,9 +146,11 @@ router.post('/', function(req, res, next) {
     }
 })
 
-router.get('/resend', function(req, res, next){
-  var messages = req.flash()
-  res.render('resend', {messages: messages})
+router.get('/resend', function(req, res, next) {
+    var messages = req.flash()
+    res.render('resend', {
+        messages: messages
+    })
 })
 router.post('/resend', function(req, res, next) {
     var email = req.body.email
