@@ -2,6 +2,10 @@ extends layout
 
 block content
     include topnav
+    if errors
+        .alert.alert-danger
+            each error in errors
+                p #{error.msg}
     form(method='POST')
         legend Reset Password
         .form-group

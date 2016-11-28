@@ -11,37 +11,19 @@ var crypto = require('crypto')
 var nodemailer = require('nodemailer')
 var config = require('config')
 
-// router.get('/profile', function(req, res, next){
-//   res.render('profile', {});
-// })
+//nodemailer obj
+var smtpTransport = nodemailer.createTransport('SMTP', {
+    service: 'SendGrid',
+    auth: {
+        user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
+        pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
+    }
+})
 
-// router.get('/library/search', function(req, res, next) {
-//     var tag = req.query.q
-//     var messages = req.flash()
-//     User.findOne({
-//             _id: req.user._id
-//         })
-//         .populate('library')
-//         .exec(function(err, user) {
-//             if (err) return next(err)
-//             Playlist.find({
-//                 owner: user._id
-//             }, function(err, playlists) {
-//                 if (err) return next(err)
-//                 res.render('library', {
-//                     songs: user.library.filter((s) => {
-//                         return (s.title.search(tag) !== -1 ||
-//                             s.lang.search(tag) !== -1 ||
-//                             s.author.search(tag) !== -1)
-//                     }),
-//                     playlists: playlists,
-//                     messages: messages
-//                 })
-//             })
-//         })
-// })
 
+//this route is to handle /library
 router.route('/library')
+    //protect the route from the user that hasn't logged in yet
     .all(passportFunction.loggedIn)
     .get(function(req, res, next) {
         var messages = req.flash()
@@ -122,7 +104,7 @@ router.route('/library')
                     owner: playlistOwner,
                     name: name,
                     song: song_id,
-                    translationsChecked: []
+                    translationsChecked: [] //translationsChecked is to store the songs from last export action
                 })
                 newPlaylistSong.save(function(err) {
                     if (err) next(err)
@@ -164,11 +146,6 @@ router.route('/library')
         })
     })
 
-router.get('/logout', passportFunction.loggedIn, function(req, res, next) {
-    passportFunction.adminLogout()
-    req.logout();
-    res.redirect('/')
-})
 
 router.route('/login')
     .all(passportFunction.notLoggedIn)
@@ -185,6 +162,13 @@ router.route('/login')
         failureFlash: true //turn the flag to true to enable flash message
     }))
 
+
+router.get('/logout', passportFunction.loggedIn, function(req, res, next) {
+    passportFunction.adminLogout()
+    req.logout();
+    res.redirect('/')
+})
+
 router.route('/forgot')
     .all(passportFunction.notLoggedIn)
     .get(function(req, res, next) {
@@ -198,6 +182,7 @@ router.route('/forgot')
     .post(function(req, res, next) {
         async.waterfall([
             function(done) {
+                //creating the random generated url for reseting the password
                 crypto.randomBytes(20, function(err, buf) {
                     var token = buf.toString('hex');
                     done(err, token);
@@ -221,21 +206,14 @@ router.route('/forgot')
                 });
             },
             function(token, user, done) {
-                var smtpTransport = nodemailer.createTransport('SMTP', {
-                    service: 'SendGrid',
-                    auth: {
-                        user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
-                        pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
-                    }
-                });
                 var mailOptions = {
                     to: user.email,
                     from: 'noreply@theotech.org',
                     subject: 'Reset Password',
-                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
-                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                    text: 'Someone has requested to reset the password for your account at glorify.cc\n\n' +
+                        'If you did not request this, you can ignore this message.\n\n' +
+                        'Otherwise, please follow this link to reset your password:\n' +
+                        'http://' + req.headers.host + '/user/reset/' + token
                 };
                 smtpTransport.sendMail(mailOptions, function(err) {
                     req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
@@ -253,6 +231,7 @@ router.route('/reset/:token')
     .all(passportFunction.notLoggedIn)
     .get(function(req, res, next) {
         User.findOne({
+            //find the user with resetPasswordToken equals the token and is not expired yet
             resetPasswordToken: req.params.token,
             resetPasswordExpires: {
                 $gt: Date.now()
@@ -268,53 +247,56 @@ router.route('/reset/:token')
         });
     })
     .post(function(req, res, next) {
-        async.waterfall([
-            function(done) {
-                User.findOne({
-                    resetPasswordToken: req.params.token,
-                    resetPasswordExpires: {
-                        $gt: Date.now()
-                    }
-                }, function(err, user) {
-                    if (!user) {
-                        req.flash('error', 'Password reset token is invalid or has expired.');
-                        return res.redirect('back');
-                    }
+        req.checkBody('password', 'Password is required').notEmpty();
+        req.checkBody('confirm', 'Passwords do not match').equals(req.body.password);
+        var errors = req.validationErrors()
+        if (errors) {
+            res.render('reset', {
+                errors: errors
+            })
+        } else {
+            async.waterfall([
+                function(done) {
+                    User.findOne({
+                        resetPasswordToken: req.params.token,
+                        resetPasswordExpires: {
+                            $gt: Date.now()
+                        }
+                    }, function(err, user) {
+                        if (!user) {
+                            req.flash('error', 'Password reset token is invalid or has expired.');
+                            return res.redirect('back');
+                        }
 
-                    user.password = user.generateHash(req.body.password);
-                    user.resetPasswordToken = undefined;
-                    user.resetPasswordExpires = undefined;
+                        user.password = user.generateHash(req.body.password);
+                        user.resetPasswordToken = undefined;
+                        user.resetPasswordExpires = undefined;
 
-                    user.save(function(err) {
-                        req.logIn(user, function(err) {
-                            done(err, user);
+                        user.save(function(err) {
+                            req.logIn(user, function(err) {
+                                done(err, user);
+                            });
                         });
                     });
-                });
-            },
-            function(user, done) {
-                var smtpTransport = nodemailer.createTransport('SMTP', {
-                    service: 'SendGrid',
-                    auth: {
-                        user: process.env.SENDGRID_USER || config.get('emailVerification.user'),
-                        pass: process.env.SENDGRID_PASS || config.get('emailVerification.pass')
-                    }
-                });
-                var mailOptions = {
-                    to: user.email,
-                    from: 'noreply@theotech.org',
-                    subject: 'Your password has been changed',
-                    text: 'Hello,\n\n' +
-                        'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
-                };
-                smtpTransport.sendMail(mailOptions, function(err) {
-                    req.flash('success', 'Success! Your password has been changed.');
-                    done(err);
-                });
-            }
-        ], function(err) {
-            res.redirect('/');
-        });
+                },
+                function(user, done) {
+                    var mailOptions = {
+                        to: user.email,
+                        from: 'noreply@theotech.org',
+                        subject: 'Your password has been changed',
+                        text: 'Hello,\n\n' +
+                            'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+                    };
+                    smtpTransport.sendMail(mailOptions, function(err) {
+                        req.flash('success', 'Success! Your password has been changed.');
+                        done(err);
+                    });
+                }
+            ], function(err) {
+                res.redirect('/');
+            });
+        }
+
     });
 
 module.exports = router;

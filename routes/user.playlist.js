@@ -4,21 +4,20 @@ var User = require('../models/user');
 var Playlist = require('../models/playlist')
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-var Song = require('../models/song')
-var app = require('../app')
-var pdf = require('html-pdf')
-var fs = require('file-system')
+var Song = require('../models/song');
+var app = require('../app');
+var pdf = require('html-pdf');
+var fs = require('file-system');
 var officegen = require('officegen');
-var async = require('async')
-var _ = require('lodash')
-var zip = require('express-zip')
-var archiver = require('archiver')
-var passportFunction = require('../lib/passport')
+var async = require('async');
+var _ = require('lodash');
+var zip = require('express-zip');
+var archiver = require('archiver');
+var passportFunction = require('../lib/passport');
 
 router.use('/', passportFunction.loggedIn)
 
 router.get('/', function(req, res, next) {
-    console.log('hahahhahahahahhaha')
     Playlist.find({
         owner: req.user._id,
         song: {
@@ -26,7 +25,6 @@ router.get('/', function(req, res, next) {
         }
     }, function(err, playlists) {
         if (err) return next(err)
-        console.log('hehehehehhehehehehe')
         res.render('playlist', {
             playlists: playlists
         })

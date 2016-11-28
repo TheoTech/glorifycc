@@ -21,13 +21,17 @@ router.route('/:song_id')
     .get(function(req, res, next) {
         if (song.copyright === 'private') {
             if (!req.isAuthenticated()) {
+                //if the song is private and the user is not logged in, show no access
                 res.render('noaccess')
             } else if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
+                //if the song is private and it is no the user's contributed song and the user is not admin, show no access
                 res.render('noaccess')
             } else {
+                //otherwise show the song
                 findSong()
             }
         } else {
+            //if it is not a private song then show the song
             findSong()
         }
 
@@ -54,10 +58,10 @@ router.route('/:song_id')
                 if (err) {
                     res.status(400).send('Error getting songs ' + err)
                 }
-
+                //The user sees a song on the left. If they want to view a translation, it appears on the right.
                 //rightTranslation is the song obj in the language that the user picks in the dropdown
                 var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                var isTranslationExisted = !_.isEmpty(rightTranslation)
+                var translationExists = !_.isEmpty(rightTranslation)
                 if (req.isAuthenticated()) {
                     Playlist.find({
                         owner: req.user._id,
@@ -72,7 +76,7 @@ router.route('/:song_id')
                             res.render('song', {
                                 song: song,
                                 rightTranslation: rightTranslation,
-                                isTranslationExisted: isTranslationExisted,
+                                translationExists: translationExists,
                                 translations: translations,
                                 playlists: playlists,
                                 inLibrary: user.library
@@ -84,7 +88,7 @@ router.route('/:song_id')
                     res.render('song', {
                         song: song,
                         rightTranslation: rightTranslation,
-                        isTranslationExisted: isTranslationExisted,
+                        translationExists: translationExists,
                         translations: translations,
                         playlists: [],
                         inLibrary: []
@@ -221,12 +225,12 @@ router.route('/:song_id/add-translation')
 
 router.route('/:song_id/edit')
     .all(passportFunction.loggedIn, function(req, res, next) {
-        song_id = req.params.song_id
-        song = {}
+        song_id = req.params.song_id;
+        song = {};
         Song.findById(song_id, function(err, s) {
-            song = s
-            next()
-        })
+            song = s;
+            next();
+        });
     })
     .get(function(req, res, next) {
         if (song.contributor !== req.user.username && !passportFunction.isAdmin) {

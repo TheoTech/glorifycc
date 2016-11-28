@@ -6,8 +6,6 @@ block content
         h1 Sign Up
         if messages
             .alert(class='#{info}')
-                -console.log(messages)
-                -console.log(info)
                 each msg in messages
                     p #{msg.msg}
                 if resend
