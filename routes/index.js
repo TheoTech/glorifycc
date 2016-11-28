@@ -70,7 +70,7 @@ router.post('/contactus', function(req, res, next) {
     var email = req.body.email
     var question = req.body.question
     var mailOptions = {
-        to: 'glorify@theotech.org',
+        to: process.env.OUR_EMAIL || config.get('ourEmail'),
         from: email,
         subject: 'Question about glorify.cc',
         text: question
