@@ -277,10 +277,6 @@ router.get('/help/addingsongs', function(req, res, next) {
 
 router.get('/search', function(req, res, next) {
     var searchString = req.query.q
-    var langShown = req.body.langShown
-    var langFilter = req.body.langFilter
-    var totalSongsDisplayed = req.body.totalSongsDisplayed
-    var songs2d = []
 
     function findSongsLoggedIn(done) {
         var query = new RegExp('.*' + searchString + '.*')
@@ -342,23 +338,38 @@ router.get('/search', function(req, res, next) {
             })
     }
 
-    function finalize(err, songs2d) {
+    function findInLibraryAndPlaylist(songs, done) {
+        User.findById(req.user._id, function(err, user) {
+            if (err) next(err)
+            Playlist.find({
+                owner: req.user._id,
+                song: {
+                    $exists: false
+                }
+            }, function(err, playlists) {
+                if (err) next(err)
+                done(null, songs, user.library, playlists)
+            })
+        })
+    }
+
+    function finalize(err, songs, inLibrary, playlists) {
         if (err) {
             res.status(500).send('Internal error' + err)
         } else {
             res.render('search', {
-                songs: songs2d,
-                inLibrary: [],
-                playlists: []
+                songs: songs,
+                inLibrary: inLibrary,
+                playlists: playlists
             })
         }
     }
 
     if (searchString) {
         if (req.isAuthenticated()) {
-            async.waterfall([findSongsLoggedIn], finalize)
+            async.waterfall([findSongsLoggedIn, findInLibraryAndPlaylist], finalize)
         } else {
-            async.waterfall([findSongsNotLoggedIn], finalize)
+            async.waterfall([findSongsNotLoggedIn, findInLibraryAndPlaylist], finalize)
         }
     } else {
         res.render('search', {

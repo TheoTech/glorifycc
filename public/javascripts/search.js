@@ -1,7 +1,6 @@
 var search = (function() {
     var displayedSongs = m.prop(songs)
     var playlistName = m.prop('')
-    var inLibrary = m.prop(currentInLibrary)
     var searchString = m.prop('')
     var addButtonDOM = m.prop()
     var enter = function(elem, checkboxClass) {
