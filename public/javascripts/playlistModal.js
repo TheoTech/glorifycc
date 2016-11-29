@@ -1,6 +1,6 @@
 var playlistModal = (function() {
     var currentPlaylists = m.prop(playlists)
-    var addPlaylist = function(name, playlistName, addButtonDOM) {
+    var addPlaylist = function(name, args) {
         m.request({
                 method: 'PUT',
                 url: '/user/library',
@@ -15,9 +15,9 @@ var playlistModal = (function() {
                         .fadeOut()
                 } else {
                     currentPlaylists(res.playlists)
-                    playlistName(name)
-                    $('#newPlaylist').modal('hide')
-                    addButtonDOM().trigger('click')
+                    args.playlistName(name)
+                    $('#newPlaylist' + args.modalName).modal('hide')
+                    args.addButtonDOM().trigger('click')
                 }
             })
     }
@@ -77,7 +77,7 @@ var playlistModal = (function() {
                         }, 'Playlist Exists'),
                         m('button#create.btn.btn-default#create', {
                             onclick: function() {
-                                addPlaylist($('input#newPlaylistInput').val(), args.playlistName, args.addButtonDOM);
+                                addPlaylist($('input#newPlaylistInput').val(), args);
                             }
                         }, 'Create')
                     ])
