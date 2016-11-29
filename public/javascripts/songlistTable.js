@@ -55,7 +55,8 @@ var songlistTable = {
                                             label: s.label,
                                             disabled: s.disabled,
                                             addButtonDOM: args.addButtonDOM,
-                                            playlistModal: playlistModal
+                                            playlistModal: playlistModal,
+                                            modalName: ''
                                         })
                                     ])
                                 ])

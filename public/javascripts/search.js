@@ -59,7 +59,8 @@ var search = (function() {
                                                 label: s.label,
                                                 disabled: s.disabled,
                                                 addButtonDOM: addButtonDOM,
-                                                playlistModal: playlistModal
+                                                playlistModal: playlistModal,
+                                                modalName: ''
                                             })
                                         ])
                                     ])

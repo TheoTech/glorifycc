@@ -39,6 +39,9 @@ var playlistModal = (function() {
                     args.disabled(false);
                     m.redraw()
                 }, 3000);
+                if (args.modalName !== '') {
+                    args.playlistName('')
+                }
             })
     }
 
