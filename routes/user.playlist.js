@@ -227,7 +227,7 @@ router.route('/:playlist_name/export3')
         songs2d = [];
         maxNumberOfSongs = 0;
         Playlist.find({
-                owner: req.user._id,
+                // owner: req.user._id,
                 name: playlistName,
                 song: {
                     $exists: true
@@ -360,6 +360,19 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
             });
             titleMargin += 100;
         })
+        pObj = slide.addText('Powered by Glorify.cc', {
+            x: 'c', //x position
+            y: 620, //y position
+            cx: '100%', //width
+            cy: 20,
+            font_size: 30,
+            align: 'center',
+            color: {
+                type: 'solid',
+                color: '8cb4cd'
+            }
+        });
+        titleMargin += 100;
         for (var i = 0; i < songs[0].lyric.length; i++) {
             //make new slide for every new stanza with background color black
             slide = pptx.makeNewSlide();
@@ -387,6 +400,18 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
                 }
                 margin += 150
             }
+            pObj = slide.addText('Powered by Glorify.cc', {
+                x: 'c', //x position
+                y: 620, //y position
+                cx: '100%', //width
+                cy: 20,
+                font_size: 30,
+                align: 'center',
+                color: {
+                    type: 'solid',
+                    color: '8cb4cd'
+                }
+            });
         }
         var out = fs.createWriteStream(filename + '.pptx');
         pptx.generate(out, {
