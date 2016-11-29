@@ -4,6 +4,7 @@ block content
     include ../topnav
     h1 Preview
     #exportOption
+    include exportButton
     hr(style='height:2px; background-color:#000000;')
     //Note: songs2d = [[Song Schema that the user checked]]
     each songs in songs2d
@@ -15,7 +16,6 @@ block content
                         p #{line}
             br
             hr(style='height:2px; background-color:#000000;')          
-    
     include exportButton
 
     script.

@@ -4,6 +4,7 @@ block content
     include ../topnav
     h1 Preview
     #exportOption
+    include exportButton
     //Note: songs2d = [[Songs that the user checked]]
     each songs in songs2d
         -var i = 0
@@ -32,7 +33,6 @@ block content
                                         br
                                 -j++
                             -j = 0
-
     include exportButton
     
     script.
