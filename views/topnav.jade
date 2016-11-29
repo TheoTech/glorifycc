@@ -10,6 +10,8 @@ nav.navbar.navbar-default
 
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
             ul.nav.navbar-nav
+                li
+                    a(href='/discover') Discover Songs
                 - if(login && user.username !== 'admin')
                     li
                         a(href="/user/library") Library

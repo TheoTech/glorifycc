@@ -15,6 +15,7 @@ block content
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
         var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
         var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
+    script(src='/dist/javascripts/songsNotFound.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/selectPlaylist.js')
     script(src='/dist/javascripts/playlistModal.js')
