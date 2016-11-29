@@ -2,7 +2,7 @@
 var buttons = function() {
     var buttonsComponent = {
         controller: function(args){
-          args.label = m.prop('add to playlist')
+          args.label = m.prop('Add to Playlist')
           args.disabled = m.prop(false)
         },
         view: function(ctrl, args) {

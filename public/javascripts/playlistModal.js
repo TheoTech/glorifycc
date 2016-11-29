@@ -1,6 +1,6 @@
 var playlistModal = (function() {
     var currentPlaylists = m.prop(playlists)
-    var addPlaylist = function(name, playlistName, addButtonDOM) {
+    var addPlaylist = function(name, args) {
         m.request({
                 method: 'PUT',
                 url: '/user/library',
@@ -15,9 +15,10 @@ var playlistModal = (function() {
                         .fadeOut()
                 } else {
                     currentPlaylists(res.playlists)
-                    playlistName(name)
-                    $('#newPlaylist').modal('hide')
-                    addButtonDOM().trigger('click')
+                    args.playlistName(name)
+                    //hide it once it is finished adding playlist
+                    $('#newPlaylist' + args.modalName).modal('hide')
+                    args.addButtonDOM().trigger('click')
                 }
             })
     }
@@ -39,6 +40,19 @@ var playlistModal = (function() {
                     args.disabled(false);
                     m.redraw()
                 }, 3000);
+
+                /*
+                  there are two different behaviors between adding to playlist from songpage and
+                  from songtable. in songpage you want the user to always choose which playlist they want
+                  to add the song to whereas in songtable the user only choose once and it becomes the
+                  default playlist.
+                  To fix that we need to have if statement that checks if the request came from songpage then
+                  reset the playlistname. Therefore, the user has to choose playlist everytime
+                  he clicks 'add to playlist' button
+                */
+                if (args.modalName !== '') {
+                    args.playlistName('')
+                }
             })
     }
 
@@ -77,7 +91,7 @@ var playlistModal = (function() {
                         }, 'Playlist Exists'),
                         m('button#create.btn.btn-default#create', {
                             onclick: function() {
-                                addPlaylist($('input#newPlaylistInput').val(), args.playlistName, args.addButtonDOM);
+                                addPlaylist($('input#newPlaylistInput').val(), args);
                             }
                         }, 'Create')
                     ])
