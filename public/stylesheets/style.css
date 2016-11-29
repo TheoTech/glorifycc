@@ -83,3 +83,8 @@
     a#slide {
       background: url('/images/slide.png') no-repeat 0 1;
     }
+
+    hr#preview {
+      height:2px;
+      background-color:#000000;
+    }

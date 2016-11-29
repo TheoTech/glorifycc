@@ -4,7 +4,8 @@ block content
     include ../topnav
     h1 Preview
     #exportOption
-    hr(style='height:2px; background-color:#000000;')
+    include exportButton
+    hr#preview
     //Note: songs2d = [[Song Schema that the user checked]]
     each songs in songs2d
         each song in songs
@@ -14,8 +15,7 @@ block content
                     each line in song.lyric[0]
                         p #{line}
             br
-            hr(style='height:2px; background-color:#000000;')          
-    
+            hr#preview         
     include exportButton
 
     script.

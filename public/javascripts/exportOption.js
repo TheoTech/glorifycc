@@ -12,6 +12,7 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
                     'name': name,
                     onclick: function() {
                         queryString = queryStr
+                        window.location.href = 'export3' + queryString
                     },
                     config: function(elem, isInit) {
                         if (!isInit) {
@@ -48,6 +49,7 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
                                 onclick: function() {
                                     queryString = '';
                                     languagePerSlide = 0;
+                                    window.location.href = 'export3' + queryString
                                 },
                                 config: function(elem, isInit) {
                                     if (!isInit) {
@@ -66,6 +68,7 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
                                 'name': 'optradio',
                                 onclick: function() {
                                     languagePerSlide = 1;
+                                    window.location.href = 'export3?language=1'
                                 },
                                 config: function(elem, isInit) {
                                     if (!isInit) {
@@ -78,12 +81,7 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
                         ], 'PPT')
                     ])
                 ]),
-                pdfOption(),
-                m('button.btn.btn-default', {
-                    onclick: function() {
-                        window.location.href = 'export3' + queryString
-                    }
-                }, 'See Preview')
+                pdfOption()
             ]
         }
     }
