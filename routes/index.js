@@ -70,6 +70,7 @@ router.get('/contact', function(req, res, next) {
 })
 
 router.post('/contact', function(req, res, next) {
+    req.checkBody('email', 'Email is invalid').isEmail();
     req.checkBody('email', 'Email is required').notEmpty();
     req.checkBody('message', 'Message is required').notEmpty();
     var email = req.body.email
@@ -81,16 +82,17 @@ router.post('/contact', function(req, res, next) {
             errors: errors
         })
     } else {
-        // var mailOptions = {
-        //     to: process.env.OUR_EMAIL || config.get('ourEmail'),
-        //     from: email,
-        //     subject: (subject === '') ? 'Subject not specified' : subject,
-        //     text: question
-        // };
-        // smtp.smtpTransport.sendMail(mailOptions, function(err) {
-        //     req.flash('info', 'Your question has been successfully sent');
-        //     res.redirect('/')
-        // });
+        var mailOptions = {
+            to: process.env.OUR_EMAIL || config.get('ourEmail'),
+            from: email,
+            subject: (subject === '') ? 'Subject not specified' : subject,
+            text: question
+        };
+        smtp.smtpTransport.sendMail(mailOptions, function(err) {
+            if (err) next(err)
+            req.flash('success_messages', 'Your message has been successfully sent')
+            res.redirect('/contact')
+        });
     }
 })
 

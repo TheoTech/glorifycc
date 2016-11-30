@@ -1,13 +1,13 @@
 extends layout
 
 block content
-    #contact
     .panel.panel-default(style='width: 525px; margin: auto;')
         .panel-body
             h2 Contact Us
-            if messages
-                .alert.alert-info
-                    p #{messages.info}
+            if success_messages[0]
+                .alert.alert-success
+                    each success_message in success_messages
+                        p #{success_message}
             if errors
                 .alert.alert-danger
                     each error in errors
