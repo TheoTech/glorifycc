@@ -65,20 +65,33 @@ router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, n
     })
 })
 
-router.post('/contactus', function(req, res, next) {
-    var name = req.body.name
+router.get('/contact', function(req, res, next) {
+    res.render('contact')
+})
+
+router.post('/contact', function(req, res, next) {
+    req.checkBody('email', 'Email is required').notEmpty();
+    req.checkBody('message', 'Message is required').notEmpty();
     var email = req.body.email
-    var question = req.body.question
-    var mailOptions = {
-        to: process.env.OUR_EMAIL || config.get('ourEmail'),
-        from: email,
-        subject: 'Question about glorify.cc',
-        text: question
-    };
-    smtp.smtpTransport.sendMail(mailOptions, function(err) {
-        req.flash('info', 'Your question has been successfully sent');
-        res.redirect('/')
-    });
+    var subject = req.body.subject
+    var question = req.body.message
+    var errors = req.validationErrors()
+    if (errors) {
+        res.render('contact', {
+            errors: errors
+        })
+    } else {
+        // var mailOptions = {
+        //     to: process.env.OUR_EMAIL || config.get('ourEmail'),
+        //     from: email,
+        //     subject: (subject === '') ? 'Subject not specified' : subject,
+        //     text: question
+        // };
+        // smtp.smtpTransport.sendMail(mailOptions, function(err) {
+        //     req.flash('info', 'Your question has been successfully sent');
+        //     res.redirect('/')
+        // });
+    }
 })
 
 

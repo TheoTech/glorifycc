@@ -18,7 +18,6 @@ block content
                             a(href="/user/library") Library
                         li
                             a(href="/user/playlist") Playlist
-
                     - else if(login && user.username === 'admin')
                         li
                             a(href="/admin/songlist-db") Song Database
@@ -44,82 +43,88 @@ block content
         #searchBox(style='width: 30em; margin: auto')
 
     hr
-    .container-fluid
-    h1(style='text-align:center; margin-top: 0;') Worship Freely
-    h4(style='text-align:center; font-style:italic;') After this I looked, and behold, a great multitude that no one could number, from every nation, from all tribes and peoples and languages, standing before the throne and before the Lamb, clothed in white robes, with palm branches in their hands, and crying out with a loud voice, “Salvation belongs to our God who sits on the throne, and to the Lamb!” - Revelation 7:9-11 ESV
+    #anyLanguage
+        .container-fluid
+        h1(style='margin-top: 0;') Worship in Any Language
+        h4 Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
+        div(style='text-align: center;')
+            a.btn.btn-default(href='#features') Learn more
     hr
 
-    .row
-        .col-xs-12.col-sm-6.col-md-6
-            .thumbnail(style='text-align:center')
-                h4 Easily Export Slides
-                .circularIcon(style='margin:auto')
-                    img(src='/images/desktop-computer.png' style='height: 40px; margin-top: 5px')
-                .caption
-                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
-                    p Glorify can do the work of making slides for you! Just add the songs you want to export to your playlist and select the languages you want them in 
-                    a.btn.btn-default(href='/help/createslide') Create Slides
-        .col-xs-12.col-sm-6.col-md-6
-            .thumbnail(style='text-align:center')
-                h4 Lyrics in Many Languages
-                .circularIcon(style='margin:auto')
-                    img(src='/images/languages.png' style='height: 40px; margin-top: 5px')
-                .caption
-                    p Use Glorify to get song lyrics in various languages, and contribute translations to enable 
-                    a.btn.btn-default(href='/discover') Find Songs
-    .row
-        .col-xs-12.col-sm-6.col-md-6
-            .thumbnail(style='text-align:center')
-                h4 Share your songs with the Global Church
-                .circularIcon(style='margin:auto')
-                    img(src='/images/business-organization.png' style='height: 40px; margin-top: 5px')
-                .caption
-                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
-                    p Songwriters can share their worship songs with the Global Church on Glorify so that even more believers can worship freely.
-                    //- button.btn.btn-default Create Slides   
-        .col-xs-12.col-sm-6.col-md-6
-            .thumbnail(style='text-align:center')
-                h4 Free for all to worship
-                .circularIcon(style='margin:auto')
-                    img(src='/images/broken-link.png' style='height: 40px; margin-top: 5px')
-                .caption
-                    //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
-                    p All songs and translations on this website are freely available as public domain or CC0 songs. Believers all over the globe can sing, share, and translate these songs.
-                    //- button.btn.btn-default Find Songs         
+    #features
+        .row
+            .col-xs-12.col-sm-6.col-md-6
+                .thumbnail(style='text-align:center')
+                    h4 Easily Export Slides
+                    .circularIcon(style='margin:auto')
+                        img(src='/images/desktop-computer.png' style='height: 40px; margin-top: 5px')
+                    .caption
+                        //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                        p Glorify can do the work of making slides for you! Just add the songs you want to export to your playlist and select the languages you want them in 
+                        a.btn.btn-default(href='/help/createslide') Create Slides
+            .col-xs-12.col-sm-6.col-md-6
+                .thumbnail(style='text-align:center')
+                    h4 Lyrics in Many Languages
+                    .circularIcon(style='margin:auto')
+                        img(src='/images/languages.png' style='height: 40px; margin-top: 5px')
+                    .caption
+                        p Use Glorify to get song lyrics in various languages, and contribute translations to enable 
+                        a.btn.btn-default(href='/discover') Find Songs
+        .row
+            .col-xs-12.col-sm-6.col-md-6
+                .thumbnail(style='text-align:center')
+                    h4 Share your songs with the Global Church
+                    .circularIcon(style='margin:auto')
+                        img(src='/images/business-organization.png' style='height: 40px; margin-top: 5px')
+                    .caption
+                        //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                        p Songwriters can share their worship songs with the Global Church on Glorify so that even more believers can worship freely.
+                        //- button.btn.btn-default Create Slides   
+            .col-xs-12.col-sm-6.col-md-6
+                .thumbnail(style='text-align:center')
+                    h4 Free for all to worship
+                    .circularIcon(style='margin:auto')
+                        img(src='/images/broken-link.png' style='height: 40px; margin-top: 5px')
+                    .caption
+                        //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
+                        p All songs and translations on this website are freely available as public domain or CC0 songs. Believers all over the globe can sing, share, and translate these songs.
+                        //- button.btn.btn-default Find Songs
+    div(style='text-align: center;')
+        a.btn.btn-default(href='#why')
     hr
 
-    h2 Why Does This Matter?
-    p.
-        Revelation 7 says that people from every language and every part of the world will be praising God together. And yet, many worship songs that are sung in churches right now originate from English-speaking countries and are copyrighted. Churches are legally required to pay in order to perform, display, print, and even translate worship songs. And license requirements also vary depending on the country.
+    #why
+        h2 Why Does This Matter?
+        p.
+            Revelation 7 says that people from every language and every part of the world will be praising God together. And yet, many worship songs that are sung in churches right now originate from English-speaking countries and are copyrighted. Churches are legally required to pay in order to perform, display, print, and even translate worship songs. And license requirements also vary depending on the country.
 
-    p.
-        We want to see the Church unleashed from the status quo. We want to see the Church united in worship across language and culture. We want to see the Church be able to worship freely. That's why we built Glorify.cc.
+        p.
+            We want to see the Church unleashed from the status quo. We want to see the Church united in worship across language and culture. We want to see the Church be able to worship freely. That's why we built Glorify.cc.
 
-    p.
-        Glorify.cc enables churches to sing praises in multiple languages together. It's a platform that empowers the global church to share their songs with one another and to contribute translations so others can join in. All songs and translations are available under the CC0 license, so the Church can come together and worship freely.
+        p.
+            Glorify.cc enables churches to sing praises in multiple languages together. It's a platform that empowers the global church to share their songs with one another and to contribute translations so others can join in. All songs and translations are available under the CC0 license, so the Church can come together and worship freely.
 
-    p Make Revelation 7 a reality in your church today, sign up with Glorify.cc.
+        p Make Revelation 7 a reality in your church today, sign up with Glorify.cc.
+        blockquote After this I looked, and behold, a great multitude that no one could number, from every nation, from all tribes and peoples and languages, standing before the throne and before the Lamb, clothed in white robes, with palm branches in their hands, and crying out with a loud voice, “Salvation belongs to our God who sits on the throne, and to the Lamb!” - Revelation 7:9-11 ESV
 
     hr
-    
-    if messages
-        .alert-info
-            p #{messages.info}
-    h2 Contact Us
-    form(role="form", method="post", action="/contactus")
+
+    #footer
         .row
-            .form-group.col-xs-12.col-sm-4
-                label Name:
-                input.form-control(name='name')
-        .row
-            .form-group.col-xs-12.col-sm-4
-                label Email:
-                input.form-control(name='email')
-        .row
-            .form-group.col-xs-12.col-sm-8
-                label Comments and Questions:
-                textarea.form-control(name='question' style='height:100px')
-        button.btn.btn-default Submit
+            .col-xs-6
+                h5 USING SLACK
+                a About/FAQ
+                br
+                a(href='/help') Help
+                br
+                a Give
+            .col-xs-6
+                h5 LEGAL
+                a Privacy Policy
+                br
+                a Term of Use
+                br
+                a(href='/contact') Contact Us
 
 
 
