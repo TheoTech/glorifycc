@@ -1,75 +1,9 @@
 #!/usr/bin/env node
+var path = require('path');
+var dbUtils = require('../lib/dbUtils');
 
-var mongoose = require('mongoose');
-var mongoConfig = require('../lib/mongoConfig');
-var Song = require('../models/song');
+// this is necessary to set the data location relative to this script
+// so this script can be run from any directory
+var songsPath = path.join(__dirname, '../init_data');
 
-var sampleSong = new Song({
-  title: 'Amazing Grace',
-  author: 'John Newton and Virginia Harmony',
-  year: '1779',
-  lang: 'English',
-  translator: null,
-  contributor: 'dev-setup-script',
-  copyright: 'Public',
-  lyric: [
-    ['Amazing grace! how sweet the sound,',
-    'That saved a wretch like me!',
-    'I once was lost, but now am found;',
-    'Was blind, but now I see.'],
-    ['The earth shall soon dissolve like snow;',
-    'The sun forbear to shine;',
-    'But God, who called me here below,',
-    'Will be forever mine.']
-  ],
-  source: null,
-  timeAdded: new Date()
-});
-
-var translatedSong = new Song({
-  title: 'Sublime gracia del Señor',
-  author: 'John Newton y Virginia Harmony',
-  year: '1779',
-  lang: 'Spanish',
-  translator: 'algún desarrollador de software probablamente',
-  contributor: 'dev-setup-script',
-  copyright: 'Public',
-  lyric: [
-    ['Sublime gracia del Señor',
-    'Que a mi pecador salvó',
-    'Fui ciego mas hoy miro yo',
-    'Perdido y el me amó.'],
-    ['[ No tenemos',
-    'una traducción',
-    'para este',
-    'verso :( ]']
-  ],
-  source: null, // will be changed
-  timeAdded: new Date()
-});
-
-mongoose.connect(mongoConfig.uri);
-
-sampleSong.save().then(
-  function(song) {
-    console.log('Saved sample song "' + song.title + '" with id ' + song.id);
-    translatedSong.source = song.id;
-    return translatedSong.save()
-  }, function(err) {
-    console.log("Unable to store sample song. Reason:");
-    console.log(err);
-    throw "Unable to store sample song";
-  }
-).then(
-  function(song) {
-    console.log('Saved translated song "' + song.title + '" with id ' + song.id);
-  }, function(err) {
-    console.log("Unable to store translated song. Reason:");
-    console.log(err); // either db failure or "Unable to store sample song"
-  }
-).then( // this promise is always fulfilled b/c errors are caught and logged above
-  function() {
-    console.log('Closing DB connection');
-    mongoose.connection.close();
-  }
-);
+dbUtils.loadSongsFromDirectory(songsPath);
