@@ -362,10 +362,10 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
         })
         pObj = slide.addText('Powered by Glorify.cc', {
             x: 'c', //x position
-            y: 620, //y position
+            y: 630, //y position
             cx: '100%', //width
             cy: 20,
-            font_size: 30,
+            font_size: 20,
             align: 'center',
             color: {
                 type: 'solid',
