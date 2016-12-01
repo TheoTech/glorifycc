@@ -87,22 +87,23 @@ var playlistTableComponent = (function() {
             } else {
                 return m('table.table', [
                     m('thead', [
-                        m('th', 'Playlist Name'),
-                        m('th')
+                        m('th', {
+                            style: {
+                                'font-size': '18px'
+                            }
+                        }, 'Playlist Name')
+                        // m('')
                     ]),
                     m('tbody', [
                         playlists.map((pl) => {
                             return m('tr', [
                                 m('td', [
                                     m('a', {
-                                        style: {
-                                            'font-size': '1.5em'
-                                        },
                                         href: '/user/playlist/' + pl.name
                                     }, pl.name)
                                 ]),
                                 m('td', [
-                                    m('button.btn.btn-default', {
+                                    m('button.btn.btn-default.pull-right', {
                                         onclick: function() {
                                             deletePlaylist(pl.name)
                                             _.remove(playlists, (n) => n.name === pl.name)
@@ -118,7 +119,7 @@ var playlistTableComponent = (function() {
     }
 
     return {
-      playlistTable: playlistTable,
-      addNewPlaylist: addNewPlaylist
+        playlistTable: playlistTable,
+        addNewPlaylist: addNewPlaylist
     }
 })()

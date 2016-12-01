@@ -1,14 +1,16 @@
 nav.navbar.navbar-default
     .container-fluid
         .navbar-header
-            button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+            button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#topmenu" aria-expanded="false")
                 span.sr-only Toggle navigation
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-            a.navbar-brand(href='/') Home
+            div
+                a(href='/')
+                    img(src='/images/glorifyicontransparent_96x96.png')
 
-        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+        #topmenu.navbar-collapse
             ul.nav.navbar-nav
                 - if(login && user.username !== 'admin')
                     li
@@ -24,7 +26,7 @@ nav.navbar.navbar-default
                 li
                     a(href='/help') Help
             .navbar-form.navbar-left
-                #searchBox
+                #searchBox(style='width: 330px')
             ul.nav.navbar-nav.navbar-right
                 if login
                     li

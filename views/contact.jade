@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    .panel.panel-default(style='width: 525px; margin: auto;')
+        .panel-body
+            h2 Contact Us
+            if success_messages[0]
+                .alert.alert-success
+                    each success_message in success_messages
+                        p #{success_message}
+            if errors
+                .alert.alert-danger
+                    each error in errors
+                        p #{error.msg}
+            form(role="form", method="post", action='')
+                .form-group
+                    label Email:
+                    input.form-control(name='email' placeholder='you@domain.com')
+                .form-group
+                    label Your Message:
+                    input.form-control(name='subject' style='margin-bottom: 4px' placeholder='Subject (optional but helpful)')
+                    textarea.form-control(name='message' style='height:100px')
+                button.btn.btn-default Submit

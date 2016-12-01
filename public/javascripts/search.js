@@ -27,7 +27,7 @@ var search = (function() {
                                 m('th'),
                                 m('th', 'Title'),
                                 m('th', 'Author'),
-                                m('th', [
+                                m('th.text-center', [
                                     m(selectPlaylist(), {
                                         playlistName: playlistName,
                                         addButtonDOM: addButtonDOM
@@ -46,13 +46,13 @@ var search = (function() {
                                                 inLibrary: inLibrary
                                             })
                                         ]),
-                                        m('td', [
+                                        m('td.alignWithTitle', [
                                             m('a', {
                                                 href: '/song/' + s._id
                                             }, s.title)
                                         ]),
-                                        m('td', s.author),
-                                        m('td', [
+                                        m('td.alignWithTitle', s.author),
+                                        m('td.text-center', [
                                             m(addToPlaylistButton(), {
                                                 playlistName: playlistName,
                                                 songID: s._id,

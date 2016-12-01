@@ -1,90 +1,55 @@
-    body {
-        padding: 50px;
-        font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    }
-
-    a {
-        color: #00B7FF;
-    }
-
-    #header.parent {
-        position: relative;
-    }
-
-    #header.child {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .table td {
-        text-align: center;
-    }
-
-    .table th {
-        text-align: center;
-    }
-
-    #searchBox.index {
-        width: 30em;
-        margin: auto;
-    }
-
-    #searchInput {
-        width: 30em;
-    }
-
-    @media screen and (max-width: 480px) {
-        #searchBox.index {
-            width: 25em;
-            margin: auto;
-        }
-        #searchInput {
-            width: 25em;
-        }
-    }
-
-    .capitalize {
-        text-transform: capitalize;
-    }
-
-    .adminOption {
-        position: fixed;
-        bottom: 0;
-        right: 0;
-    }
-
-    a#playlist {
-        cursor: pointer
-    }
-
-    a.thumbnail.home {
-        width: 300px;
-        height: 300px;
-        margin-top: auto;
-        text-align: center;
-    }
+body {
+    font-family: 'Arial' !important
+}
 
 
-    .circularIcon {
-        width: 70px;
-        height: 70px;
-        padding: 10px 16px;
-        font-size: 24px;
-        line-height: 1.33;
-        border-radius: 35px;
-        background-color: #272b30;
-    }
+/*hero image*/
+.jumbotron {
+    background: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    border: none !important;
+    padding-top: 150px !important;
+}
 
-    :hover {
-     background-position: 0px;
-    }
+.capitalize {
+    text-transform: capitalize;
+}
 
-    a#slide {
-      background: url('/images/slide.png') no-repeat 0 1;
-    }
 
-    hr#preview {
-      height:2px;
-      background-color:#000000;
+/*set the td to align with th*/
+.alignWithTitle {
+    padding-left: 0 !important;
+}
+
+
+/*circular icon on the features section on the landing page*/
+.circularIcon {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+    background-color: #272b30;
+}
+
+
+/*hr on the pdf preview page*/
+hr.preview {
+    height: 2px;
+    background-color: #000000;
+}
+
+#searchBoxHome {
+    width: 450px;
+    margin: auto
+}
+
+@media screen and (max-width: 480px) {
+    #searchBoxHome {
+      width: 300px;
     }
+}

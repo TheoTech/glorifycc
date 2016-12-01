@@ -87,6 +87,8 @@ app.use(function(req, res, next) {
     res.locals.session = req.session;
     res.locals.login = req.isAuthenticated();
     res.locals.user = req.user;
+    res.locals.success_messages = req.flash('success_messages');
+    res.locals.error_messages = req.flash('error_messages');
     next();
 })
 

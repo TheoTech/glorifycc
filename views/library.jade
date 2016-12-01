@@ -1,15 +1,15 @@
 extends layout
 
 block content
-    include topnav
-    h1 My Library
-    #searchBox
-    if messages.error
-        .alert.alert-danger
-            p #{messages.error}
-    br
-    a.btn.btn-default(href='/songlist-db/add') Add Song
-    #library
+    .container-fluid
+        h1 My Library
+        #searchBox
+        if messages.error
+            .alert.alert-danger
+                p #{messages.error}
+        br
+        a.btn.btn-default(href='/songlist-db/add') Add Song
+        #library
 
     script.
         var songs = m.prop(!{JSON.stringify(songs).replace(/<\//g, "<\\/")})
@@ -24,6 +24,3 @@ block content
     script.
         libraryTableComponent.init(document.getElementById('library'))
         //- m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: '/user/library'}))
-
-        
-        
