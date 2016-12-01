@@ -10,12 +10,12 @@ var searchBoxComponent = (function() {
     var searchBox = {
         view: function(ctrl, args) {
             return m('#searchInput.input-group', {
-              style: {
-                width: '550px';
-              }
-            },[
+                style: {
+                    width: '100%'
+                }
+            }, [
                 m('input.form-control[type=text]', {
-                    placeholder: 'Title, Lyric or Author',
+                    placeholder: 'Search by title, lyrics or author',
                     onchange: m.withAttr('value', args.searchString),
                     config: function(elem, isInit, context) {
                         if (!isInit) {

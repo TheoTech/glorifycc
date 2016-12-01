@@ -1,7 +1,8 @@
 /*hero image*/
 
 .jumbotron {
-    background: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg) no-repeat center center fixed;
+    background-image: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg);
+    background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -51,9 +52,16 @@ hr.preview {
     margin: auto
 }
 
-@media screen and (max-width: 480px) {
+#discoverBox {
+    width: 550px;
+}
+
+@media screen and (max-width: 570px) {
     #searchBoxHome {
         width: 300px;
+    }
+    #discoverBox {
+        width: 350px;
     }
 }
 
@@ -67,4 +75,7 @@ hr.preview {
     p#lyricInManyLanguages {
         height: 40px;
     }
+    /*#discoverBox {
+      width: 350px;
+    }*/
 }
