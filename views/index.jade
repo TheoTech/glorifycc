@@ -3,10 +3,8 @@ html
     head
         title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
-        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css")
         link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css")
-        link(href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet")
         link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
         crossorigin="anonymous")
@@ -14,18 +12,17 @@ html
         link(rel="icon" href="/images/glorifyicon_32x32.png")
     body
         include importJS
-        //- img#heroImage(src='/images/hero_image.jpg')
         nav.navbar.navbar-default.navbar-fixed-top(style='margin-bottom: 0px; border: none')
             .container
                 .navbar-header
-                    button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
+                    button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#topmenu" aria-expanded="false")
                         span.sr-only Toggle navigation
                         span.icon-bar
                         span.icon-bar
                         span.icon-bar
                     a.navbar-brand(href='/') Home
 
-                .collapse.navbar-collapse
+                #topmenu.collapse.navbar-collapse
                     ul.nav.navbar-nav
                         - if(login && user.username !== 'admin')
                             li
@@ -52,15 +49,13 @@ html
             header#header.text-center(style="margin-bottom: 90px")
                 img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
                 p(style='color: white; text-shadow: 1px 1px 1px rgb(0,0,0,0.5)') Find Public Domain and CC0 Worship Songs in Multiple Languages
-                #searchBox(style='width: 30em; margin: auto')
+                #searchBoxHome
 
         .container
-            #anyLanguage
-                .container-fluid
-                h1(style='margin-top: 0;') Worship in Any Language
-                p Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
-                div(style='text-align: center;')
-                    a.btn.btn-default(href='#features') Learn more
+            h1(style='margin-top: 0;') Worship in Any Language
+            p Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
+            div(style='text-align: center;')
+                a.btn.btn-default(href='#features') Learn more
             hr
 
             #features
@@ -71,7 +66,6 @@ html
                             .circularIcon(style='margin:auto')
                                 img(src='/images/desktop-computer.png' style='height: 40px; margin-top: 5px')
                             .caption
-                                //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                                 p Glorify can do the work of making slides for you! Just add the songs you want to export to your playlist and select the languages you want them in 
                                 a.btn.btn-default(href='/help/createslide') Create Slides
                     .col-xs-12.col-sm-6.col-md-6
@@ -89,16 +83,14 @@ html
                             .circularIcon(style='margin:auto')
                                 img(src='/images/business-organization.png' style='height: 40px; margin-top: 5px')
                             .caption
-                                //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                                 p Songwriters can share their worship songs with the Global Church on Glorify so that even more believers can worship freely.
                                 //- button.btn.btn-default Create Slides   
                     .col-xs-12.col-sm-6.col-md-6
                         .thumbnail(style='text-align:center')
-                            h4 Free for all to worship
+                            h4 Freedom to worship
                             .circularIcon(style='margin:auto')
                                 img(src='/images/broken-link.png' style='height: 40px; margin-top: 5px')
                             .caption
-                                //- img.img-responsive(alt="create slides" src="images/create-feature-img.jpeg")    
                                 p All songs and translations on this website are freely available as public domain or CC0 songs. Believers all over the globe can sing, share, and translate these songs.
                                 //- button.btn.btn-default Find Songs
             div(style='text-align: center;')
@@ -111,7 +103,7 @@ html
                     Revelation 7 says that people from every language and every part of the world will be praising God together. And yet, many worship songs that are sung in churches right now originate from English-speaking countries and are copyrighted. Churches are legally required to pay in order to perform, display, print, and even translate worship songs. And license requirements also vary depending on the country.
 
                 p.
-                    We want to see the Church unleashed from the status quo. We want to see the Church united in worship across language and culture. We want to see the Church be able to worship freely. That's why we built Glorify.cc.
+                    We want to see the Church unleashed from the segregated status quo. We want to see the Church united in worship across language and culture. We want to see the Church be able to worship freely. That's why we built Glorify.cc.
 
                 p.
                     Glorify.cc enables churches to sing praises in multiple languages together. It's a platform that empowers the global church to share their songs with one another and to contribute translations so others can join in. All songs and translations are available under the CC0 license, so the Church can come together and worship freely.
@@ -123,4 +115,4 @@ html
 
         script(src='/dist/javascripts/searchBoxHome.js')
         script.
-            m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)
+            m.mount(document.getElementById('searchBoxHome'), searchBoxHome().searchBoxHomeComponent)

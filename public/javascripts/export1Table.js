@@ -29,7 +29,7 @@ var export1TableComponent = (function() {
                     m('thead', [
                         m('th', 'Title'),
                         uniqueLanguages.map((lang) => {
-                            return m('th.capitalize', {
+                            return m('th.capitalize.text-center', {
                                 margin: 'auto'
                             }, lang)
                         })
@@ -38,7 +38,7 @@ var export1TableComponent = (function() {
                         m('tr', [
                             m('td'),
                             uniqueLanguages.map((lang) => {
-                                return m('td', {
+                                return m('td.text-center', {
                                     margin: 'auto'
                                 }, [
                                     m('input', {
@@ -56,7 +56,7 @@ var export1TableComponent = (function() {
                                 uniqueLanguages.map((lang, j) => {
                                     var rightSong = song.availableTranslations.find((availableTranslation) => availableTranslation.lang === lang)
                                     var songID = rightSong ? rightSong._id : ''
-                                    return m('td', [
+                                    return m('td.text-center', [
                                         m('input', {
                                             className: lang,
                                             id: rightSong ? songID : '',

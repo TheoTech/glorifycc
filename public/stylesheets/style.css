@@ -1,3 +1,9 @@
+body {
+    font-family: 'Arial' !important
+}
+
+
+/*hero image*/
 .jumbotron {
     background: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -8,18 +14,18 @@
     padding-top: 150px !important;
 }
 
-.table td {
-    text-align: center;
-}
-
-.table th {
-    text-align: center;
-}
-
 .capitalize {
     text-transform: capitalize;
 }
 
+
+/*set the td to align with th*/
+.alignWithTitle {
+    padding-left: 0 !important;
+}
+
+
+/*circular icon on the features section on the landing page*/
 .circularIcon {
     width: 70px;
     height: 70px;
@@ -30,7 +36,20 @@
     background-color: #272b30;
 }
 
-hr#preview {
+
+/*hr on the pdf preview page*/
+hr.preview {
     height: 2px;
     background-color: #000000;
+}
+
+#searchBoxHome {
+    width: 450px;
+    margin: auto
+}
+
+@media screen and (max-width: 480px) {
+    #searchBoxHome {
+      width: 300px;
+    }
 }

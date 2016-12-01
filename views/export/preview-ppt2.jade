@@ -1,11 +1,10 @@
 extends ../layout
 
 block content
-    include ../topnav
     h1 Preview
     #exportOption
     include exportButton
-    hr#preview
+    hr.preview
     //Note: songs2d = [[Song Schema that the user checked]]
     each songs in songs2d
         h1
@@ -18,7 +17,7 @@ block content
                 each line in song.lyric[0]
                     p #{line}
         br
-        hr#preview
+        hr.preview
     include exportButton  
 
     script.

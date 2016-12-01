@@ -22,7 +22,7 @@ var songlistTable = {
                             m('th'),
                             m('th', 'Title'),
                             m('th', 'Author'),
-                            m('th', [
+                            m('th.text-center', [
                                 m(selectPlaylist(), {
                                     playlistName: args.playlistName,
                                     addButtonDOM: args.addButtonDOM
@@ -42,13 +42,13 @@ var songlistTable = {
                                             inLibrary: args.inLibrary
                                         })
                                     ]),
-                                    m('td', [
+                                    m('td.alignWithTitle', [
                                         m('a', {
                                             href: '/song/' + s._id
                                         }, s.title)
                                     ]),
-                                    m('td', s.author),
-                                    m('td', [
+                                    m('td.alignWithTitle', s.author),
+                                    m('td.text-center', [
                                         m(addToPlaylistButton(), {
                                             playlistName: args.playlistName,
                                             songID: s._id,
