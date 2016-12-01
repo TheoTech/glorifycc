@@ -350,8 +350,8 @@ router.get('/search', function(req, res, next) {
         } else {
             res.render('search', {
                 songs: songs,
-                inLibrary: inLibrary,
-                playlists: playlists
+                inLibrary: inLibrary || [],
+                playlists: playlists || []
             })
         }
     }
@@ -360,7 +360,7 @@ router.get('/search', function(req, res, next) {
         if (req.isAuthenticated()) {
             async.waterfall([findSongsLoggedIn, findInLibraryAndPlaylist], finalize)
         } else {
-            async.waterfall([findSongsNotLoggedIn, findInLibraryAndPlaylist], finalize)
+            async.waterfall([findSongsNotLoggedIn], finalize)
         }
     } else {
         res.render('search', {
