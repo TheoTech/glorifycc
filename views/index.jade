@@ -24,6 +24,8 @@ html
 
                 #topmenu.collapse.navbar-collapse
                     ul.nav.navbar-nav
+                        li
+                            a(href='/discover') Discover
                         - if(login && user.username !== 'admin')
                             li
                                 a(href="/user/library") Library
