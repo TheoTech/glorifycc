@@ -1,26 +1,36 @@
-    .table td {
-        text-align: center;
-    }
+.jumbotron {
+    background: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    border: none !important;
+    padding-top: 150px !important;
+}
 
-    .table th {
-        text-align: center;
-    }
+.table td {
+    text-align: center;
+}
 
-    .capitalize {
-        text-transform: capitalize;
-    }
+.table th {
+    text-align: center;
+}
 
-    .circularIcon {
-        width: 70px;
-        height: 70px;
-        padding: 10px 16px;
-        font-size: 24px;
-        line-height: 1.33;
-        border-radius: 35px;
-        background-color: #272b30;
-    }
+.capitalize {
+    text-transform: capitalize;
+}
 
-    hr#preview {
-      height:2px;
-      background-color:#000000;
-    }
+.circularIcon {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+    background-color: #272b30;
+}
+
+hr#preview {
+    height: 2px;
+    background-color: #000000;
+}

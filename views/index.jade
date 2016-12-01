@@ -14,8 +14,9 @@ html
         link(rel="icon" href="/images/glorifyicon_32x32.png")
     body
         include importJS
-        nav.navbar.navbar-default
-            .container-fluid
+        //- img#heroImage(src='/images/hero_image.jpg')
+        nav.navbar.navbar-default.navbar-fixed-top(style='margin-bottom: 0px; border: none')
+            .container
                 .navbar-header
                     button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false")
                         span.sr-only Toggle navigation
@@ -24,7 +25,7 @@ html
                         span.icon-bar
                     a.navbar-brand(href='/') Home
 
-                #bs-example-navbar-collapse-1.collapse.navbar-collapse
+                .collapse.navbar-collapse
                     ul.nav.navbar-nav
                         - if(login && user.username !== 'admin')
                             li
@@ -36,8 +37,6 @@ html
                                 a(href="/admin/songlist-db") Song Database
                             //- li
                             //-     a(href="/admin/userlist") User Database
-                        li
-                            a(href='/help') Help
                     ul.nav.navbar-nav.navbar-right
                         if login
                             li
@@ -49,18 +48,17 @@ html
                                 a(href="/user/login") Log In
                             li
                                 a(href="/user/signup") Sign Up
-
-        .container
+        .jumbotron               
             header#header.text-center(style="margin-bottom: 90px")
                 img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
-                p Find Public Domain and CC0 Worship Songs in Multiple Languages
+                p(style='color: white; text-shadow: 1px 1px 1px rgb(0,0,0,0.5)') Find Public Domain and CC0 Worship Songs in Multiple Languages
                 #searchBox(style='width: 30em; margin: auto')
 
-            hr
+        .container
             #anyLanguage
                 .container-fluid
                 h1(style='margin-top: 0;') Worship in Any Language
-                h4 Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
+                p Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
                 div(style='text-align: center;')
                     a.btn.btn-default(href='#features') Learn more
             hr
@@ -122,7 +120,7 @@ html
                 blockquote After this I looked, and behold, a great multitude that no one could number, from every nation, from all tribes and peoples and languages, standing before the throne and before the Lamb, clothed in white robes, with palm branches in their hands, and crying out with a loud voice, “Salvation belongs to our God who sits on the throne, and to the Lamb!” - Revelation 7:9-11 ESV
         hr
         include footer
-        
+
         script(src='/dist/javascripts/searchBoxHome.js')
         script.
             m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)
