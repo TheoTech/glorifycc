@@ -241,10 +241,10 @@ router.route('/:playlist_name/export3')
             .exec(function(err, playlists) {
                 if (err) return next(err)
                 songs2d = playlists.map((playlist) => {
-                    return playlist.translationsChecked
+                        return playlist.translationsChecked
 
-                })
-                //this var is to check whether we should disable the export option on the ui
+                    })
+                    //this var is to check whether we should disable the export option on the ui
                 maxNumberOfSongs = songs2d.reduce((prev, curr) => {
                     if (prev.length > curr.length) {
                         return prev.length
@@ -318,6 +318,7 @@ module.exports = router;
 function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
     //files is an array to store the filename for each pptx file
     var files = [];
+    var watermark = 'Powered by Glorify.cc'
     songs2d.forEach((songs, index, arr) => {
         var pptx = officegen('pptx');
         filename = '';
@@ -333,33 +334,13 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
         songs.forEach((song) => {
             filename += song.title;
             //add text with white color, and center horizontally
-            pObj = slide.addText(song.title, {
-                x: 'c', //x position
-                y: titleMargin, //y position
-                cx: '100%', //width
-                cy: 50,
-                font_size: 50,
-                align: 'center',
-                color: {
-                    type: 'solid',
-                    color: 'ffffff'
-                }
-            });
+            pObj = addTextToSlide(slide, song.title, titleMargin, 50, 50, 'ffffff')
             titleMargin += 70; //add y space for the second title
-            pObj = slide.addText('(' + song.lang + ')', {
-                x: 'c', //x position
-                y: titleMargin, //y position
-                cx: '100%', //width
-                cy: 20,
-                font_size: 30,
-                align: 'center',
-                color: {
-                    type: 'solid',
-                    color: 'ffffff'
-                }
-            });
+            pObj = addTextToSlide(slide, '(' + song.lang + ')', titleMargin, 20, 30, 'ffffff')
             titleMargin += 100;
         })
+        pObj = addTextToSlide(slide, watermark, 630, 20, 20, '8cb4cd')
+        titleMargin += 100;
         for (var i = 0; i < songs[0].lyric.length; i++) {
             //make new slide for every new stanza with background color black
             slide = pptx.makeNewSlide();
@@ -371,22 +352,12 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
             for (var x = 0; x < songs.length; x++) {
                 for (var j = 0; j < songs[x].lyric[i].length; j++) {
                     //print stanza
-                    pObj = slide.addText(songs[x].lyric[i][j], {
-                        x: 'c', //x position
-                        y: margin, //y position
-                        cx: '100%', //width
-                        cy: 40,
-                        font_size: 40,
-                        align: 'center',
-                        color: {
-                            type: 'solid',
-                            color: 'ffffff'
-                        }
-                    });
+                    pObj = addTextToSlide(slide, songs[x].lyric[i][j], margin, 40, 40, 'ffffff')
                     margin += 50;
                 }
                 margin += 150
             }
+            pObj = addTextToSlide(slide, watermark, 630, 20, 30, '8cb4cd')
         }
         var out = fs.createWriteStream(filename + '.pptx');
         pptx.generate(out, {
@@ -418,7 +389,20 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
     })
 }
 
-
+function addTextToSlide(slide, text, y, cy, fontsize, color) {
+    return slide.addText(text, {
+        x: 'c', //x position
+        y: y, //y position
+        cx: '100%', //width
+        cy: cy,
+        font_size: fontsize,
+        align: 'center',
+        color: {
+            type: 'solid',
+            color: color
+        }
+    });
+}
 
 // function generateSlideByLine(res, songs2d, playlistName) {
 //     //files is an array to store the filename for each pptx file
