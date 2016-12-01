@@ -360,6 +360,8 @@ router.get('/search', function(req, res, next) {
         if (req.isAuthenticated()) {
             async.waterfall([findSongsLoggedIn, findInLibraryAndPlaylist], finalize)
         } else {
+            //if the user not logged in then we dont need to findInLibraryAndPlaylist and just pass empty array
+            //for inLibrary and playlists at the render
             async.waterfall([findSongsNotLoggedIn], finalize)
         }
     } else {
