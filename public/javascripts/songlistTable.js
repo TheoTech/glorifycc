@@ -1,11 +1,7 @@
 var songlistTable = {
     view: function(ctrl, args) {
         if (args.displayedSongs().length === 0) {
-            return m('h4', {
-                style: {
-                    'margin-top': '35px'
-                }
-            }, 'Songs not found')
+            return songsNotFound()
         } else {
             return [
                 m(showSongsIn, {
