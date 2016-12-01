@@ -6,48 +6,16 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
         link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css")
-        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
-        crossorigin="anonymous")
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
         link(rel='stylesheet' href='/stylesheets/slate.min.css')
         link(rel="icon" href="/images/glorifyicon_32x32.png")
     body
+        //this var is to omit the searchbox on topbar
+        -var withoutSearchbox = true; 
         include importJS
-        nav.navbar.navbar-default.navbar-fixed-top(style='margin-bottom: 0px; border: none')
-            .container
-                .navbar-header
-                    button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#topmenu" aria-expanded="false")
-                        span.sr-only Toggle navigation
-                        span.icon-bar
-                        span.icon-bar
-                        span.icon-bar
-
-                #topmenu.collapse.navbar-collapse
-                    ul.nav.navbar-nav
-                        li
-                            a(href='/discover') Discover
-                        - if(login && user.username !== 'admin')
-                            li
-                                a(href="/user/library") Library
-                            li
-                                a(href="/user/playlist") Playlist
-                        - else if(login && user.username === 'admin')
-                            li
-                                a(href="/admin/songlist-db") Song Database
-                            //- li
-                            //-     a(href="/admin/userlist") User Database
-                    ul.nav.navbar-nav.navbar-right
-                        if login
-                            li
-                                a #{user.username}
-                            li
-                                a(href="/user/logout") Log Out
-                        else 
-                            li
-                                a(href="/user/login") Log In
-                            li
-                                a(href="/user/signup") Sign Up
-        .jumbotron               
+        #homeTopbar
+            include topnav
+        .jumbotron        
             header#header.text-center(style="margin-bottom: 90px")
                 img(src='/images/glorifylogo400x100.png' style='height: 80px; margin-bottom: 50px')
                 p(style='color: white; text-shadow: 1px 1px 1px rgb(0,0,0,0.5)') Find Public Domain and CC0 Worship Songs in Multiple Languages
@@ -55,15 +23,16 @@ html
 
         .container
             h1(style='margin-top: 0;') Worship in Any Language
-            p Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
+            p.lead Glorify.cc enables you to worship together in many languages by providing a single place where songwriters and worship leaders can share worship music and translations. 
             div(style='text-align: center;')
                 a.btn.btn-default(href='#features') Learn more
             hr
 
             #features
+                h1 Features
                 .row
                     .col-xs-12.col-sm-6.col-md-6
-                        .thumbnail(style='text-align:center')
+                        .thumbnail.text-center
                             h4 Easily Export Slides
                             .circularIcon(style='margin:auto')
                                 img(src='/images/desktop-computer.png' style='height: 40px; margin-top: 5px')
@@ -71,31 +40,30 @@ html
                                 p Glorify can do the work of making slides for you! Just add the songs you want to export to your playlist and select the languages you want them in 
                                 a.btn.btn-default(href='/help/createslide') Create Slides
                     .col-xs-12.col-sm-6.col-md-6
-                        .thumbnail(style='text-align:center')
+                        .thumbnail.text-center
                             h4 Lyrics in Many Languages
                             .circularIcon(style='margin:auto')
                                 img(src='/images/languages.png' style='height: 40px; margin-top: 5px')
                             .caption
-                                p Use Glorify to get song lyrics in various languages, and contribute translations to enable 
+                                p#lyricInManyLanguages Use Glorify to get song lyrics in various languages, and contribute translations to enable 
                                 a.btn.btn-default(href='/discover') Find Songs
                 .row
                     .col-xs-12.col-sm-6.col-md-6
-                        .thumbnail(style='text-align:center')
+                        .thumbnail.text-center
                             h4 Share your songs with the Global Church
                             .circularIcon(style='margin:auto')
                                 img(src='/images/business-organization.png' style='height: 40px; margin-top: 5px')
                             .caption
                                 p Songwriters can share their worship songs with the Global Church on Glorify so that even more believers can worship freely.
-                                //- button.btn.btn-default Create Slides   
+                                a.btn.btn-default(href='/songlist-db/add') Contribute Songs   
                     .col-xs-12.col-sm-6.col-md-6
-                        .thumbnail(style='text-align:center')
+                        .thumbnail.text-center
                             h4 Freedom to worship
                             .circularIcon(style='margin:auto')
                                 img(src='/images/broken-link.png' style='height: 40px; margin-top: 5px')
                             .caption
                                 p All songs and translations on this website are freely available as public domain or CC0 songs. Believers all over the globe can sing, share, and translate these songs.
-                                //- button.btn.btn-default Find Songs
-            div(style='text-align: center;')
+            div.text-center
                 a.btn.btn-default(href='#why') Learn more
             hr
 

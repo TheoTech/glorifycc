@@ -1,9 +1,5 @@
-body {
-    font-family: 'Arial' !important
-}
-
-
 /*hero image*/
+
 .jumbotron {
     background: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -20,12 +16,14 @@ body {
 
 
 /*set the td to align with th*/
+
 .alignWithTitle {
     padding-left: 0 !important;
 }
 
 
 /*circular icon on the features section on the landing page*/
+
 .circularIcon {
     width: 70px;
     height: 70px;
@@ -38,9 +36,14 @@ body {
 
 
 /*hr on the pdf preview page*/
+
 hr.preview {
     height: 2px;
     background-color: #000000;
+}
+
+#homeTopbar>nav {
+    margin-bottom: 0;
 }
 
 #searchBoxHome {
@@ -50,6 +53,18 @@ hr.preview {
 
 @media screen and (max-width: 480px) {
     #searchBoxHome {
-      width: 300px;
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    p#lyricInManyLanguages {
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    p#lyricInManyLanguages {
+        height: 40px;
     }
 }

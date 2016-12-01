@@ -1,29 +1,39 @@
-extends layout
+doctype html
+html
+    head
+        title Glorify
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css")
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+        link(rel='stylesheet' href='/stylesheets/slate.min.css')
+        link(rel="icon" href="/images/glorifyicon_32x32.png")
+    body
+        //this var is to omit the searchbox on topbar
+        -var withoutSearchbox = true;
+        include importJS
+        include topnav
+        .container-fluid
+            h1 Discover Songs
+            #discoverBox
+            #songlistTable
 
-block content
-    h1 Discover Songs
-    #discoverBox
-    //- #filterOption
-    #songlistTable
-    
 
-    script.
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-        var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
-        var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
-        var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
-    script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/selectPlaylist.js')
-    script(src='/dist/javascripts/playlistModal.js')
-    script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/showSongsIn.js')
-    //- script(src='/dist/javascripts/hasTranslationsIn.js')
-    script(src='/dist/javascripts/searchBox.js')
-    script(src='/dist/javascripts/songlistTable.js')
-    script(src='/dist/javascripts/discover.js')
-    script.
-        discover.init()
-        
-    
+        script.
+            var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+            var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+            var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+            var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
+            var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
+            var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
+        script(src='/dist/javascripts/addOrDeleteButton.js')
+        script(src='/dist/javascripts/selectPlaylist.js')
+        script(src='/dist/javascripts/playlistModal.js')
+        script(src='/dist/javascripts/addToPlaylistButton.js')
+        script(src='/dist/javascripts/showSongsIn.js')
+        script(src='/dist/javascripts/searchBox.js')
+        script(src='/dist/javascripts/songlistTable.js')
+        script(src='/dist/javascripts/discover.js')
+        script.
+            discover.init()

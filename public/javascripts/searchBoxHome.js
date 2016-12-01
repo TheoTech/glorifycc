@@ -15,7 +15,7 @@ var searchBoxHome = function() {
                 }
             }, [
                 m('input.form-control[type=text]', {
-                    placeholder: 'Title, Lyric or Author',
+                    placeholder: 'Search by title, lyric or author',
                     onchange: m.withAttr('value', searchString),
                     config: function(elem, isInit, context) {
                         if (!isInit) {

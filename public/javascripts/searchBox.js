@@ -9,7 +9,11 @@ var searchBoxComponent = (function() {
 
     var searchBox = {
         view: function(ctrl, args) {
-            return m('#searchInput.input-group', [
+            return m('#searchInput.input-group', {
+              style: {
+                width: '550px';
+              }
+            },[
                 m('input.form-control[type=text]', {
                     placeholder: 'Title, Lyric or Author',
                     onchange: m.withAttr('value', args.searchString),
