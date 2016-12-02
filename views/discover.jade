@@ -1,30 +1,31 @@
-extends layout
+doctype html
+html
+    head
+        include headContent
+    body
+        //this var is to omit the searchbox on topbar
+        -var withoutSearchbox = true;
+        include importJS
+        include topnav
+        .container-fluid
+            h1 Discover Songs
+            #discoverBox
+            #songlistTable
 
-block content
-    h1 Discover Songs
-    #discoverBox
-    //- #filterOption
-    #songlistTable
-    
-
-    script.
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-        var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
-        var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
-        var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
-    script(src='/dist/javascripts/songsNotFound.js')
-    script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/selectPlaylist.js')
-    script(src='/dist/javascripts/playlistModal.js')
-    script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/showSongsIn.js')
-    //- script(src='/dist/javascripts/hasTranslationsIn.js')
-    script(src='/dist/javascripts/searchBox.js')
-    script(src='/dist/javascripts/songlistTable.js')
-    script(src='/dist/javascripts/discover.js')
-    script.
-        discover.init()
-        
-    
+        script.
+            var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+            var currentInLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+            var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+            var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
+            var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
+            var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
+        script(src='/dist/javascripts/addOrDeleteButton.js')
+        script(src='/dist/javascripts/selectPlaylist.js')
+        script(src='/dist/javascripts/playlistModal.js')
+        script(src='/dist/javascripts/addToPlaylistButton.js')
+        script(src='/dist/javascripts/showSongsIn.js')
+        script(src='/dist/javascripts/searchBox.js')
+        script(src='/dist/javascripts/songlistTable.js')
+        script(src='/dist/javascripts/discover.js')
+        script.
+            discover.init()

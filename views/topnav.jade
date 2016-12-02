@@ -6,9 +6,8 @@ nav.navbar.navbar-default
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-            div
-                a(href='/')
-                    img(src='/images/glorifyicontransparent_96x96.png')
+            a(href='/')
+                img(src='/images/glorifyicontransparent_96x96.png' style='height: 40px; margin: 3px 12px 0 0')
 
         #topmenu.navbar-collapse
             ul.nav.navbar-nav
@@ -25,9 +24,10 @@ nav.navbar.navbar-default
                     //- li
                     //-     a(href="/admin/userlist") User Database
                 li
-                    a(href='/help') Help
+                    a(href='/discover') Discover Songs
             .navbar-form.navbar-left
-                #searchBox(style='width: 330px')
+                if !withoutSearchbox
+                    #searchBox(style='width: 330px')
             ul.nav.navbar-nav.navbar-right
                 if login
                     li
