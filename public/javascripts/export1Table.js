@@ -2,15 +2,14 @@ var export1TableComponent = (function() {
     //Note: var uniqueLanguages, var songs, var playlistName are defined on export1.jade
 
     var saveTranslationsChecked = function(songs) {
-        console.log('hehehe')
+
         m.request({
                 method: 'POST',
-                url: '/user/playlist/' + playlistName + '/export1',
+                url: '/user/playlist/' + encodeURIComponent(playlistName) + '/export1',
                 data: songs
             })
             .then(function(res) {
-                console.log(res.url)
-                window.location.href = res.url
+                window.location.href = '/user/playlist/' + encodeURIComponent(playlistName)+ '/export3'
             })
     }
 

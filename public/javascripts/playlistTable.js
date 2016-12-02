@@ -92,14 +92,13 @@ var playlistTableComponent = (function() {
                                 'font-size': '18px'
                             }
                         }, 'Playlist Name')
-                        // m('')
                     ]),
                     m('tbody', [
                         playlists.map((pl) => {
                             return m('tr', [
                                 m('td', [
                                     m('a', {
-                                        href: '/user/playlist/' + pl.name
+                                        href: '/user/playlist/' + encodeURIComponent(pl.name)
                                     }, pl.name)
                                 ]),
                                 m('td', [

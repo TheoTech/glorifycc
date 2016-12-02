@@ -43,7 +43,7 @@ var playlistClickedComponent = (function() {
                 ]),
                 m('div', [
                     m('a.btn.btn-primary', {
-                        href: '/user/playlist/' + playlistName() + '/export1'
+                        href: '/user/playlist/' + encodeURIComponent(playlistName()) + '/export1'
                     }, 'Export Playlist'),
                     m('button.btn.btn-default.pull-right', {
                         onclick: function() {
