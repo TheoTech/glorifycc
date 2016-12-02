@@ -66,16 +66,13 @@ hr.preview {
 }
 
 @media screen and (max-width: 1200px) {
-    p#lyricInManyLanguages {
+    p#lyricsInManyLanguages {
         height: 60px;
     }
 }
 
 @media screen and (max-width: 768px) {
-    p#lyricInManyLanguages {
+    p#lyricsInManyLanguages {
         height: 40px;
     }
-    /*#discoverBox {
-      width: 350px;
-    }*/
 }
