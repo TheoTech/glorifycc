@@ -43,8 +43,16 @@ hr.preview {
     background-color: #000000;
 }
 
-#homeTopbar>nav {
+#homeTopbar>header {
     margin-bottom: 0;
+}
+
+footer a{
+  font-size: 13px;
+}
+
+footer h5{
+  font-size: 1px;
 }
 
 #searchBoxHome {

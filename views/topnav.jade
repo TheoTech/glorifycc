@@ -1,4 +1,4 @@
-nav.navbar.navbar-default
+header.navbar.navbar-default
     .container-fluid
         .navbar-header
             button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#topmenu" aria-expanded="false")
@@ -9,7 +9,7 @@ nav.navbar.navbar-default
             a(href='/')
                 img(src='/images/glorifyicontransparent_96x96.png' style='height: 40px; margin: 3px 12px 0 0')
 
-        #topmenu.navbar-collapse
+        nav#topmenu.collapse.navbar-collapse
             ul.nav.navbar-nav
                 li
                     a(href='/discover') Discover Songs
@@ -23,11 +23,9 @@ nav.navbar.navbar-default
                         a(href="/songlist-db") Song Database
                     //- li
                     //-     a(href="/admin/userlist") User Database
-                li
-                    a(href='/discover') Discover Songs
-            .navbar-form.navbar-left
-                if !withoutSearchbox
-                    #searchBox(style='width: 330px')
+            if !withoutSearchbox
+                .navbar-form.navbar-left
+                        #searchBox(style='width: 330px')
             ul.nav.navbar-nav.navbar-right
                 if login
                     li
