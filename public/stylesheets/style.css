@@ -47,12 +47,12 @@ hr.preview {
     margin-bottom: 0;
 }
 
-footer a{
-  font-size: 13px;
+footer a {
+    font-size: 13px;
 }
 
-footer h5{
-  font-size: 1px;
+footer h5 {
+    font-size: 1px;
 }
 
 #searchBoxHome {
@@ -64,23 +64,38 @@ footer h5{
     width: 550px;
 }
 
-@media screen and (max-width: 570px) {
-    #searchBoxHome {
-        width: 300px;
-    }
-    #discoverBox {
-        width: 350px;
-    }
-}
-
 @media screen and (max-width: 1200px) {
     p#lyricsInManyLanguages {
         height: 60px;
+    }
+    p#shareWithGlobalChurch {
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    p#shareWithGlobalChurch {
+        height: 80px;
+    }
+    h4#freedomToWorship {
+      height: 38px
     }
 }
 
 @media screen and (max-width: 768px) {
     p#lyricsInManyLanguages {
         height: 40px;
+    }
+    p#shareWithGlobalChurch {
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    #searchBoxHome {
+        width: 300px;
+    }
+    #discoverBox {
+        width: 350px;
     }
 }
