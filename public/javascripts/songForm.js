@@ -252,15 +252,7 @@ function songForm(obj) {
                         }, [
                             m('option', 'CC0'),
                             m('option', 'public'),
-                            m('option', {
-                                'title': 'your songs will not be seen by other users',
-                                'data-toggle': "tooltip",
-                                config: function(elem, isInit) {
-                                    if (!isInit) {
-                                        $(elem).tooltip()
-                                    }
-                                }
-                            }, 'private')
+                            m('option', 'private')
                         ])
                     ]),
                     m('div', {
