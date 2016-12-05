@@ -1,4 +1,5 @@
 /*hero image*/
+
 .jumbotron {
     background-image: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg);
     background-position: center;
@@ -6,8 +7,8 @@
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    border: none !important;
-    padding-top: 150px !important;
+    border: none;
+    padding-top: 150px;
 }
 
 .capitalize {
@@ -17,8 +18,8 @@
 
 /*set the td to align with th*/
 
-.alignWithTitle {
-    padding-left: 0 !important;
+.table>tbody>tr>td.alignWithTitle {
+    padding-left: 0;
 }
 
 
@@ -52,7 +53,7 @@ footer a {
 
 #searchBoxHome {
     width: 450px;
-    margin: auto
+    margin: auto;
 }
 
 #discoverBox {
@@ -60,19 +61,23 @@ footer a {
 }
 
 img.createSlide {
-  height: 200px
+    height: 200px;
 }
 
 h4.featureTitle {
-  height: 40px;
+    height: 40px;
 }
 
 p.featureExplanation {
-  height: 80px;
+    height: 80px;
 }
 
 .whyDoesThisMatter {
-  font-weight: 300
+    font-weight: 300;
+}
+
+footer.footer {
+    font-weight: 300;
 }
 
 @media screen and (max-width: 570px) {
