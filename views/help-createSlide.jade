@@ -6,11 +6,22 @@ block content
     h4 Glorify can do the work of making slides from song lyrics for you! 
     h4 Follow the instructions below to export multiple songs to slides:
     ol
-        li login or Create an account
-        li Create a Playlist 
+        li
+            a(href='/user/login') Login 
+            span or  
+            a(href='/user/signup') create an account
+        li Create a 
+            a(href='/user/playlist') Playlist
+        img.createSlide(src='/images/create_playlist.png')
+        br
+        br
         li Add songs to your playlist
+        img(src='/images/add_to_playlist.png' style='height: 300px')
+        br
+        br
         li Once you’re ready, view your playlist and select the languages you want the lyrics in
+        img.createSlide(src='/images/choose_language.png')
+        br
+        br
         li Export the playlist to PDF or powerpoint
-    br
-    a.btn.btn-default(href='/user/login') Login 
-    a.btn.btn-default(href='/user/signup') Signup
+        img.createSlide(src='/images/export.png')

@@ -1,59 +1,60 @@
 extends layout
 
 block content
-    .row
-        .col-xs-6
-            h1 #{song.title}
-            h3 by #{song.author}
-            if song.translator
-                p Translated by #{song.translator}
-            if song.contributor
-                p Contributor: #{song.contributor}
-            if song.copyright
-                p Copyright: #{song.copyright}
-        if translationExists
-            .col-xs-6
-                h1 #{rightTranslation.title}
-                h3 by #{song.author}
-                p Translated by
-                p Contributor: #{rightTranslation.contributor}
-                p Copyright: #{rightTranslation.copyright}
-
-    br
-    br
-    .row
-        .col-xs-offset-6.col-xs-6
-            .form-group
-                label(for="language") Language
-                select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
-                    optgroup
-                        option(value='/song/#{song._id}/add-translation') Add Translation
-                    optgroup
-                        for t in translations
-                            option(value='?lang=' + t.lang) #{t.lang}
-    .row
-        .col-xs-6
-            #song
-            h4.capitalize=song.lang
-        .col-xs-6
-            if translationExists
-                #translation
-                h4.capitalize #{rightTranslation.lang}
-    -for (var i = 0; i < song.lyric.length; i++)
+    .container
         .row
             .col-xs-6
-                each line in song.lyric[i]
-                    span #{line}
-                    br
-                br            
+                h1 #{song.title}
+                h3 by #{song.author}
+                if song.translator
+                    p Translated by #{song.translator}
+                if song.contributor
+                    p Contributor: #{song.contributor}
+                if song.copyright
+                    p Copyright: #{song.copyright}
+            if translationExists
+                .col-xs-6
+                    h1 #{rightTranslation.title}
+                    h3 by #{song.author}
+                    p Translated by
+                    p Contributor: #{rightTranslation.contributor}
+                    p Copyright: #{rightTranslation.copyright}
+
+        br
+        br
+        .row
+            .col-xs-offset-6.col-xs-6
+                .form-group
+                    label(for="language") Language
+                    select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
+                        optgroup
+                            option(value='/song/#{song._id}/add-translation') Add Translation
+                        optgroup
+                            for t in translations
+                                option(value='?lang=' + t.lang) #{t.lang}
+        .row
+            .col-xs-6
+                #song
+                h4.capitalize=song.lang
             .col-xs-6
                 if translationExists
-                    each line in rightTranslation.lyric[i]
+                    #translation
+                    h4.capitalize #{rightTranslation.lang}
+        -for (var i = 0; i < song.lyric.length; i++)
+            .row
+                .col-xs-6
+                    each line in song.lyric[i]
                         span #{line}
                         br
-                br
-    #songPlaylistModal  
-    #translationPlaylistModal           
+                    br            
+                .col-xs-6
+                    if translationExists
+                        each line in rightTranslation.lyric[i]
+                            span #{line}
+                            br
+                    br
+        #songPlaylistModal  
+        #translationPlaylistModal           
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}

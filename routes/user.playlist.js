@@ -208,7 +208,7 @@ router.post('/:playlist_name/export1', function(req, res, next) {
     }), function(err) {
         if (err) return next
         res.send({
-            url: '/user/playlist/' + playlistName + '/export3'
+            url: true
         })
     })
 })

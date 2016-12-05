@@ -1,5 +1,4 @@
 /*hero image*/
-
 .jumbotron {
     background-image: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg);
     background-position: center;
@@ -51,10 +50,6 @@ footer a{
   font-size: 13px;
 }
 
-footer h5{
-  font-size: 1px;
-}
-
 #searchBoxHome {
     width: 450px;
     margin: auto
@@ -63,6 +58,11 @@ footer h5{
 #discoverBox {
     width: 550px;
 }
+
+img.createSlide {
+  height: 200px
+}
+
 
 @media screen and (max-width: 570px) {
     #searchBoxHome {
