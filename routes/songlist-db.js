@@ -37,7 +37,7 @@ router.route('/add')
                     author: '',
                     year: '',
                     lang: 'english',
-                    copyright: 'CC0',
+                    copyright: 'private',
                     lyric: [
                         ['']
                     ]

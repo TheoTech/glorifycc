@@ -16,7 +16,7 @@ block content
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
     script.
-        var translationObject = {title: '', author: '', year: '', lang: 'english', copyright: 'CC0', lyric: []}
+        var translationObject = {title: '', author: '', year: '', lang: 'english', copyright: 'private', lyric: []}
         //to show multiple stanza boxes on the form
         for (var i = 0; i < song.lyric.length; i++) {
             translationObject.lyric.push([''])
