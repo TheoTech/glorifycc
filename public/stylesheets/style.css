@@ -63,6 +63,14 @@ img.createSlide {
   height: 200px
 }
 
+h4.featureTitle {
+  height: 40px;
+}
+
+p.featureExplanation {
+  height: 80px;
+}
+
 @media screen and (max-width: 570px) {
     #searchBoxHome {
         width: 300px;
