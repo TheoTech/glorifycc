@@ -46,8 +46,8 @@ hr.preview {
     margin-bottom: 0;
 }
 
-footer a{
-  font-size: 13px;
+footer a {
+    font-size: 13px;
 }
 
 #searchBoxHome {
@@ -63,24 +63,11 @@ img.createSlide {
   height: 200px
 }
 
-
 @media screen and (max-width: 570px) {
     #searchBoxHome {
         width: 300px;
     }
     #discoverBox {
         width: 350px;
-    }
-}
-
-@media screen and (max-width: 1200px) {
-    p#lyricsInManyLanguages {
-        height: 60px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    p#lyricsInManyLanguages {
-        height: 40px;
     }
 }
