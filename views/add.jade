@@ -9,10 +9,13 @@ block content
 
 
     script.
-        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
+    script(src='/dist/javascripts/defaultSongObj.js')
     script.
+        var song = defaultSongObj
+        //to show one stanza box on the form
+        song.lyric.push([''])
         var obj = {
             song: song, 
             url: '/songlist-db/add', 

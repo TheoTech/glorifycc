@@ -32,19 +32,8 @@ router.route('/add')
             if (err) next(err)
             res.render('add', {
                 availableLanguages: languages.map((language) => language.lang),
-                song: {
-                    title: '',
-                    author: '',
-                    year: '',
-                    lang: 'english',
-                    copyright: 'private',
-                    lyric: [
-                        ['']
-                    ]
-                }
             })
         })
-
     })
     //add the song to database
     .post(function(req, res, next) {
