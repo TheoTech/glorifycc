@@ -1,4 +1,15 @@
 /*hero image*/
+/*body #page-wrapper {
+  background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/hero_image.jpg");
+  background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/hero_image.jpg");
+  background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/hero_image.jpg");
+  background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/hero_image.jpg");
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 0;
+}*/
 
 .jumbotron {
     background-image: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(/images/hero_image.jpg);
@@ -51,10 +62,6 @@ footer a{
   font-size: 13px;
 }
 
-footer h5{
-  font-size: 1px;
-}
-
 #searchBoxHome {
     width: 450px;
     margin: auto
@@ -63,6 +70,11 @@ footer h5{
 #discoverBox {
     width: 550px;
 }
+
+img.createSlide {
+  height: 300px
+}
+
 
 @media screen and (max-width: 570px) {
     #searchBoxHome {
