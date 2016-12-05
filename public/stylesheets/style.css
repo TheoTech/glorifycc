@@ -71,6 +71,10 @@ p.featureExplanation {
   height: 80px;
 }
 
+.whyDoesThisMatter {
+  font-weight: 300
+}
+
 @media screen and (max-width: 570px) {
     #searchBoxHome {
         width: 300px;
