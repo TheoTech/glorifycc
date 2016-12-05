@@ -25,7 +25,7 @@ header.navbar.navbar-default
                     //-     a(href="/admin/userlist") User Database
             if !withoutSearchbox
                 .navbar-form.navbar-left
-                        #searchBox(style='width: 330px')
+                    #searchBox(style='width: 330px')
             ul.nav.navbar-nav.navbar-right
                 if login
                     li
@@ -37,7 +37,7 @@ header.navbar.navbar-default
                         a(href="/user/login") Log In
                     li
                         a(href="/user/signup") Sign Up
-
-script(src='/dist/javascripts/searchBoxHome.js')
-script.
-    m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)
+if !withoutSearchbox
+    script(src='/dist/javascripts/searchBoxHome.js')
+    script.
+        m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)
