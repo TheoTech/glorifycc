@@ -156,8 +156,8 @@ function songForm(obj) {
         if (!_.isEmpty(errors)) {
             return m('#alert.alert.alert-danger', {
                 config: function(elem, isInit) {
-                    if(!isInit){
-                      $(elem).delay(3000).fadeOut()
+                    if (!isInit) {
+                        $(elem).delay(3000).fadeOut()
                     }
                 }
             }, [
@@ -221,7 +221,7 @@ function songForm(obj) {
                     ]),
                     m('.form-group', [
                         m('label', 'Language'),
-                        m('select.form-control.capitalize', {
+                        m('select.form-control', {
                             onchange: m.withAttr('value', lang),
                             config: function(elem, isInit) {
                                 if (!isInit) {
@@ -233,7 +233,9 @@ function songForm(obj) {
                             }
                         }, [
                             availableLanguages.map((lang) => {
-                                return m('option', lang)
+                                return m('option', {
+                                    'value': lang.code
+                                }, lang.label)
                             })
                         ])
                     ]),

@@ -31,7 +31,7 @@ router.route('/add')
         Language.find(function(err, languages) {
             if (err) next(err)
             res.render('add', {
-                availableLanguages: languages.map((language) => language.lang),
+                availableLanguages: languages
             })
         })
     })

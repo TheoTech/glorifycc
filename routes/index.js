@@ -39,22 +39,19 @@ router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, n
     //     ],
     //     private: false
     // }]
-    var stanza = [];
-    var newLyric = [];
     Song.find(function(err, songs) {
         songs.forEach((song, i, arr) => {
-            song.lyric.forEach((line) => {
-                if (line !== '') {
-                    stanza.push(line)
-                } else {
-                    newLyric.push(stanza)
-                    stanza = [];
-                }
-            })
-            newLyric.push(stanza)
-            stanza = [];
-            song.lyric = newLyric;
-            delete song.private
+            if (song.lang === 'english') {
+                song.lang = 'en'
+            } else if (song.lang === 'spanish') {
+                song.lang = 'es'
+            } else if (song.lang === 'mandarin') {
+                song.lang = 'zh'
+            } else if (song.lang === 'portuguese') {
+                song.lang = 'pt'
+            } else if (song.lang === 'bahasa') {
+                song.lang = 'id'
+            }
             song.save(function(err) {
                 if (err) next(err)
                 if (i === arr.length - 1) {

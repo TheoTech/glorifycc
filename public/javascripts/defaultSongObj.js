@@ -2,7 +2,7 @@ var defaultSongObj = {
     title: '',
     author: '',
     year: '',
-    lang: 'english',
+    lang: 'en',
     copyright: 'private',
     lyric: []
 }

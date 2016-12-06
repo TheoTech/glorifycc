@@ -146,7 +146,7 @@ router.route('/:song_id/add-translation')
                     if (err) next(err)
                     res.render('addTranslation', {
                         song: song,
-                        availableLanguages: languages.map((language) => language.lang)
+                        availableLanguages: languages
                     })
                 })
             }
@@ -239,7 +239,7 @@ router.route('/:song_id/edit')
             Language.find(function(err, languages) {
                 if (err) next(err)
                 res.render('edit', {
-                    availableLanguages: languages.map((language) => language.lang),
+                    availableLanguages: languages,
                     song: song
                 })
             })
