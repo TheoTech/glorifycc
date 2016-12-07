@@ -1,30 +1,33 @@
-extends ../layout
-
-block content
-    each songs in songs2d
-        -var i = 0
-        -var j = 0
-        -while (i < songs.length && j < songs.length)
-            table.table.text-center(style='page-break-after: always; font-size: 10px')
-                thead
-                    th.text-center #{songs[i].title}
-                    -i++
-                    - while(i % 3 !== 0 && i < songs.length)
+doctype html
+html
+    head
+        include ../headContent
+    body
+        include ../importJS
+        each songs in songs2d
+            -var i = 0
+            -var j = 0
+            -while (i < songs.length && j < songs.length)
+                table.table.text-center(style='page-break-after: always; font-size: 10px')
+                    thead
                         th.text-center #{songs[i].title}
                         -i++
-                tbody
-                    -for(var index = 0; index < songs[0].lyric.length; index++)
-                        tr
-                            td
-                                -for(var x = 0; x < songs[j].lyric[index].length; x++)
-                                    !{songs[j].lyric[index][x]}
-                                    br
-                                br
-                            -j++
-                            -while(j % 3 !== 0 && j < songs.length)            
+                        - while(i % 3 !== 0 && i < songs.length)
+                            th.text-center #{songs[i].title}
+                            -i++
+                    tbody
+                        -for(var index = 0; index < songs[0].lyric.length; index++)
+                            tr
                                 td
                                     -for(var x = 0; x < songs[j].lyric[index].length; x++)
                                         !{songs[j].lyric[index][x]}
                                         br
+                                    br
                                 -j++
-                            -j = 0
+                                -while(j % 3 !== 0 && j < songs.length)            
+                                    td
+                                        -for(var x = 0; x < songs[j].lyric[index].length; x++)
+                                            !{songs[j].lyric[index][x]}
+                                            br
+                                    -j++
+                                -j = 0
