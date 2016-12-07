@@ -6,6 +6,8 @@ var _ = require('lodash');
 var Playlist = require('../models/playlist');
 var Language = require('../models/language');
 var passportFunction = require('../lib/passport');
+var Language = require('../models/language')
+var defaultSongObj = require('../lib/defaultSongObj')
 
 
 router.route('/:song_id')
@@ -13,7 +15,9 @@ router.route('/:song_id')
         lang = req.query.lang || ''
         song_id = req.params.song_id
         song = {}
-        Song.findById(song_id, function(err, s) {
+        Song.findById(song_id)
+        .populate('lang')
+        .exec(function(err, s) {
             song = s;
             next()
         })
@@ -36,65 +40,68 @@ router.route('/:song_id')
         }
 
         function findSong() {
-            Song.find({
-                $or: [{
-                    $and: [{
-                        source: song.source
-                    }, {
-                        source: {
-                            $exists: true
-                        }
-                    }, {
-                        lang: {
-                            $ne: song.lang
-                        }
-                    }]
-                }, {
-                    _id: song.source
-                }, {
-                    source: song._id
-                }]
-            }, function(err, translations) {
-                if (err) {
-                    res.status(400).send('Error getting songs ' + err)
-                }
-                //The user sees a song on the left. If they want to view a translation, it appears on the right.
-                //rightTranslation is the song obj in the language that the user picks in the dropdown
-                var rightTranslation = translations.find((translation) => translation.lang === lang) || {}
-                var translationExists = !_.isEmpty(rightTranslation)
-                if (req.isAuthenticated()) {
-                    Playlist.find({
-                        owner: req.user._id,
-                        song: {
-                            $exists: false
-                        }
-                    }, function(err, playlists) {
-                        User.findOne({
-                            _id: req.user._id
-                        }, function(err, user) {
-                            console.log(user.library)
-                            res.render('song', {
-                                song: song,
-                                rightTranslation: rightTranslation,
-                                translationExists: translationExists,
-                                translations: translations,
-                                playlists: playlists,
-                                inLibrary: user.library
-                            })
-                        })
 
-                    })
-                } else {
-                    res.render('song', {
-                        song: song,
-                        rightTranslation: rightTranslation,
-                        translationExists: translationExists,
-                        translations: translations,
-                        playlists: [],
-                        inLibrary: []
-                    })
-                }
-            })
+            Song.find({
+                    $or: [{
+                        $and: [{
+                            source: song.source
+                        }, {
+                            source: {
+                                $exists: true
+                            }
+                        }, {
+                            lang: {
+                                $ne: song.lang._id
+                            }
+                        }]
+                    }, {
+                        _id: song.source
+                    }, {
+                        source: song._id
+                    }]
+                })
+                .populate('lang')
+                .exec(function(err, translations) {
+                    if (err) {
+                        res.status(400).send('Error getting songs ' + err)
+                    }
+                    console.log(translations)
+                    //The user sees a song on the left. If they want to view a translation, it appears on the right.
+                    //rightTranslation is the song obj in the language that the user picks in the dropdown
+                    var rightTranslation = translations.find((translation) => translation.lang._id == lang) || {}
+                    var translationExists = !_.isEmpty(rightTranslation)
+                    if (req.isAuthenticated()) {
+                        Playlist.find({
+                            owner: req.user._id,
+                            song: {
+                                $exists: false
+                            }
+                        }, function(err, playlists) {
+                            User.findOne({
+                                _id: req.user._id
+                            }, function(err, user) {
+                                res.render('song', {
+                                    song: song,
+                                    rightTranslation: rightTranslation,
+                                    translationExists: translationExists,
+                                    translations: translations,
+                                    playlists: playlists,
+                                    inLibrary: user.library
+                                })
+                            })
+
+                        })
+                    } else {
+                        res.render('song', {
+                            song: song,
+                            rightTranslation: rightTranslation,
+                            translationExists: translationExists,
+                            translations: translations,
+                            playlists: [],
+                            inLibrary: []
+                        })
+                    }
+                })
         }
     })
     //choosing translations
@@ -146,7 +153,8 @@ router.route('/:song_id/add-translation')
                     if (err) next(err)
                     res.render('addTranslation', {
                         song: song,
-                        availableLanguages: languages
+                        availableLanguages: languages,
+                        defaultSongObj: defaultSongObj.song
                     })
                 })
             }
@@ -193,13 +201,22 @@ router.route('/:song_id/add-translation')
                         title: data.title,
                         author: data.author,
                         year: data.year,
-                        lang: data.lang,
+                        translator: data.translator,
                         lyric: data.lyric,
+                        lang: data.lang,
+                        youtubeLink: data.youtubeLink,
                         contributor: req.user.username,
                         copyright: data.copyright,
-                        timeAdded: Date.now(),
-                        source: song._id
+                        timeAdded: Date.now()
                     })
+
+                    if (!song.source) {
+                        //the user adds the translation to parent song
+                        newSong.source = song._id
+                    } else {
+                        //the user adds the translation to child song
+                        newSong.source = song.source
+                    }
                     newSong.save(function(err) {
                         if (err) next(err)
                         if (data.copyright === 'private') {
@@ -227,10 +244,12 @@ router.route('/:song_id/edit')
     .all(passportFunction.loggedIn, function(req, res, next) {
         song_id = req.params.song_id;
         song = {};
-        Song.findById(song_id, function(err, s) {
-            song = s;
-            next();
-        });
+        Song.findById(song_id)
+            .populate('lang')
+            .exec(function(err, s) {
+                song = s;
+                next();
+            });
     })
     .get(function(req, res, next) {
         if (song.contributor !== req.user.username && !passportFunction.isAdmin) {

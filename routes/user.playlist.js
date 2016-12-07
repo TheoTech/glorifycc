@@ -155,20 +155,25 @@ router.get('/:playlist_name/export1', function(req, res, next) {
                 $exists: true
             }
         })
-        .populate('song availableTranslations')
+        .populate({
+            path: 'song availableTranslations',
+            populate: {
+                path: 'lang'
+            }
+        })
         .exec(function(err, playlists) {
             if (err) return next(err)
             uniqueLanguages =
                 //get 2d array of songs' languages, turn it to 1d array, get the unique languages, sort it by alphabet
                 (_.uniq(playlists.map((pl) =>
-                        pl.availableTranslations.map((translation) =>
-                            translation.lang))
+                        pl.availableTranslations.map((translation) => {
+                            return translation.lang
+                        }))
                     .reduce((prev, curr) => _.concat(prev, curr)))).sort();
 
             songs =
                 //get the songs object useful for client side
                 playlists.map((playlist) => {
-                    console.log(playlist.translationsChecked)
                     return {
                         song: playlist.song,
                         availableTranslations: playlist.availableTranslations.map((availableTranslation) => {
@@ -237,12 +242,16 @@ router.route('/:playlist_name/export3')
                     $ne: []
                 }
             })
-            .populate('translationsChecked')
+            .populate({
+                path: 'translationsChecked',
+                populate: {
+                    path: 'lang'
+                }
+            })
             .exec(function(err, playlists) {
                 if (err) return next(err)
                 songs2d = playlists.map((playlist) => {
                         return playlist.translationsChecked
-
                     })
                     //this var is to check whether we should disable the export option on the ui
                 maxNumberOfSongs = songs2d.reduce((prev, curr) => {
@@ -336,7 +345,7 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
             //add text with white color, and center horizontally
             pObj = addTextToSlide(slide, song.title, titleMargin, 50, 50, 'ffffff')
             titleMargin += 70; //add y space for the second title
-            pObj = addTextToSlide(slide, '(' + song.lang + ')', titleMargin, 20, 30, 'ffffff')
+            pObj = addTextToSlide(slide, '(' + song.lang.label + ')', titleMargin, 20, 30, 'ffffff')
             titleMargin += 100;
         })
         pObj = addTextToSlide(slide, watermark, 630, 20, 20, '8cb4cd')

@@ -3,16 +3,19 @@ var express = require('express'),
     Song = require('../models/song'),
     User = require('../models/user'),
     passportFunction = require('../lib/passport'),
-    Language = require('../models/language')
+    Language = require('../models/language'),
+    defaultSongObj = require('../lib/defaultSongObj')
 
 
 router.get('/', passportFunction.adminLoggedIn, function(req, res, next) {
-    Song.find(function(err, songs) {
-        if (err) return next(err);
-        res.render('songlist-db', {
-            songs: songs
+    Song.find()
+        .populate('lang')
+        .exec(function(err, songs) {
+            if (err) return next(err);
+            res.render('songlist-db', {
+                songs: songs
+            })
         })
-    })
 })
 
 router.delete('/:song_id', passportFunction.adminLoggedIn, function(req, res, next) {
@@ -28,9 +31,11 @@ router.delete('/:song_id', passportFunction.adminLoggedIn, function(req, res, ne
 router.route('/add')
     .all(passportFunction.loggedIn)
     .get(function(req, res, next) {
+        console.log(defaultSongObj.song)
         Language.find(function(err, languages) {
             if (err) next(err)
             res.render('add', {
+                song: defaultSongObj.song,
                 availableLanguages: languages
             })
         })
@@ -47,6 +52,7 @@ router.route('/add')
             })
         } else {
             var data = req.body
+            console.log(data)
             Song.findOne({
                 title: data.title
             }, function(err, song) {
@@ -58,16 +64,20 @@ router.route('/add')
                         errorMessages: ['Song Exists']
                     });
                 } else {
+                    if (err) next(err)
                     var newSong = new Song({
-                        title: data.title,
-                        author: data.author,
-                        year: data.year,
-                        lang: data.lang,
-                        lyric: data.lyric,
-                        contributor: req.user.username,
-                        copyright: data.copyright,
-                        timeAdded: Date.now()
-                    })
+                            title: data.title,
+                            author: data.author,
+                            translator: data.translator,
+                            year: data.year,
+                            lang: data.lang,
+                            youtubeLink: data.youtubeLink,
+                            lyric: data.lyric,
+                            contributor: req.user.username,
+                            copyright: data.copyright,
+                            timeAdded: Date.now()
+                        })
+                        // newSong.lang = language._id
                     newSong.save(function(err) {
                         if (err) {
                             res.status(400).send('error saving new song ' + err)

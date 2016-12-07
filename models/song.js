@@ -3,16 +3,21 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema
 
-
 var songSchema = new Schema({
     title: String,
     author: String,
     year: String,
-    lang: String,
+    lang: {
+        type: Schema.Types.ObjectId,
+        ref: 'Language'
+    },
     translator: String,
     contributor: String,
     copyright: String,
-    lyric: [[String]],
+    youtubeLink: String,
+    lyric: [
+        [String]
+    ],
     source: Schema.Types.ObjectId,
     oriSong: String,
     timeAdded: Date

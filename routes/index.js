@@ -9,6 +9,7 @@ var fs = require('file-system');
 var officegen = require('officegen');
 var passportFunction = require('../lib/passport');
 var smtp = require('../lib/smtp');
+var Language = require('../models/language')
 
 router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, next) {
     // var songs = [{
@@ -41,23 +42,27 @@ router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, n
     // }]
     Song.find(function(err, songs) {
         songs.forEach((song, i, arr) => {
-            if (song.lang === 'english') {
-                song.lang = 'en'
-            } else if (song.lang === 'spanish') {
-                song.lang = 'es'
-            } else if (song.lang === 'mandarin') {
-                song.lang = 'zh'
-            } else if (song.lang === 'portuguese') {
-                song.lang = 'pt'
-            } else if (song.lang === 'bahasa') {
-                song.lang = 'id'
-            }
-            song.save(function(err) {
-                if (err) next(err)
-                if (i === arr.length - 1) {
-                    res.send('migration success')
-                }
-            })
+            song.temp = 'ahahhaa'
+            song.save()
+                // console.log(song.year)
+                // console.log(song.lang)
+                // Language.find({
+                //     code: song.lang
+                // }, (err, language) => {
+                //     if (err) {
+                //         res.status(400).send('error: ' + err)
+                //     } else {
+                //         console.log(i)
+                //         console.log(language)
+                //         song.lang = language._id
+                //         song.save(function(err) {
+                //             if (err) next(err)
+                //             if (i === arr.length - 1) {
+                //                 res.send('migration success')
+                //             }
+                //         })
+                //     }
+                // })
         })
     })
 })
@@ -101,7 +106,7 @@ router.get('/', function(req, res, next) {
             copyright: {
                 $ne: 'private'
             }
-        }, function(err, songs, count) {
+        }, function(err, songs) {
             if (err) {
                 res.status(400).send('error getting song list ' + err)
             }
@@ -284,28 +289,32 @@ router.get('/search', function(req, res, next) {
     function findSongsLoggedIn(done) {
         var query = new RegExp('.*' + searchString + '.*')
         Song.find({
-                    $or: [{
-                        title: {
-                            $regex: query,
-                            $options: 'si' //s option to allow dot character to match all characters including new line
-                        }
+                    $and: [{
+                        $or: [{
+                            title: {
+                                $regex: query,
+                                $options: 'si' //s option to allow dot character to match all characters including new line
+                            }
+                        }, {
+                            author: {
+                                $regex: query,
+                                $options: 'si'
+                            }
+                        }, {
+                            lyric: {
+                                $regex: query,
+                                $options: 'si'
+                            }
+                        }]
                     }, {
-                        author: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        lyric: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        copyright: 'private',
-                        contributor: req.user.username
-                    }, {
-                        copyright: {
-                            $ne: 'private'
-                        }
+                        $or: [{
+                            copyright: 'private',
+                            contributor: req.user.username
+                        }, {
+                            copyright: {
+                                $ne: 'private'
+                            }
+                        }]
                     }]
                 },
                 function(err, songs) {
@@ -400,11 +409,16 @@ router.get('/discover', function(req, res, next) {
             copyright: {
                 $ne: 'private'
             }
-        }, function(err, songs, count) {
+        })
+        .populate('lang')
+        .sort({
+            title: 1
+        })
+        .exec(function(err, songs) {
             if (err) {
-                res.status(400).send('error getting song list ' + err)
+                next(err)
             }
-            //to get what languages we need to include in the dropdown for filtering feature
+                //to get what languages we need to include in the dropdown for filtering feature
             langsExist = _.uniq(songs.map((s) => s.lang))
             if (req.isAuthenticated()) {
                 User.findOne({
@@ -439,10 +453,7 @@ router.get('/discover', function(req, res, next) {
                 })
             }
         })
-        .sort({
-            title: 1
-        })
-        .limit(10)
+
 })
 
 router.put('/discover', function(req, res, next) {
@@ -535,7 +546,8 @@ router.put('/discover', function(req, res, next) {
     var applyFilter = function(songs2d, done) {
         if (!_.isEmpty(langFilter)) {
             songs2d = songs2d.filter((songs) => {
-                var langArray = (songs.map((song) => song.lang))
+                //get all the songs lang id, convert it to string so we can compare it later with langFilter
+                var langArray = (songs.map((song) => song.lang.toString()))
                 for (var i = 0; i < langFilter.length; i++) {
                     if (!_.includes(langArray, langFilter[i])) {
                         return false
@@ -560,7 +572,7 @@ router.put('/discover', function(req, res, next) {
     //apply 'show songs in' filter
     var loadMore = function(songs2d, done) {
         if (langShown !== 'all') {
-            songs2d = songs2d.filter((s) => s.lang === langShown)
+            songs2d = songs2d.filter((s) => s.lang == langShown)
         }
         if (songs2d.length >= totalSongsDisplayed) {
             songs2d = songs2d.slice(0, totalSongsDisplayed)
@@ -571,7 +583,6 @@ router.put('/discover', function(req, res, next) {
     var finalize = function(err, songs2d) {
         if (err) {
             res.status(500).send('Internal error' + err)
-            console.log(err)
         } else {
             res.send({
                 songs: songs2d

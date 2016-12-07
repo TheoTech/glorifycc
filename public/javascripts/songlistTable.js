@@ -10,7 +10,8 @@ var songlistTable = {
                     loadMoreAndApplyFilter: args.loadMoreAndApplyFilter,
                     initial: args.initial,
                     langsExist: args.langsExist,
-                    searchString: args.searchString
+                    searchString: args.searchString,
+                    langShownLabel: args.langShownLabel
                 }),
                 m('.table-responsive', [
                     m('table.table', [

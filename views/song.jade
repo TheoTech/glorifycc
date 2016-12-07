@@ -31,15 +31,15 @@ block content
                             option(value='/song/#{song._id}/add-translation') Add Translation
                         optgroup
                             for t in translations
-                                option(value='?lang=' + t.lang) #{t.lang}
+                                option(value='?lang=' + t.lang._id) #{t.lang.label}
         .row
             .col-xs-6
                 #song
-                h4.capitalize=song.lang
+                h4 #{song.lang.label}
             .col-xs-6
                 if translationExists
                     #translation
-                    h4.capitalize #{rightTranslation.lang}
+                    h4 #{rightTranslation.lang.label}
         -for (var i = 0; i < song.lyric.length; i++)
             .row
                 .col-xs-6

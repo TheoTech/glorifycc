@@ -9,18 +9,17 @@ block content
 
 
     script.
+        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
-    script(src='/dist/javascripts/defaultSongObj.js')
     script.
-        var song = defaultSongObj
         //to show one stanza box on the form
         song.lyric.push([''])
         var obj = {
-            song: song, 
+            song: song,
             url: '/songlist-db/add',
-            readonly: false, 
-            submitButton: true, 
-            formID: '' 
+            readonly: false,
+            submitButton: true,
+            formID: ''
         }
         m.mount(document.getElementById('addSong'), songForm(obj).songFormComponent)

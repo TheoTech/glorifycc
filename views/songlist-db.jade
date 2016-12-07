@@ -27,7 +27,7 @@ block content
                         a(href='/song/#{song.id}', font-size="5em") #{song.title}
                     td #{song.author}
                     td #{song.year}
-                    td.capitalize #{song.lang}
+                    td #{song.lang.label}
                     td
                     td #{song.contributor}
                     td.capitalize #{song.copyright}

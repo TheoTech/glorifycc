@@ -3,6 +3,7 @@ var discover = (function() {
     var displayedSongs = m.prop(songs)
     var initial = 10
     var langShown = m.prop('all')
+    var langShownLabel = m.prop()
     var langFilter = m.prop([])
     var searchString = m.prop()
     var addButtonDOM = m.prop()
@@ -52,7 +53,8 @@ var discover = (function() {
                 langsExist: langsExist,
                 searchString: searchString,
                 isLoggedIn: isLoggedIn,
-                addButtonDOM: addButtonDOM
+                addButtonDOM: addButtonDOM,
+                langShownLabel: langShownLabel
             }))
         }
     }

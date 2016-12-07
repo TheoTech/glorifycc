@@ -50,14 +50,14 @@ var searchBoxComponent = (function() {
                                     m('input[type=checkbox]', {
                                         onclick: function() {
                                             if (this.checked) {
-                                                args.langFilter().push(lang)
+                                                args.langFilter().push(lang._id)
                                             } else {
-                                                _.remove(args.langFilter(), (n) => n === lang)
+                                                _.remove(args.langFilter(), (n) => n === lang._id)
                                             }
                                             args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
                                         }
                                     })
-                                ], lang)
+                                ], lang.label)
                             })
                         ])
                     ])

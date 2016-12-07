@@ -16,10 +16,12 @@
 function songForm(obj) {
     var title = m.prop(obj.song.title)
     var author = m.prop(obj.song.author)
+    var translator = m.prop(obj.song.translator)
     var year = m.prop(obj.song.year)
-    var lang = m.prop(obj.song.lang)
+    var lang = m.prop(obj.song.lang._id)
     var copyright = m.prop(obj.song.copyright)
     var lyric = obj.song.lyric;
+    var youtubeLink = m.prop(obj.song.youtubeLink)
 
     //copypaste stores the current data for copy and paste box
     var copypaste = []
@@ -39,9 +41,11 @@ function songForm(obj) {
                 data: {
                     title: title(),
                     author: author(),
+                    translator: translator(),
                     year: year(),
                     lang: lang(),
                     copyright: copyright(),
+                    youtubeLink: youtubeLink(),
                     lyric: lyric
                 }
             })
@@ -119,7 +123,6 @@ function songForm(obj) {
                                                 return cp.split(/\n|\//)
                                             })
                                         }
-                                        console.log(JSON.stringify(copypaste[0]))
                                     });
                                 }
                             }
@@ -206,6 +209,20 @@ function songForm(obj) {
                         })
                     ]),
                     m('.form-group', [
+                        m('label', 'Translator'),
+                        m('input.form-control', {
+                            value: translator(),
+                            onchange: m.withAttr('value', translator),
+                            config: function(elem, isInit) {
+                                if (!isInit) {
+                                    if (obj.readonly) {
+                                        $(elem).prop('readonly', true)
+                                    }
+                                }
+                            }
+                        })
+                    ]),
+                    m('.form-group', [
                         m('label', 'Year Published'),
                         m('input.form-control', {
                             value: year(),
@@ -234,7 +251,7 @@ function songForm(obj) {
                         }, [
                             availableLanguages.map((lang) => {
                                 return m('option', {
-                                    'value': lang.code
+                                    'value': lang._id
                                 }, lang.label)
                             })
                         ])
@@ -256,6 +273,20 @@ function songForm(obj) {
                             m('option', 'public'),
                             m('option', 'private')
                         ])
+                    ]),
+                    m('.form-group', [
+                        m('label', 'Youtube Video Link'),
+                        m('input.form-control', {
+                            value: youtubeLink(),
+                            onchange: m.withAttr('value', youtubeLink),
+                            config: function(elem, isInit) {
+                                if (!isInit) {
+                                    if (obj.readonly) {
+                                        $(elem).prop('readonly', true)
+                                    }
+                                }
+                            }
+                        })
                     ]),
                     m('div', {
                         id: 'stanzas' + obj.formID
