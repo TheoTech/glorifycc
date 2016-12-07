@@ -1,0 +1,85 @@
+[
+  {
+    "title": "Amazing Grace",
+    "author": "John Newton and Virginia Harmony ",
+    "year": "1779",
+    "lang": "english",
+    "copyright": "public",
+    "contributor": "GlorifyStaff",
+    "lyric": [
+      [
+        "Amazing grace! how sweet the sound,",
+        "That saved a wretch like me!",
+        "I once was lost, but now am found;",
+        "Was blind, but now I see."
+      ],
+      [
+        "'Twas grace that taught my heart to fear,",
+        "And grace my fears relieved;",
+        "How precious did that grace appear",
+        "The hour I first believed!"
+      ],
+      [
+        "Thro' many dangers, toils and snares",
+        "I have already come;",
+        "'Tis grace has brought me safe thus far,",
+        "And grace will lead me home."
+      ],
+      [
+        "The Lord has promised good to me;",
+        "His Word my hope secures;",
+        "He will my Shield and Portion be,",
+        "As long as life endures."
+      ],
+      [
+        "The earth shall soon dissolve like snow;",
+        "The sun forbear to shine;",
+        "But God, who called me here below,",
+        "Will be forever mine."
+      ],
+      [
+        "When we've been there ten thousand years,",
+        "Bright shining as the sun,",
+        "We've no less days to sing God's praise",
+        "Than when we'd first begun"
+      ]
+    ]
+  },
+  {
+    "title": "Amazing Grace",
+    "author": "John Newton and Virginia Harmony ",
+    "year": "1779",
+    "lang": "spanish",
+    "translator": "desconocido",
+    "copyright": "public",
+    "contributor": "GlorifyStaff",
+    "lyric": [
+      [
+        "Sublime gracia del Señor",
+        "Que a mi pecador salvó",
+        "Fui ciego mas hoy miro yo",
+        "Perdido y el me amó."
+      ],
+      [
+        "Su gracia me enseño a temer",
+        "Mis dudas ahuyentó",
+        "O cuan precioso fue a mi ser",
+        "Al dar mi corazón."
+      ],
+      [
+        "En los peligros o aflicción",
+        "Que yo he tenido aquí",
+        "Su gracia siempre me libró",
+        "Y me guiará feliz."
+      ],
+      [],
+      [],
+      [
+        "Y cuando en Sión por siglos mil",
+        "Brillando este cual sol",
+        "Yo cantaré por siempre allí",
+        "Su amor que me salvo."
+      ]
+    ]
+  }
+]
