@@ -35,11 +35,14 @@ block content
         .row
             .col-xs-6
                 #song
-                h4.capitalize=song.lang
             .col-xs-6
                 if translationExists
                     #translation
-                    h4.capitalize #{rightTranslation.lang}
+        .row
+            .col-xs-6
+                h4.capitalize=song.lang
+            .col-xs-6
+                h4.capitalize #{rightTranslation.lang}
         -for (var i = 0; i < song.lyric.length; i++)
             .row
                 .col-xs-6
@@ -68,4 +71,3 @@ block content
     script(src='/dist/javascripts/addOrDeleteButton.js')
     script(src='/dist/javascripts/buttons.js')
     script(src='/dist/javascripts/songClicked.js')
-        

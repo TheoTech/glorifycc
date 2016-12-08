@@ -287,28 +287,32 @@ router.get('/search', function(req, res, next) {
     function findSongsLoggedIn(done) {
         var query = new RegExp('.*' + searchString + '.*')
         Song.find({
-                    $or: [{
-                        title: {
-                            $regex: query,
-                            $options: 'si' //s option to allow dot character to match all characters including new line
-                        }
+                    $and: [{
+                        $or: [{
+                            title: {
+                                $regex: query,
+                                $options: 'si' //s option to allow dot character to match all characters including new line
+                            }
+                        }, {
+                            author: {
+                                $regex: query,
+                                $options: 'si'
+                            }
+                        }, {
+                            lyric: {
+                                $regex: query,
+                                $options: 'si'
+                            }
+                        }]
                     }, {
-                        author: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        lyric: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        copyright: 'private',
-                        contributor: req.user.username
-                    }, {
-                        copyright: {
-                            $ne: 'private'
-                        }
+                        $or: [{
+                            copyright: 'private',
+                            contributor: req.user.username
+                        }, {
+                            copyright: {
+                                $ne: 'private'
+                            }
+                        }]
                     }]
                 },
                 function(err, songs) {
