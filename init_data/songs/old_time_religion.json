@@ -8,7 +8,7 @@
     "contributor": "GlorifyStaff",
     "lyric": [
       [
-        "’Tis the old time religion,[or Give me that old time religion]",
+        "’Tis the old time religion,",
         "’Tis the old time religion,",
         "’Tis the old time religion,",
         "And it’s good enough for me."
@@ -20,7 +20,7 @@
         "And it’s good enough for me."
       ],
       [
-        "’Tis the old time religion,[or Give me that old time religion]",
+        "’Tis the old time religion,",
         "’Tis the old time religion,",
         "’Tis the old time religion,",
         "And it’s good enough for me."
@@ -32,7 +32,7 @@
         "And it’s good enough for me."
       ],
       [
-        "’Tis the old time religion,[or Give me that old time religion]",
+        "’Tis the old time religion,",
         "’Tis the old time religion,",
         "’Tis the old time religion,",
         "And it’s good enough for me."
@@ -44,17 +44,19 @@
         "And it’s good enough for me."
       ],
       [
-        "’Tis the old time religion,[or Give me that old time religion]",
         "’Tis the old time religion,",
         "’Tis the old time religion,",
-        "And it’s good enough for me.",
+        "’Tis the old time religion,",
+        "And it’s good enough for me."
+      ],
+      [       
         "It will do when I am dying.",
         "It will do when I am dying.",
         "It will do when I am dying.",
         "And it’s good enough for me."
       ],
       [
-        "’Tis the old time religion,[or Give me that old time religion]",
+        "’Tis the old time religion,",
         "’Tis the old time religion,",
         "’Tis the old time religion,",
         "And it’s good enough for me."
@@ -66,10 +68,10 @@
         "And it’s good enough for me."
       ],
       [
-        "’Tis the old time religion,[or Give me that old time religion]",
         "’Tis the old time religion,",
         "’Tis the old time religion,",
-        "And it’s good enough for me.\n"
+        "’Tis the old time religion,",
+        "And it’s good enough for me."
       ]
     ]
   }
