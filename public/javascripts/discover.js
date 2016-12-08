@@ -1,12 +1,20 @@
 var discover = (function() {
-    var inLibrary = m.prop(currentInLibrary)
-    var displayedSongs = m.prop(songs)
-    var initial = 10
-    var langShown = m.prop('all')
-    var langShownLabel = m.prop()
-    var langFilter = m.prop([])
-    var searchString = m.prop()
-    var addButtonDOM = m.prop()
+    var inLibrary = m.prop(currentInLibrary);
+    var displayedSongs = m.prop(songs);
+    var initial = 10;
+
+    //langShown store the language id. it is for showing the songs title in 'langShown'
+    var langShown = m.prop('all');
+
+    //langShownLabel stores the language label such as 'English', 'Spanish', etc
+    var langShownLabel = m.prop();
+
+    //langFilter contains languages for showing the songs that has translations in 'langFilter'
+    var langFilter = m.prop([]);
+
+    //the string that the user types in the searchBox
+    var searchString = m.prop();
+    var addButtonDOM = m.prop();
 
     var loadMoreAndApplyFilter = function(totalSongsDisplayed, langShown, langFilter, searchString) {
         m.request({
@@ -20,7 +28,7 @@ var discover = (function() {
                 }
             })
             .then(function(res) {
-                displayedSongs(res.songs)
+                displayedSongs(res.songs);
             })
     }
 

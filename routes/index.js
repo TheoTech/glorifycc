@@ -11,61 +11,61 @@ var passportFunction = require('../lib/passport');
 var smtp = require('../lib/smtp');
 var Language = require('../models/language')
 
-router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, next) {
-    // var songs = [{
-    //     "lyric": [
-    //         "A mighty fortress is our God,",
-    //         "A bulwark never failing;",
-    //         "Our helper He, amid the flood",
-    //         "Of mortal ills prevailing.",
-    //         "For still our ancient foe",
-    //         "Doth seek to work us woe;",
-    //         "His craft and pow'r are great,",
-    //         "And, armed with cruel hate,",
-    //         "On earth is not his equal.",
-    //         '',
-    //         "Joy to the World , the Lord is come!",
-    //         "Let earth receive her King",
-    //         "Let every heart prepare Him room",
-    //         "And Heaven and nature sing",
-    //         "And Heaven and nature sing",
-    //         "And Heaven, and Heaven, and nature sing",
-    //         "",
-    //         "Joy to the World, the Savior reigns!",
-    //         "Let men their songs employ",
-    //         "While fields and floods, rocks, hills and plains",
-    //         "Repeat the sounding joy",
-    //         "Repeat the sounding joy",
-    //         "Repeat, repeat, the sounding joy"
-    //     ],
-    //     private: false
-    // }]
-    Song.find(function(err, songs) {
-        songs.forEach((song, i, arr) => {
-            song.temp = 'ahahhaa'
-            song.save()
-                // console.log(song.year)
-                // console.log(song.lang)
-                // Language.find({
-                //     code: song.lang
-                // }, (err, language) => {
-                //     if (err) {
-                //         res.status(400).send('error: ' + err)
-                //     } else {
-                //         console.log(i)
-                //         console.log(language)
-                //         song.lang = language._id
-                //         song.save(function(err) {
-                //             if (err) next(err)
-                //             if (i === arr.length - 1) {
-                //                 res.send('migration success')
-                //             }
-                //         })
-                //     }
-                // })
-        })
-    })
-})
+// router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, next) {
+//     // var songs = [{
+//     //     "lyric": [
+//     //         "A mighty fortress is our God,",
+//     //         "A bulwark never failing;",
+//     //         "Our helper He, amid the flood",
+//     //         "Of mortal ills prevailing.",
+//     //         "For still our ancient foe",
+//     //         "Doth seek to work us woe;",
+//     //         "His craft and pow'r are great,",
+//     //         "And, armed with cruel hate,",
+//     //         "On earth is not his equal.",
+//     //         '',
+//     //         "Joy to the World , the Lord is come!",
+//     //         "Let earth receive her King",
+//     //         "Let every heart prepare Him room",
+//     //         "And Heaven and nature sing",
+//     //         "And Heaven and nature sing",
+//     //         "And Heaven, and Heaven, and nature sing",
+//     //         "",
+//     //         "Joy to the World, the Savior reigns!",
+//     //         "Let men their songs employ",
+//     //         "While fields and floods, rocks, hills and plains",
+//     //         "Repeat the sounding joy",
+//     //         "Repeat the sounding joy",
+//     //         "Repeat, repeat, the sounding joy"
+//     //     ],
+//     //     private: false
+//     // }]
+//     Song.find(function(err, songs) {
+//         songs.forEach((song, i, arr) => {
+//             song.temp = 'ahahhaa'
+//             song.save()
+//                 // console.log(song.year)
+//                 // console.log(song.lang)
+//                 // Language.find({
+//                 //     code: song.lang
+//                 // }, (err, language) => {
+//                 //     if (err) {
+//                 //         res.status(400).send('error: ' + err)
+//                 //     } else {
+//                 //         console.log(i)
+//                 //         console.log(language)
+//                 //         song.lang = language._id
+//                 //         song.save(function(err) {
+//                 //             if (err) next(err)
+//                 //             if (i === arr.length - 1) {
+//                 //                 res.send('migration success')
+//                 //             }
+//                 //         })
+//                 //     }
+//                 // })
+//         })
+//     })
+// })
 
 router.get('/contact', function(req, res, next) {
     res.render('contact')
@@ -301,7 +301,7 @@ router.get('/search', function(req, res, next) {
                                 $options: 'si'
                             }
                         }, {
-                            lyric: {
+                            lyrics: {
                                 $regex: query,
                                 $options: 'si'
                             }
@@ -339,7 +339,7 @@ router.get('/search', function(req, res, next) {
                             $options: 'si'
                         }
                     }, {
-                        lyric: {
+                        lyrics: {
                             $regex: query,
                             $options: 'si'
                         }
@@ -482,7 +482,7 @@ router.put('/discover', function(req, res, next) {
                             $options: 'si'
                         }
                     }, {
-                        lyric: {
+                        lyrics: {
                             $regex: query,
                             $options: 'si'
                         }
@@ -572,7 +572,7 @@ router.put('/discover', function(req, res, next) {
     //apply 'show songs in' filter
     var loadMore = function(songs2d, done) {
         if (langShown !== 'all') {
-            songs2d = songs2d.filter((s) => s.lang == langShown)
+            songs2d = songs2d.filter((s) => s.lang.toString() === langShown)
         }
         if (songs2d.length >= totalSongsDisplayed) {
             songs2d = songs2d.slice(0, totalSongsDisplayed)

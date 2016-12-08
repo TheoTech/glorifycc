@@ -350,7 +350,7 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
         })
         pObj = addTextToSlide(slide, watermark, 630, 20, 20, '8cb4cd')
         titleMargin += 100;
-        for (var i = 0; i < songs[0].lyric.length; i++) {
+        for (var i = 0; i < songs[0].lyrics.length; i++) {
             //make new slide for every new stanza with background color black
             slide = pptx.makeNewSlide();
             slide.back = {
@@ -359,9 +359,9 @@ function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
             };
             var margin = stanzasPerSlide === 1 ? 175 : 50;
             for (var x = 0; x < songs.length; x++) {
-                for (var j = 0; j < songs[x].lyric[i].length; j++) {
+                for (var j = 0; j < songs[x].lyrics[i].length; j++) {
                     //print stanza
-                    pObj = addTextToSlide(slide, songs[x].lyric[i][j], margin, 40, 40, 'ffffff')
+                    pObj = addTextToSlide(slide, songs[x].lyrics[i][j], margin, 40, 40, 'ffffff')
                     margin += 50;
                 }
                 margin += 150

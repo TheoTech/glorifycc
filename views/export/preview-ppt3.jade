@@ -14,8 +14,7 @@ block content
         div(style='font-size: 12px; text-align: center; height: 330px; width: 500px; margin: auto; background-color: black; display: table')
             div(style='display: table-cell; vertical-align: middle')       
                 each song in songs
-                    -console.log('hehehe')
-                    p #{song.lyric[0][0]}
+                    p #{song.lyrics[0][0]}
         br
         hr.preview    
     include exportButton

@@ -4,13 +4,15 @@ var express = require('express'),
     User = require('../models/user'),
     passportFunction = require('../lib/passport'),
     Language = require('../models/language'),
-    defaultSongObj = require('../lib/defaultSongObj')
+    createDefaultSong = require('../lib/createDefaultSong'),
+    copyrightLists = require('../lib/copyrightConstant')
 
 
 router.get('/', passportFunction.adminLoggedIn, function(req, res, next) {
-    Song.find()
+    Song.find({})
         .populate('lang')
         .exec(function(err, songs) {
+            console.log(songs)
             if (err) return next(err);
             res.render('songlist-db', {
                 songs: songs
@@ -31,12 +33,14 @@ router.delete('/:song_id', passportFunction.adminLoggedIn, function(req, res, ne
 router.route('/add')
     .all(passportFunction.loggedIn)
     .get(function(req, res, next) {
-        console.log(defaultSongObj.song)
         Language.find(function(err, languages) {
             if (err) next(err)
-            res.render('add', {
-                song: defaultSongObj.song,
-                availableLanguages: languages
+            createDefaultSong(function(defaultSong) {
+                res.render('addSong', {
+                    song: defaultSong,
+                    availableLanguages: languages,
+                    copyrightLists: copyrightLists
+                })
             })
         })
     })

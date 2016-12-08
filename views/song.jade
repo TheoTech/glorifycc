@@ -40,16 +40,16 @@ block content
                 if translationExists
                     #translation
                     h4 #{rightTranslation.lang.label}
-        -for (var i = 0; i < song.lyric.length; i++)
+        -for (var i = 0; i < song.lyrics.length; i++)
             .row
                 .col-xs-6
-                    each line in song.lyric[i]
+                    each line in song.lyrics[i]
                         span #{line}
                         br
                     br            
                 .col-xs-6
                     if translationExists
-                        each line in rightTranslation.lyric[i]
+                        each line in rightTranslation.lyrics[i]
                             span #{line}
                             br
                     br

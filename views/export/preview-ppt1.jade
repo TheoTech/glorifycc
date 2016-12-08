@@ -11,7 +11,7 @@ block content
             h1 #{song.title}.pptx
             div(style='font-size: 20px; text-align: center; height: 330px; width: 500px; margin: auto; background-color: black; display: table')
                 div(style='display: table-cell; vertical-align: middle')
-                    each line in song.lyric[0]
+                    each line in song.lyrics[0]
                         p #{line}
             br
             hr.preview         

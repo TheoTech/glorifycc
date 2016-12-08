@@ -6,8 +6,9 @@ var _ = require('lodash');
 var Playlist = require('../models/playlist');
 var Language = require('../models/language');
 var passportFunction = require('../lib/passport');
-var Language = require('../models/language')
-var defaultSongObj = require('../lib/defaultSongObj')
+var Language = require('../models/language');
+var createDefaultSong = require('../lib/createDefaultSong');
+var copyrightLists = require('../lib/copyrightConstant');
 
 
 router.route('/:song_id')
@@ -16,11 +17,11 @@ router.route('/:song_id')
         song_id = req.params.song_id
         song = {}
         Song.findById(song_id)
-        .populate('lang')
-        .exec(function(err, s) {
-            song = s;
-            next()
-        })
+            .populate('lang')
+            .exec(function(err, s) {
+                song = s;
+                next()
+            })
     })
     .get(function(req, res, next) {
         if (song.copyright === 'private') {
@@ -66,8 +67,8 @@ router.route('/:song_id')
                         res.status(400).send('Error getting songs ' + err)
                     }
                     console.log(translations)
-                    //The user sees a song on the left. If they want to view a translation, it appears on the right.
-                    //rightTranslation is the song obj in the language that the user picks in the dropdown
+                        //The user sees a song on the left. If they want to view a translation, it appears on the right.
+                        //rightTranslation is the song obj in the language that the user picks in the dropdown
                     var rightTranslation = translations.find((translation) => translation.lang._id == lang) || {}
                     var translationExists = !_.isEmpty(rightTranslation)
                     if (req.isAuthenticated()) {
@@ -139,7 +140,9 @@ router.route('/:song_id/add-translation')
     .all(function(req, res, next) {
         song_id = req.params.song_id;
         song = {}
-        Song.findById(song_id, function(err, s) {
+        Song.findById(song_id)
+        .populate('lang')
+        .exec(function(err, s) {
             song = s;
             next();
         })
@@ -151,10 +154,14 @@ router.route('/:song_id/add-translation')
             } else {
                 Language.find(function(err, languages) {
                     if (err) next(err)
-                    res.render('addTranslation', {
-                        song: song,
-                        availableLanguages: languages,
-                        defaultSongObj: defaultSongObj.song
+                    createDefaultSong(function(defaultSong) {
+                        console.log(defaultSong)
+                        res.render('addTranslation', {
+                            song: song,
+                            availableLanguages: languages,
+                            defaultSongObj: defaultSong,
+                            copyrightLists: copyrightLists
+                        })
                     })
                 })
             }
@@ -210,6 +217,12 @@ router.route('/:song_id/add-translation')
                         timeAdded: Date.now()
                     })
 
+                    /*
+                      We have two cases: when a translation is added to an original versus when a translation is added to
+                      a translation of an original. In the first case the source of the original will be null, so we can
+                      attach this as a translation of that source. In the second case, the source of the original will
+                      point to the true original song and we should make this a translation of that.
+                    */
                     if (!song.source) {
                         //the user adds the translation to parent song
                         newSong.source = song._id
@@ -259,7 +272,8 @@ router.route('/:song_id/edit')
                 if (err) next(err)
                 res.render('edit', {
                     availableLanguages: languages,
-                    song: song
+                    song: song,
+                    copyrightLists: copyrightLists
                 })
             })
         }

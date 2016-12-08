@@ -14,12 +14,13 @@ block content
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
         var defaultSongObj = !{JSON.stringify(defaultSongObj).replace(/<\//g, "<\\/")}
+        var copyrightLists = !{JSON.stringify(copyrightLists).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
     script.
         var translationObject = defaultSongObj
         //to show multiple stanza boxes on the form
-        for (var i = 0; i < song.lyric.length; i++) {
-            translationObject.lyric.push([''])
+        for (var i = 0; i < song.lyrics.length; i++) {
+            translationObject.lyrics.push([''])
         }
         var songObj = {
             song: song, 

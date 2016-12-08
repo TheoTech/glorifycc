@@ -20,7 +20,7 @@ function songForm(obj) {
     var year = m.prop(obj.song.year)
     var lang = m.prop(obj.song.lang._id)
     var copyright = m.prop(obj.song.copyright)
-    var lyric = obj.song.lyric;
+    var lyrics = obj.song.lyrics;
     var youtubeLink = m.prop(obj.song.youtubeLink)
 
     //copypaste stores the current data for copy and paste box
@@ -46,7 +46,7 @@ function songForm(obj) {
                     lang: lang(),
                     copyright: copyright(),
                     youtubeLink: youtubeLink(),
-                    lyric: lyric
+                    lyrics: lyrics
                 }
             })
             .then(function(res) {
@@ -79,7 +79,7 @@ function songForm(obj) {
                                 //make an array of string
                                 var newStanza = $(elem).val() ? $(elem).val().split(/\r?\n/) : ''
                                     //update the object
-                                lyric.splice(args.index, 1, newStanza)
+                                lyrics.splice(args.index, 1, newStanza)
                             });
                         }
                     }
@@ -87,14 +87,14 @@ function songForm(obj) {
                 m('button.btn.btn-default', {
                     disabled: args.length === 1 ? true : false,
                     onclick: function() {
-                        lyric.splice(args.index, 1)
+                        lyrics.splice(args.index, 1)
                     }
                 }, [
                     m('span.glyphicon.glyphicon-minus')
                 ]),
                 m('button.btn.btn-default', {
                     onclick: function() {
-                        lyric.splice(args.index + 1, 0, [''])
+                        lyrics.splice(args.index + 1, 0, [''])
                     }
                 }, [
                     m('span.glyphicon.glyphicon-plus')
@@ -143,7 +143,7 @@ function songForm(obj) {
                                     }
                                 })
                                 if (isConfirmed) {
-                                    lyric = copypaste
+                                    lyrics = copypaste
                                     $('#copypaste' + obj.formID).modal('hide')
                                     $('#copypaste' + obj.formID).find('textarea').val('')
                                 }
@@ -269,9 +269,9 @@ function songForm(obj) {
                                 }
                             }
                         }, [
-                            m('option', 'CC0'),
-                            m('option', 'public'),
-                            m('option', 'private')
+                            copyrightLists.map((cp) => {
+                                return m('option', cp)
+                            })
                         ])
                     ]),
                     m('.form-group', [
@@ -291,7 +291,7 @@ function songForm(obj) {
                     m('div', {
                         id: 'stanzas' + obj.formID
                     }, [
-                        lyric.map((stanza, i, arr) => {
+                        lyrics.map((stanza, i, arr) => {
                             return m(addStanza, {
                                 stanza: stanza,
                                 index: i,

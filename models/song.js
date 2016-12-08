@@ -15,7 +15,7 @@ var songSchema = new Schema({
     contributor: String,
     copyright: String,
     youtubeLink: String,
-    lyric: [
+    lyrics: [
         [String]
     ],
     source: Schema.Types.ObjectId,

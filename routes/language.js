@@ -4,11 +4,11 @@ var express = require('express'),
     User = require('../models/user'),
     _ = require('lodash'),
     Playlist = require('../models/playlist'),
-    Language = require('../models/language')
+    Language = require('../models/language');
 
 router.get('/', function(req, res, next) {
     Language.find(function(err, languages) {
-        if (err) next(err)
+        if (err) next(err);
         res.render('language', {
             languages: languages
         })
@@ -16,8 +16,8 @@ router.get('/', function(req, res, next) {
 })
 
 router.post('/', function(req, res, next) {
-    var label = req.body.label
-    var code = req.body.code
+    var label = req.body.label;
+    var code = req.body.code;
     Language.findOne({
         code: code
     }, function(err, language) {
@@ -28,12 +28,12 @@ router.post('/', function(req, res, next) {
                 code: code
             })
             newLanguage.save(function(err) {
-                if (err) next(err)
-                res.redirect('/language')
+                if (err) next(err);
+                res.redirect('/language');
             })
         } else {
-            req.flash('error_messages', 'Language already in the dabase')
-            res.redirect('/language')
+            req.flash('error_messages', 'Language already in the dabase');
+            res.redirect('/language');
         }
     })
 })

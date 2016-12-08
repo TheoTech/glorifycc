@@ -10,6 +10,7 @@ block content
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
+        var copyrightLists = !{JSON.stringify(copyrightLists).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
     script.
         var obj = {
