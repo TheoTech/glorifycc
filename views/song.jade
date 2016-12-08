@@ -5,12 +5,7 @@ block content
         .text-center
             h1 #{song.title}
             h3 by #{song.author}
-            if song.translator
-                p Translated by #{song.translator}
-            if song.contributor
-                p Contributor: #{song.contributor}
-            if song.copyright
-                p Copyright: #{song.copyright}
+            #song
         //- .row
         //-     .col-xs-6
         //-         h1 #{song.title}
@@ -31,16 +26,27 @@ block content
 
         br
         br
-        .row
-            .col-xs-offset-6.col-xs-6
-                .form-group
-                    label(for="language") Language
-                    select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
-                        optgroup
-                            option(value='/song/#{song._id}/add-translation') Add Translation
-                        optgroup
-                            for t in translations
-                                option(value='?lang=' + t.lang) #{t.lang}
+        #chooseLanguage
+        //- .row
+        //-     .col-xs-6
+        //-         .form-group
+        //-             label(for="language") Language
+        //-             select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
+        //-                 optgroup
+        //-                     option(value='/song/#{song._id}/add-translation') Add Translation
+        //-                 optgroup
+        //-                     for t in translations
+        //-                         option(value='?lang=' + t.lang) #{t.lang}
+        //-     .col-xs-6
+        //-         .form-group
+        //-             label(for="language") Language
+        //-             select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
+        //-                 optgroup
+        //-                     option(value='/song/#{song._id}/add-translation') Add Translation
+        //-                 optgroup
+        //-                     for t in translations
+        //-                         option(value='?lang=' + t.lang) #{t.lang}
+
         //- .row
         //-     .container.col-xs-6
         //-         #song
@@ -71,10 +77,10 @@ block content
         //-     #translationPlaylistModal
         .row
             .container.col-xs-6
-                #song
+                //- #song
             .col-xs-6
                 if translationExists
-                    #translation
+                    //- #translation
         .row
             .col-xs-6
                 h4.capitalize=song.lang
@@ -103,9 +109,11 @@ block content
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
+        var translations = !{JSON.stringify(translations).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/playlistModal.js')
     script(src='/dist/javascripts/songButton.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
+    script(src='/dist/javascripts/chooseLanguage.js')
     script(src='/dist/javascripts/buttons.js')
     script(src='/dist/javascripts/songClicked.js')

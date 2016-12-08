@@ -7,12 +7,12 @@ var buttons = function() {
         },
         view: function(ctrl, args) {
             return [
-                m(addOrDeleteButtonComponent.addOrDeleteButton, {
-                    songID: args.songID,
-                    url: '/',
-                    inLibrary: args.inLibrary
-                }),
-                m('button.btn.btn-default', {
+                // m(addOrDeleteButtonComponent.addOrDeleteButton, {
+                //     songID: args.songID,
+                //     url: '/',
+                //     inLibrary: args.inLibrary
+                // }),
+                m('button.btn.btn-success', {
                     disabled: args.disabled(),
                     onclick: function() {
                         if (!isLoggedIn) {
@@ -24,7 +24,13 @@ var buttons = function() {
                             args.playlistModal.addToPlaylist(args)
                         }
                     }
-                }, args.label())
+                }, args.label()),
+                // m('br'),
+                m('button.btn.btn-default', {
+                    onclick: function() {
+                        window.location.href = args.songID + '/add-translation'
+                    }
+                }, 'Add Translation')
             ]
         }
     }
