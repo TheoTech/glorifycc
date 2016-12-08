@@ -80,6 +80,14 @@ footer.footer {
     font-weight: 300;
 }
 
+.row0 {
+  background-color: black;
+}
+
+.row1 {
+  background-color: white;
+}
+
 @media screen and (max-width: 570px) {
     #searchBoxHome {
         width: 300px;

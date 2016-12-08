@@ -2,23 +2,32 @@ extends layout
 
 block content
     .container
-        .row
-            .col-xs-6
-                h1 #{song.title}
-                h3 by #{song.author}
-                if song.translator
-                    p Translated by #{song.translator}
-                if song.contributor
-                    p Contributor: #{song.contributor}
-                if song.copyright
-                    p Copyright: #{song.copyright}
-            if translationExists
-                .col-xs-6
-                    h1 #{rightTranslation.title}
-                    h3 by #{song.author}
-                    p Translated by
-                    p Contributor: #{rightTranslation.contributor}
-                    p Copyright: #{rightTranslation.copyright}
+        .text-center
+            h1 #{song.title}
+            h3 by #{song.author}
+            if song.translator
+                p Translated by #{song.translator}
+            if song.contributor
+                p Contributor: #{song.contributor}
+            if song.copyright
+                p Copyright: #{song.copyright}
+        //- .row
+        //-     .col-xs-6
+        //-         h1 #{song.title}
+        //-         h3 by #{song.author}
+        //-         if song.translator
+        //-             p Translated by #{song.translator}
+        //-         if song.contributor
+        //-             p Contributor: #{song.contributor}
+        //-         if song.copyright
+        //-             p Copyright: #{song.copyright}
+        //-     if translationExists
+        //-         .col-xs-6
+        //-             h1 #{rightTranslation.title}
+        //-             h3 by #{song.author}
+        //-             p Translated by
+        //-             p Contributor: #{rightTranslation.contributor}
+        //-             p Copyright: #{rightTranslation.copyright}
 
         br
         br
@@ -31,9 +40,37 @@ block content
                             option(value='/song/#{song._id}/add-translation') Add Translation
                         optgroup
                             for t in translations
-                                option(value='?lang=' + t.lang._id) #{t.lang.label}
+                                option(value='?lang=' + t.lang) #{t.lang}
+        //- .row
+        //-     .container.col-xs-6
+        //-         #song
+        //-         h4.capitalize=song.lang
+        //-     .container.col-xs-6
+        //-         if translationExists
+        //-             #translation
+        //-             h4.capitalize #{rightTranslation.lang}
+        //- table.table
+        //-     thead
+        //-         th #{song.title}
+        //-         th #{rightTranslation.title}
+        //-     -for (var i = 0; i < song.lyric.length; i++)
+        //-         tbody
+        //-             tr
+        //-                 td
+        //-                     p
+        //-                         each line in song.lyric[i]
+        //-                             span #{line}
+        //-                             br
+        //-                 if translationExists
+        //-                     td
+        //-                         p
+        //-                             each line in rightTranslation.lyric[i]
+        //-                                 span #{line}
+        //-                                 br
+        //-     #songPlaylistModal  
+        //-     #translationPlaylistModal
         .row
-            .col-xs-6
+            .container.col-xs-6
                 #song
             .col-xs-6
                 if translationExists
@@ -44,20 +81,21 @@ block content
             .col-xs-6
                 h4.capitalize #{rightTranslation.lang}
         -for (var i = 0; i < song.lyric.length; i++)
+            -var classLabel = i % 2
             .row
-                .col-xs-6
-                    each line in song.lyrics[i]
+                .container.col-xs-6
+                    each line in song.lyric[i]
                         span #{line}
                         br
                     br            
-                .col-xs-6
+                .container.col-xs-6
                     if translationExists
                         each line in rightTranslation.lyrics[i]
                             span #{line}
                             br
                     br
-        #songPlaylistModal  
-        #translationPlaylistModal           
+            #songPlaylistModal  
+            #translationPlaylistModal           
     script.
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
