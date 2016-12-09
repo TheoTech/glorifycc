@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+var Song = require('../models/song');
+var Language = require('../models/language');
+
+var MongoURI = process.env.MONGOURI || 'mongodb://heroku_z2hck36f:gi10ruk7mcsdedgjkdampa3mh3@ds033153.mlab.com:33153/heroku_z2hck36f';
+mongoose.connect(MongoURI, function(err, database) {
+    if (err) {
+        console.log('Error connecting to: ' + MongoURI + '. ' + err);
+    } else {
+      function updateSong(song, code){
+          Language.find({code: code}, (err, language) => {
+              song.lang = language._id;
+              song.save((err) => {
+                  if (err){
+                      console.log('Error migrating a song');
+                  } else {
+                      console.log('Success');
+                  }
+              });
+          });
+      }
+
+      Song.find((err, songs) => {
+        songs.forEach((song) => {
+            if(song.lang === 'english'){
+                updateSong(song, 'en');
+            } else if(song.lang === 'spanish'){
+                updateSong(song, 'es');
+            } else if (song.lang === 'bahasa') {
+                updateSong(song, 'id');
+            }
+        });
+      });
+    }
+});
