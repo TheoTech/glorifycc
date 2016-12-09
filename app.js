@@ -13,9 +13,9 @@ var validator = require('express-validator')
 var MongoStore = require('connect-mongo')(session);
 var pdf = require('html-pdf');
 var fs = require('file-system');
-var nodemailer = require('nodemailer')
-var config = require('config')
-var _ = require('lodash')
+var nodemailer = require('nodemailer');
+var config = require('config');
+var _ = require('lodash');
 
 var app = module.exports = express();
 
@@ -25,9 +25,12 @@ var user = require('./routes/user');
 var usersignup = require('./routes/user.signup');
 var userplaylist = require('./routes/user.playlist');
 var userlist = require('./routes/userlist');
-var songlist = require('./routes/songlist')
-var song = require('./routes/song')
-var language = require('./routes/language')
+var songlist = require('./routes/songlist');
+var song = require('./routes/song');
+var language = require('./routes/language');
+var contact = require('./routes/contact');
+var discover = require('./routes/discover');
+var help = require('./routes/help');
 
 
 var mongoConfig = require('./lib/mongoConfig');
@@ -100,13 +103,16 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/', index);
 app.use('/songlist', songlist);
-app.use('/user', user)
-app.use('/songlist-db', songlistdb)
-app.use('/userlist', userlist)
-app.use('/user/signup', usersignup)
-app.use('/user/playlist', userplaylist)
-app.use('/song', song)
-app.use('/language', language)
+app.use('/user', user);
+app.use('/songlist-db', songlistdb);
+app.use('/userlist', userlist);
+app.use('/user/signup', usersignup);
+app.use('/user/playlist', userplaylist);
+app.use('/song', song);
+app.use('/language', language);
+app.use('/contact', contact);
+app.use('/discover', discover);
+app.use('/help', help);
 
 app.get('/api', function(req, res, next) {
     app.render('songs-in-pdf', function(err, html) {

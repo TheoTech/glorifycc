@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
     Language.findOne({
         code: code
     }, function(err, language) {
-        if (err) next(err)
+        if (err) next(err);
         if (!language) {
             var newLanguage = new Language({
                 label: label,

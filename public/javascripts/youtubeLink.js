@@ -14,7 +14,8 @@ function encoder(youtubeLink) {
     if (youtubeLink === '') {
         return youtubeLink
     } else {
-        var startIndex = youtubeLink.indexOf('v=') + 2;
+        var stringIndicator = 'v='
+        var startIndex = youtubeLink.indexOf(stringIndicator) + stringIndicator.length;
         var endIndex = youtubeLink.indexOf('&');
         var embedLink = 'https://www.youtube.com/embed/';
         if (endIndex !== -1) {
@@ -31,7 +32,8 @@ function decoder(embedLink) {
     if (embedLink === '') {
         return embedLink;
     } else {
-        var startIndex = embedLink.indexOf('embed/') + 6;
+        var stringIndicator = 'embed/'
+        var startIndex = embedLink.indexOf(stringIndicator) + stringIndicator.length;
         var youtubeLink = 'https://www.youtube.com/watch?v=';
         return youtubeLink + embedLink.substring(startIndex);
     }

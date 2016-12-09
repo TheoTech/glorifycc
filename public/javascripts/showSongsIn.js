@@ -7,7 +7,7 @@ var showSongsIn = {
                         'data-toggle': "dropdown",
                         'aria-haspopup': "true",
                         'aria-expanded': "false"
-                    }, (args.langShown() === 'all' ? 'All Languages' : args.langShownLabel()), [
+                    }, args.langShownLabel(), [
                         m('span.caret')
                     ]),
                     m('ul.dropdown-menu', [
@@ -16,6 +16,7 @@ var showSongsIn = {
                                 href: '#',
                                 onclick: function() {
                                     args.langShown('all')
+                                    args.langShownLabel('All Languages')
                                     args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
                                 }
                             }, 'All Languages')

@@ -7,7 +7,7 @@ var discover = (function() {
     var langShown = m.prop('all');
 
     //langShownLabel stores the language label such as 'English', 'Spanish', etc
-    var langShownLabel = m.prop();
+    var langShownLabel = m.prop('All Languages');
 
     //langFilter contains languages for showing the songs that has translations in 'langFilter'
     var langFilter = m.prop([]);
