@@ -16,10 +16,12 @@
 function songForm(obj) {
     var title = m.prop(obj.song.title)
     var author = m.prop(obj.song.author)
+    var translator = m.prop(obj.song.translator)
     var year = m.prop(obj.song.year)
-    var lang = m.prop(obj.song.lang)
+    var lang = m.prop(obj.song.lang._id)
     var copyright = m.prop(obj.song.copyright)
-    var lyric = obj.song.lyric;
+    var lyrics = obj.song.lyrics;
+    var youtubeLink = m.prop(obj.song.youtubeLink)
 
     //copypaste stores the current data for copy and paste box
     var copypaste = []
@@ -39,10 +41,12 @@ function songForm(obj) {
                 data: {
                     title: title(),
                     author: author(),
+                    translator: translator(),
                     year: year(),
                     lang: lang(),
                     copyright: copyright(),
-                    lyric: lyric
+                    youtubeLink: youtubeLink(),
+                    lyrics: lyrics
                 }
             })
             .then(function(res) {
@@ -75,7 +79,7 @@ function songForm(obj) {
                                 //make an array of string
                                 var newStanza = $(elem).val() ? $(elem).val().split(/\r?\n/) : ''
                                     //update the object
-                                lyric.splice(args.index, 1, newStanza)
+                                lyrics.splice(args.index, 1, newStanza)
                             });
                         }
                     }
@@ -83,14 +87,14 @@ function songForm(obj) {
                 m('button.btn.btn-default', {
                     disabled: args.length === 1 ? true : false,
                     onclick: function() {
-                        lyric.splice(args.index, 1)
+                        lyrics.splice(args.index, 1)
                     }
                 }, [
                     m('span.glyphicon.glyphicon-minus')
                 ]),
                 m('button.btn.btn-default', {
                     onclick: function() {
-                        lyric.splice(args.index + 1, 0, [''])
+                        lyrics.splice(args.index + 1, 0, [''])
                     }
                 }, [
                     m('span.glyphicon.glyphicon-plus')
@@ -119,7 +123,6 @@ function songForm(obj) {
                                                 return cp.split(/\n|\//)
                                             })
                                         }
-                                        console.log(JSON.stringify(copypaste[0]))
                                     });
                                 }
                             }
@@ -140,7 +143,7 @@ function songForm(obj) {
                                     }
                                 })
                                 if (isConfirmed) {
-                                    lyric = copypaste
+                                    lyrics = copypaste
                                     $('#copypaste' + obj.formID).modal('hide')
                                     $('#copypaste' + obj.formID).find('textarea').val('')
                                 }
@@ -156,8 +159,8 @@ function songForm(obj) {
         if (!_.isEmpty(errors)) {
             return m('#alert.alert.alert-danger', {
                 config: function(elem, isInit) {
-                    if(!isInit){
-                      $(elem).delay(3000).fadeOut()
+                    if (!isInit) {
+                        $(elem).delay(3000).fadeOut()
                     }
                 }
             }, [
@@ -206,6 +209,20 @@ function songForm(obj) {
                         })
                     ]),
                     m('.form-group', [
+                        m('label', 'Translator'),
+                        m('input.form-control', {
+                            value: translator(),
+                            onchange: m.withAttr('value', translator),
+                            config: function(elem, isInit) {
+                                if (!isInit) {
+                                    if (obj.readonly) {
+                                        $(elem).prop('readonly', true)
+                                    }
+                                }
+                            }
+                        })
+                    ]),
+                    m('.form-group', [
                         m('label', 'Year Published'),
                         m('input.form-control', {
                             value: year(),
@@ -221,7 +238,7 @@ function songForm(obj) {
                     ]),
                     m('.form-group', [
                         m('label', 'Language'),
-                        m('select.form-control.capitalize', {
+                        m('select.form-control', {
                             onchange: m.withAttr('value', lang),
                             config: function(elem, isInit) {
                                 if (!isInit) {
@@ -233,7 +250,9 @@ function songForm(obj) {
                             }
                         }, [
                             availableLanguages.map((lang) => {
-                                return m('option', lang)
+                                return m('option', {
+                                    'value': lang._id
+                                }, lang.label)
                             })
                         ])
                     ]),
@@ -250,15 +269,29 @@ function songForm(obj) {
                                 }
                             }
                         }, [
-                            m('option', 'CC0'),
-                            m('option', 'public'),
-                            m('option', 'private')
+                            copyrightLists.map((cp) => {
+                                return m('option', cp)
+                            })
                         ])
+                    ]),
+                    m('.form-group', [
+                        m('label', 'Youtube Video Link'),
+                        m('input.form-control', {
+                            value: youtubeLink(),
+                            onchange: m.withAttr('value', youtubeLink),
+                            config: function(elem, isInit) {
+                                if (!isInit) {
+                                    if (obj.readonly) {
+                                        $(elem).prop('readonly', true)
+                                    }
+                                }
+                            }
+                        })
                     ]),
                     m('div', {
                         id: 'stanzas' + obj.formID
                     }, [
-                        lyric.map((stanza, i, arr) => {
+                        lyrics.map((stanza, i, arr) => {
                             return m(addStanza, {
                                 stanza: stanza,
                                 index: i,

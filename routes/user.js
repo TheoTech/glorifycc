@@ -20,49 +20,48 @@ router.route('/library')
     //protect the route from the user that hasn't logged in yet
     .all(passportFunction.loggedIn)
     .get(function(req, res, next) {
-        var messages = req.flash()
+        var messages = req.flash();
         User.findById(req.user._id)
             .populate('library')
             .exec(function(err, user) {
-                if (err) return next(err)
+                if (err) return next(err);
                 Playlist.find({
                     owner: user._id,
                     song: {
                         $exists: false
                     }
                 }, function(err, playlists) {
-                    if (err) return next(err)
+                    if (err) return next(err);
                     res.render('library', {
                         songs: user.library,
                         playlists: playlists,
                         messages: messages,
                         inLibrary: user.library
-                    })
-                })
-
-            })
+                    });
+                });
+            });
     })
     //adding new playlist
     .put(function(req, res, next) {
-        var name = req.body.name
+        var name = req.body.name;
         if (req.isAuthenticated()) {
-            var owner = req.user._id
+            var owner = req.user._id;
             Playlist.findOne({
                 owner: owner,
                 name: name
             }, function(err, playlist) {
-                if (err) return next(err)
+                if (err) return next(err);
                 if (playlist) {
                     res.send({
                         playlistExists: true
-                    })
+                    });
                 } else {
                     var newPlaylist = new Playlist({
                         owner: owner,
                         name: name
-                    })
+                    });
                     newPlaylist.save(function(err) {
-                        if (err) return next(err)
+                        if (err) return next(err);
                         Playlist.find({
                             owner: owner,
                             song: {
@@ -71,28 +70,27 @@ router.route('/library')
                         }, function(err, playlists) {
                             res.send({
                                 playlists: playlists
-                            })
-                        })
-                    })
+                            });
+                        });
+                    });
                 }
-            })
+            });
         } else {
             res.send({
                 url: '/user/login'
             })
         }
-
     })
     //adding song to playlist
     .post(function(req, res, next) {
-        var name = req.body.name
-        var song_id = req.body.id
-        var playlistOwner = req.user._id
+        var name = req.body.name;
+        var song_id = req.body.id;
+        var playlistOwner = req.user._id;
         Playlist.findOne({
             owner: playlistOwner,
             name: name
         }, function(err, playlist) {
-            if (err) return next(err)
+            if (err) return next(err);
             if (playlist) {
                 var newPlaylistSong = new Playlist({
                     owner: playlistOwner,
@@ -102,31 +100,31 @@ router.route('/library')
                     //We store those songs in this array. This is so that if they refresh,
                     //they do not lose their selections.
                     translationsChecked: []
-                })
+                });
                 newPlaylistSong.save(function(err) {
-                    if (err) next(err)
-                    res.send({})
-                })
+                    if (err) next(err);
+                    res.send({});
+                });
             } else {
-                req.flash('error', 'Choose Playlist')
-                res.send({})
+                req.flash('error', 'Choose Playlist');
+                res.send({});
             }
-        })
+        });
     })
     //delete song from library
     .delete(function(req, res, next) {
-        var song_id = req.body.id
+        var song_id = req.body.id;
         User.findOne({
             _id: req.user._id
         }, function(err, u) {
-            if (err) return next(err)
-            var index = u.library.indexOf(song_id)
+            if (err) return next(err);
+            var index = u.library.indexOf(song_id);
             if (index > -1) {
-                u.library.splice(index, 1)
+                u.library.splice(index, 1);
             }
             u.save(function(err) {
                 if (err) {
-                    res.status(400).send('error deleting song ' + err)
+                    res.status(400).send('error deleting song ' + err);
                 } else {
                     User.findOne({
                             _id: req.user._id
@@ -136,45 +134,44 @@ router.route('/library')
                             res.send({
                                 songs: user.library,
                                 msg: 'deleting done'
-                            })
-                        })
+                            });
+                        });
                 }
-            })
-        })
-    })
+            });
+        });
+    });
 
 
 router.route('/login')
     .all(passportFunction.notLoggedIn)
     .get(function(req, res, next) {
-        var messages = req.flash('error')
+        var messages = req.flash('error');
         res.render('login', {
             messages: messages,
             hasErrors: messages.length > 0
-        })
+        });
     })
     .post(passport.authenticate('local.login', {
         successRedirect: '/',
         failureRedirect: '/user/login',
         failureFlash: true //turn the flag to true to enable flash message
-    }))
+    }));
 
 
 router.get('/logout', passportFunction.loggedIn, function(req, res, next) {
-    passportFunction.adminLogout()
+    passportFunction.adminLogout();
     req.logout();
-    res.redirect('/')
+    res.redirect('/');
 })
 
 router.route('/forgot')
     .all(passportFunction.notLoggedIn)
     .get(function(req, res, next) {
-        var messages = req.flash()
-        console.log(messages)
+        var messages = req.flash();
         res.render('forgot', {
             user: req.user,
             messages: messages
-        })
+        });
     })
     .post(function(req, res, next) {
         async.waterfall([
@@ -245,7 +242,7 @@ router.route('/reset/:token')
     .post(function(req, res, next) {
         req.checkBody('password', 'Password is required').notEmpty();
         req.checkBody('confirm', 'Passwords do not match').equals(req.body.password);
-        var errors = req.validationErrors()
+        var errors = req.validationErrors();
         if (errors) {
             res.render('reset', {
                 errors: errors

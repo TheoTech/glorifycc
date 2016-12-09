@@ -1,6 +1,6 @@
 var express = require('express'),
     router = express.Router(),
-    User = require('../models/user')
+    User = require('../models/user');
 
 
 router.get('/', function(req, res, next) {
@@ -19,15 +19,11 @@ router.get('/', function(req, res, next) {
 router.route('/:user_id')
     .all(function(req, res, next) {
         user_id = req.params.user_id;
-        //console.log(user_id)
-        user = {}
+        user = {};
         User.findById(user_id, function(err, u) {
-            user = u
+            user = u;
             next();
         })
     })
-
-
-
 
 module.exports = router;

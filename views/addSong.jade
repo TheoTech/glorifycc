@@ -9,18 +9,22 @@ block content
 
 
     script.
+        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
+        var copyrightTypes = !{JSON.stringify(copyrightTypes).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/songForm.js')
-    script(src='/dist/javascripts/defaultSongObj.js')
     script.
-        var song = defaultSongObj
         //to show one stanza box on the form
-        song.lyric.push([''])
+        song.lyrics.push([''])
         var obj = {
-            song: song, 
-            url: '/songlist-db/add', 
-            readonly: false, 
-            submitButton: true, 
-            formID: '' 
+            song: song,
+            url: '/songlist-db/add',
+            readonly: false,
+            submitButton: true,
+            /*
+              formID is for differentiating the stanza boxes in add translation because we have stanza boxes for song and translation. 
+              in the case of add a song, we only have one stanza boxes so we left it blank
+            */
+            formID: ''
         }
         m.mount(document.getElementById('addSong'), songForm(obj).songFormComponent)

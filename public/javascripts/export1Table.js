@@ -28,9 +28,9 @@ var export1TableComponent = (function() {
                     m('thead', [
                         m('th', 'Title'),
                         uniqueLanguages.map((lang) => {
-                            return m('th.capitalize.text-center', {
+                            return m('th.text-center', {
                                 margin: 'auto'
-                            }, lang)
+                            }, lang.label)
                         })
                     ]),
                     m('tbody', [
@@ -43,7 +43,7 @@ var export1TableComponent = (function() {
                                     m('input', {
                                         type: 'checkbox',
                                         onclick: function() {
-                                            selectAll(this, lang)
+                                            selectAll(this, lang._id)
                                         }
                                     })
                                 ])
@@ -52,12 +52,13 @@ var export1TableComponent = (function() {
                         songs.map((song, i) => {
                             return m('tr', [
                                 m('td', song.song.title),
-                                uniqueLanguages.map((lang, j) => {
-                                    var rightSong = song.availableTranslations.find((availableTranslation) => availableTranslation.lang === lang)
+                                uniqueLanguages.map((lang) => {
+                                    //to check if the song has the available translation as the label (th)
+                                    var rightSong = song.availableTranslations.find((availableTranslation) => availableTranslation.lang._id == lang._id)
                                     var songID = rightSong ? rightSong._id : ''
                                     return m('td.text-center', [
                                         m('input', {
-                                            className: lang,
+                                            className: lang._id,
                                             id: rightSong ? songID : '',
                                             type: 'checkbox',
                                             disabled: rightSong ? false : true,

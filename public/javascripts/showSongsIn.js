@@ -7,28 +7,30 @@ var showSongsIn = {
                         'data-toggle': "dropdown",
                         'aria-haspopup': "true",
                         'aria-expanded': "false"
-                    }, (args.langShown() === 'all' ? 'All Languages' : args.langShown()), [
+                    }, args.langShownLabel(), [
                         m('span.caret')
                     ]),
                     m('ul.dropdown-menu', [
                         m('li', [
-                            m('a#all', {
+                            m('a', {
                                 href: '#',
                                 onclick: function() {
-                                    args.langShown(this.id)
+                                    args.langShown('all')
+                                    args.langShownLabel('All Languages')
                                     args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
                                 }
                             }, 'All Languages')
                         ]),
                         args.langsExist.map((lang) => {
                             return m('li', [
-                                m('a.capitalize', {
+                                m('a', {
                                     href: '#',
                                     onclick: function() {
-                                        args.langShown(lang)
+                                        args.langShown(lang._id)
+                                        args.langShownLabel(lang.label)
                                         args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
                                     }
-                                }, lang)
+                                }, lang.label)
                             ])
                         })
                     ])

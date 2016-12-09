@@ -4,8 +4,8 @@ var User = require('../models/user');
 var mongoose = require('mongoose');
 var emailVerification = require('email-verification')(mongoose);
 var bcrypt = require('bcrypt-nodejs');
-var config = require('config')
-var passportFunction = require('../lib/passport')
+var config = require('config');
+var passportFunction = require('../lib/passport');
 
 var TempUser = mongoose.model('Tempuser',
     new mongoose.Schema(),
@@ -54,10 +54,10 @@ emailVerification.generateTempUserModel(User, function(err, tempUserModel) {
     console.log('generated temp user model: ' + (typeof tempUserModel === 'function'));
 });
 
-router.use('/', passportFunction.notLoggedIn)
+router.use('/', passportFunction.notLoggedIn);
 
 router.get('/', function(req, res, next) {
-    res.render('signup', {})
+    res.render('signup', {});
 })
 
 
@@ -68,15 +68,15 @@ router.post('/', function(req, res, next) {
     req.checkBody('password', 'Password is required').notEmpty();
     req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
-    var messages = req.validationErrors()
+    var messages = req.validationErrors();
 
     if (messages) {
         res.render('signup', {
             messages: messages,
             info: 'btn-danger'
-        })
+        });
     } else {
-        var username = req.body.username
+        var username = req.body.username;
         var email = req.body.email;
         var password = req.body.password;
         var newUser = new User({
@@ -90,7 +90,7 @@ router.post('/', function(req, res, next) {
         TempUser.findOne({
             username: username
         }, function(err, tu) {
-            if (err) return next(err)
+            if (err) return next(err);
             if (tu) {
                 res.render('signup', {
                     messages: [{
@@ -142,29 +142,30 @@ router.post('/', function(req, res, next) {
                     }
                 });
             }
-        })
+        });
     }
-})
+});
 
 router.get('/resend', function(req, res, next) {
-    var messages = req.flash()
+    var messages = req.flash();
     res.render('resend', {
         messages: messages
-    })
-})
+    });
+});
+
 router.post('/resend', function(req, res, next) {
-    var email = req.body.email
+    var email = req.body.email;
     emailVerification.resendVerificationEmail(email, function(err, userFound) {
         if (err) {
             return res.status(404).send('ERROR: resending verification email FAILED');
         }
         if (userFound) {
-            req.flash('success', 'An email has been sent to you, yet again. Please check it to verify your account.')
+            req.flash('success', 'An email has been sent to you, yet again. Please check it to verify your account.');
         } else {
-            req.flash('error', 'No account with that email address exists. You have to signup')
+            req.flash('error', 'No account with that email address exists. You have to signup');
         };
-        res.redirect('/user/signup/resend')
-    })
+        res.redirect('/user/signup/resend');
+    });
 });
 
 router.get('/email-verification/:URL', function(req, res, next) {
@@ -175,7 +176,6 @@ router.get('/email-verification/:URL', function(req, res, next) {
                 if (err) {
                     return res.status(404).send('ERROR: sending confirmation email FAILED');
                 }
-                console.log('success')
                 res.render('success');
             });
         } else {
@@ -185,4 +185,4 @@ router.get('/email-verification/:URL', function(req, res, next) {
 });
 
 
-module.exports = router
+module.exports = router;

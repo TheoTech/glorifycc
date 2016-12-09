@@ -3,12 +3,13 @@ extends layout
 block content
     h2 Available Language:
     ol
-        each language in availableLanguages
-            li #{language.lang}
+        each language in languages
+            li #{language.label} (#{language.code})
 
     form(method='post')
         .col-xs-3.form-group
-            select.form-control(name='lang')
-                each language in languageOptions
-                    option #{language}
-        button.btn.btn-default Add
+            label Language label:
+            input.form-control(name='label')
+            label Language code:
+            input.form-control(name='code')
+            button.btn.btn-default Add
