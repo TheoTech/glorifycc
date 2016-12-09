@@ -8,7 +8,8 @@ var Language = require('../models/language');
 var passportFunction = require('../lib/passport');
 var Language = require('../models/language');
 var createDefaultSong = require('../lib/createDefaultSong');
-var copyrightLists = require('../lib/copyrightConstant');
+var copyrightLists = require('../lib/copyrightLists');
+var _ = require('lodash');
 
 
 router.route('/:song_id')
@@ -24,7 +25,7 @@ router.route('/:song_id')
             })
     })
     .get(function(req, res, next) {
-        if (song.copyright === 'private') {
+        if (song.copyright === copyrightLists.private) {
             if (!req.isAuthenticated()) {
                 //if the user is not logged in, dont show the song
                 res.render('noaccess')
@@ -160,7 +161,7 @@ router.route('/:song_id/add-translation')
                             song: song,
                             availableLanguages: languages,
                             defaultSongObj: defaultSong,
-                            copyrightLists: copyrightLists
+                            copyrightLists: _.values(copyrightLists)
                         })
                     })
                 })
@@ -198,10 +199,10 @@ router.route('/:song_id/add-translation')
                         errorMessages: ['Translation Exists']
                     })
                 } else {
-                    var stanzaOffset = song.lyric.length - data.lyric.length
+                    var stanzaOffset = song.lyrics.length - data.lyrics.length
                     if (stanzaOffset > 0) {
                         for (var i = 0; i < stanzaOffset; i++) {
-                            data.lyric.push([''])
+                            data.lyrics.push([''])
                         }
                     }
                     var newSong = new Song({
@@ -209,7 +210,7 @@ router.route('/:song_id/add-translation')
                         author: data.author,
                         year: data.year,
                         translator: data.translator,
-                        lyric: data.lyric,
+                        lyrics: data.lyrics,
                         lang: data.lang,
                         youtubeLink: data.youtubeLink,
                         contributor: req.user.username,
@@ -232,7 +233,7 @@ router.route('/:song_id/add-translation')
                     }
                     newSong.save(function(err) {
                         if (err) next(err)
-                        if (data.copyright === 'private') {
+                        if (data.copyright === copyrightLists.private) {
                             User.findById(req.user._id, function(err, user) {
                                 user.library.push(newSong._id)
                                 user.save(function(err) {
@@ -273,7 +274,7 @@ router.route('/:song_id/edit')
                 res.render('edit', {
                     availableLanguages: languages,
                     song: song,
-                    copyrightLists: copyrightLists
+                    copyrightLists: _.values(copyrightLists)
                 })
             })
         }
@@ -294,7 +295,7 @@ router.route('/:song_id/edit')
             song.year = data.year
             song.lang = data.lang
             song.copyright = data.copyright
-            song.lyric = data.lyric
+            song.lyrics = data.lyrics
             song.save(function(err) {
                 if (err) {
                     res.status(400).send('Error editing the song: ' + error)

@@ -10,6 +10,7 @@ var officegen = require('officegen');
 var passportFunction = require('../lib/passport');
 var smtp = require('../lib/smtp');
 var Language = require('../models/language')
+var copyrightLists = require('../lib/copyrightLists')
 
 // router.get('/updateschema', passportFunction.adminLoggedIn, function(req, res, next) {
 //     // var songs = [{
@@ -104,7 +105,7 @@ router.get('/', function(req, res, next) {
     var langsExist;
     Song.find({
             copyright: {
-                $ne: 'private'
+                $ne: copyrightLists.private
             }
         }, function(err, songs) {
             if (err) {
@@ -308,11 +309,11 @@ router.get('/search', function(req, res, next) {
                         }]
                     }, {
                         $or: [{
-                            copyright: 'private',
+                            copyright: copyrightLists.private,
                             contributor: req.user.username
                         }, {
                             copyright: {
-                                $ne: 'private'
+                                $ne: copyrightLists.private
                             }
                         }]
                     }]
@@ -345,7 +346,7 @@ router.get('/search', function(req, res, next) {
                         }
                     }],
                     copyright: {
-                        $ne: 'private'
+                        $ne: copyrightLists.private
                     }
                 },
                 function(err, songs) {
@@ -407,7 +408,7 @@ router.get('/discover', function(req, res, next) {
     var messages = req.flash()
     Song.find({
             copyright: {
-                $ne: 'private'
+                $ne: copyrightLists.private
             }
         })
         .populate('lang')
@@ -488,7 +489,7 @@ router.put('/discover', function(req, res, next) {
                         }
                     }],
                     copyright: {
-                        $ne: 'private'
+                        $ne: copyrightLists.private
                     }
                 },
                 function(err, songs) {
@@ -500,7 +501,7 @@ router.put('/discover', function(req, res, next) {
                         $exists: false
                     },
                     copyright: {
-                        $ne: 'private'
+                        $ne: copyrightLists.private
                     }
                 },
                 function(err, songs) {
@@ -521,7 +522,7 @@ router.put('/discover', function(req, res, next) {
                     Song.find({
                         source: s._id,
                         copyright: {
-                            $ne: 'private'
+                            $ne: copyrightLists.private
                         }
                     }, (err, translations) => {
                         translations.forEach((t) => {

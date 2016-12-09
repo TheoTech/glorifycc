@@ -5,7 +5,8 @@ var express = require('express'),
     passportFunction = require('../lib/passport'),
     Language = require('../models/language'),
     createDefaultSong = require('../lib/createDefaultSong'),
-    copyrightLists = require('../lib/copyrightConstant')
+    copyrightLists = require('../lib/copyrightLists'),
+    _ = require('lodash')
 
 
 router.get('/', passportFunction.adminLoggedIn, function(req, res, next) {
@@ -39,7 +40,7 @@ router.route('/add')
                 res.render('addSong', {
                     song: defaultSong,
                     availableLanguages: languages,
-                    copyrightLists: copyrightLists
+                    copyrightLists: _.values(copyrightLists)
                 })
             })
         })
@@ -70,18 +71,17 @@ router.route('/add')
                 } else {
                     if (err) next(err)
                     var newSong = new Song({
-                            title: data.title,
-                            author: data.author,
-                            translator: data.translator,
-                            year: data.year,
-                            lang: data.lang,
-                            youtubeLink: data.youtubeLink,
-                            lyric: data.lyric,
-                            contributor: req.user.username,
-                            copyright: data.copyright,
-                            timeAdded: Date.now()
-                        })
-                        // newSong.lang = language._id
+                        title: data.title,
+                        author: data.author,
+                        translator: data.translator,
+                        year: data.year,
+                        lang: data.lang,
+                        youtubeLink: data.youtubeLink,
+                        lyrics: data.lyrics,
+                        contributor: req.user.username,
+                        copyright: data.copyright,
+                        timeAdded: Date.now()
+                    })
                     newSong.save(function(err) {
                         if (err) {
                             res.status(400).send('error saving new song ' + err)
