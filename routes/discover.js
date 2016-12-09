@@ -5,7 +5,7 @@ var User = require('../models/user');
 var _ = require('lodash');
 var Playlist = require('../models/playlist');
 var async = require('async');
-var copyrightLists = require('../lib/copyrightLists');
+var copyrightTypes = require('../lib/copyrightTypes');
 
 router.get('/', function(req, res, next) {
     var playlistName = req.query.playlist || '';
@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
     var messages = req.flash();
     Song.find({
             copyright: {
-                $ne: copyrightLists.private
+                $ne: copyrightTypes.private
             }
         })
         .populate('lang')
@@ -94,7 +94,7 @@ router.put('/', function(req, res, next) {
                         }
                     }],
                     copyright: {
-                        $ne: copyrightLists.private
+                        $ne: copyrightTypes.private
                     }
                 },
                 function(err, songs) {
@@ -106,7 +106,7 @@ router.put('/', function(req, res, next) {
                         $exists: false
                     },
                     copyright: {
-                        $ne: copyrightLists.private
+                        $ne: copyrightTypes.private
                     }
                 },
                 function(err, songs) {
@@ -127,7 +127,7 @@ router.put('/', function(req, res, next) {
                     Song.find({
                         source: s._id,
                         copyright: {
-                            $ne: copyrightLists.private
+                            $ne: copyrightTypes.private
                         }
                     }, (err, translations) => {
                         translations.forEach((t) => {
