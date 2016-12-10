@@ -14,7 +14,8 @@ var _ = require('lodash');
 
 router.route('/:song_id')
     .all(function(req, res, next) {
-        lang = req.query.lang || '';
+        left = req.query.left || '';
+        right = req.query.right || '';
         song_id = req.params.song_id;
         song = {};
         Song.findById(song_id)
@@ -69,7 +70,7 @@ router.route('/:song_id')
                     }
                     //The user sees a song on the left. If they want to view a translation, it appears on the right.
                     //rightTranslation is the song obj in the language that the user picks in the dropdown
-                    var rightTranslation = translations.find((translation) => translation.lang._id == lang) || {};
+                    var rightTranslation = translations.find((translation) => translation.lang._id.toString() === right) || {};
                     var translationExists = !_.isEmpty(rightTranslation);
                     if (req.isAuthenticated()) {
                         Playlist.find({

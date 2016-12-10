@@ -3,12 +3,12 @@ function chooseLanguage() {
     var chooseLanguageComponent = {
         view: function() {
             return m('.row', [
-                m('.col-xs-offset-6.col-xs-6', [
+                m('.col-xs-6', [
                     m('select.form-control.selectpicker', {
                         title: 'Choose Language',
                         onchange: function() {
-                            query += 'left' + $(this).val()
-                        }
+                            window.location.href
+                        },
                     }, [
                         translations.map((t) => {
                             return m('option', {
@@ -21,13 +21,14 @@ function chooseLanguage() {
                     m('select.form-control.selectpicker', {
                         title: 'Choose Language',
                         onchange: function() {
-                            query += 'right' + $(this).val()
+                            query += '&right=' + $(this).val()
+                            window.location.href += query
                         }
                     }, [
                         translations.map((t) => {
                             return m('option', {
                                 value: t.lang._id
-                            }, t.lang)
+                            }, t.lang.label)
                         })
                     ])
                 ])

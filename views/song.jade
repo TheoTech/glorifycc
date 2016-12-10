@@ -83,14 +83,14 @@ block content
                     //- #translation
         .row
             .col-xs-6
-                h4.capitalize=song.lang
+                h4 #{song.lang.label}
             .col-xs-6
-                h4.capitalize #{rightTranslation.lang}
-        -for (var i = 0; i < song.lyric.length; i++)
-            -var classLabel = i % 2
+                if translationExists
+                    h4 #{rightTranslation.lang.label}
+        -for (var i = 0; i < song.lyrics.length; i++)
             .row
                 .container.col-xs-6
-                    each line in song.lyric[i]
+                    each line in song.lyrics[i]
                         span #{line}
                         br
                     br            
@@ -110,10 +110,10 @@ block content
         var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
         var translations = !{JSON.stringify(translations).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/chooseLanguage.js')
     script(src='/dist/javascripts/playlistModal.js')
     script(src='/dist/javascripts/songButton.js')
     script(src='/dist/javascripts/addToPlaylistButton.js')
     script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/chooseLanguage.js')
     script(src='/dist/javascripts/buttons.js')
     script(src='/dist/javascripts/songClicked.js')
