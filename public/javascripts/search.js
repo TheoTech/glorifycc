@@ -56,7 +56,6 @@ var search = (function() {
                                                 disabled: s.disabled,
                                                 addButtonDOM: addButtonDOM,
                                                 playlistModal: playlistModal,
-                                                modalName: ''
                                             })
                                         ])
                                     ])
@@ -67,7 +66,6 @@ var search = (function() {
                     m(playlistModal.playlistModalComponent, {
                         playlistName: playlistName,
                         addButtonDOM: addButtonDOM,
-                        modalName: ''
                     })
                 ])
             }

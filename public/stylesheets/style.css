@@ -81,11 +81,19 @@ footer.footer {
 }
 
 .row0 {
-  background-color: black;
+    background-color: black;
 }
 
 .row1 {
-  background-color: white;
+    background-color: white;
+}
+
+select option[disabled]:first-child {
+    display: none;
+}
+
+.inline-block {
+    display: inline-block
 }
 
 @media screen and (max-width: 570px) {

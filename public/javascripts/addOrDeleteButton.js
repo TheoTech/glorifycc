@@ -52,6 +52,7 @@ var addOrDeleteButtonComponent = (function() {
         view: function(ctrl, args) {
             return m('div', [
                 m('button.btn.btn-default', {
+                    className: args.className,
                     title: ctrl.buttonTitle(),
                     onclick: function() {
                         if (!isLoggedIn) {

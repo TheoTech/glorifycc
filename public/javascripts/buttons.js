@@ -7,25 +7,19 @@ var buttons = function() {
         },
         view: function(ctrl, args) {
             return [
-                // m(addOrDeleteButtonComponent.addOrDeleteButton, {
-                //     songID: args.songID,
-                //     url: '/',
-                //     inLibrary: args.inLibrary
-                // }),
                 m('button.btn.btn-success', {
                     disabled: args.disabled(),
                     onclick: function() {
                         if (!isLoggedIn) {
                             window.location.href = '/user/login'
                         } else if (!args.playlistName()) {
-                            $('#choosePlaylist' + args.modalName).modal('show')
+                            $('#choosePlaylist').modal('show')
                             args.addButtonDOM($(this))
                         } else {
                             args.playlistModal.addToPlaylist(args)
                         }
                     }
                 }, args.label()),
-                // m('br'),
                 m('button.btn.btn-default', {
                     onclick: function() {
                         window.location.href = args.songID + '/add-translation'

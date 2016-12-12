@@ -3,109 +3,47 @@ extends layout
 block content
     .container
         .text-center
-            h1 #{song.title}
-            h3 by #{song.author}
-            #song
-        //- .row
-        //-     .col-xs-6
-        //-         h1 #{song.title}
-        //-         h3 by #{song.author}
-        //-         if song.translator
-        //-             p Translated by #{song.translator}
-        //-         if song.contributor
-        //-             p Contributor: #{song.contributor}
-        //-         if song.copyright
-        //-             p Copyright: #{song.copyright}
-        //-     if translationExists
-        //-         .col-xs-6
-        //-             h1 #{rightTranslation.title}
-        //-             h3 by #{song.author}
-        //-             p Translated by
-        //-             p Contributor: #{rightTranslation.contributor}
-        //-             p Copyright: #{rightTranslation.copyright}
-
+            h1 #{leftSong.title}
+            h3 by #{leftSong.author}
+            #groupSong
         br
         br
         #chooseLanguage
-        //- .row
-        //-     .col-xs-6
-        //-         .form-group
-        //-             label(for="language") Language
-        //-             select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
-        //-                 optgroup
-        //-                     option(value='/song/#{song._id}/add-translation') Add Translation
-        //-                 optgroup
-        //-                     for t in translations
-        //-                         option(value='?lang=' + t.lang) #{t.lang}
-        //-     .col-xs-6
-        //-         .form-group
-        //-             label(for="language") Language
-        //-             select.form-control.capitalize.selectpicker(title='Choose Translation' onChange= 'window.location.href=this.value' style='color: white')
-        //-                 optgroup
-        //-                     option(value='/song/#{song._id}/add-translation') Add Translation
-        //-                 optgroup
-        //-                     for t in translations
-        //-                         option(value='?lang=' + t.lang) #{t.lang}
-
-        //- .row
-        //-     .container.col-xs-6
-        //-         #song
-        //-         h4.capitalize=song.lang
-        //-     .container.col-xs-6
-        //-         if translationExists
-        //-             #translation
-        //-             h4.capitalize #{rightTranslation.lang}
-        //- table.table
-        //-     thead
-        //-         th #{song.title}
-        //-         th #{rightTranslation.title}
-        //-     -for (var i = 0; i < song.lyric.length; i++)
-        //-         tbody
-        //-             tr
-        //-                 td
-        //-                     p
-        //-                         each line in song.lyric[i]
-        //-                             span #{line}
-        //-                             br
-        //-                 if translationExists
-        //-                     td
-        //-                         p
-        //-                             each line in rightTranslation.lyric[i]
-        //-                                 span #{line}
-        //-                                 br
-        //-     #songPlaylistModal  
-        //-     #translationPlaylistModal
-        .row
-            .container.col-xs-6
-                //- #song
-            .col-xs-6
-                if translationExists
-                    //- #translation
         .row
             .col-xs-6
-                h4 #{song.lang.label}
+                ul.list-inline
+                    li
+                        #leftSongLikeButton
+                    li
+                        h3 #{leftSong.title}
+                h4 #{leftSong.lang.label}
             .col-xs-6
-                if translationExists
-                    h4 #{rightTranslation.lang.label}
-        -for (var i = 0; i < song.lyrics.length; i++)
+                if rightSongExists
+                    ul.list-inline
+                        li
+                            #rightSongLikeButton.inline-block
+                        li
+                            h3.inline-block #{leftSong.title}
+                    h4 #{rightSong.lang.label}
+        -for (var i = 0; i < leftSong.lyrics.length; i++)
             .row
                 .container.col-xs-6
-                    each line in song.lyrics[i]
+                    each line in leftSong.lyrics[i]
                         span #{line}
                         br
                     br            
                 .container.col-xs-6
-                    if translationExists
-                        each line in rightTranslation.lyrics[i]
+                    if rightSongExists
+                        each line in rightSong.lyrics[i]
                             span #{line}
                             br
                     br
             #songPlaylistModal  
             #translationPlaylistModal           
     script.
-        var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
-        var translation = !{JSON.stringify(rightTranslation).replace(/<\//g, "<\\/")}
-        var translationExists = !{JSON.stringify(translationExists).replace(/<\//g, "<\\/")}
+        var leftSong = !{JSON.stringify(leftSong).replace(/<\//g, "<\\/")}
+        var rightSong = !{JSON.stringify(rightSong).replace(/<\//g, "<\\/")}
+        var rightSongExists = !{JSON.stringify(rightSongExists).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}

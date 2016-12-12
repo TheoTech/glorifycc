@@ -53,7 +53,6 @@ var songlistTable = {
                                             disabled: s.disabled,
                                             addButtonDOM: args.addButtonDOM,
                                             playlistModal: playlistModal,
-                                            modalName: ''
                                         })
                                     ])
                                 ])
@@ -64,7 +63,6 @@ var songlistTable = {
                 m(playlistModal.playlistModalComponent, {
                     playlistName: args.playlistName,
                     addButtonDOM: args.addButtonDOM,
-                    modalName: ''
                 })
             ]
         }

@@ -4,32 +4,27 @@ var songClicked = (function() {
     var translationPlaylistName = m.prop()
     var addButtonDOM = m.prop()
     m.mount(document.getElementById('songPlaylistModal'), m(playlistModal.playlistModalComponent, {
-            playlistName: songPlaylistName,
-            addButtonDOM: addButtonDOM,
-            modalName: 'song'
-        }))
-        // m.mount(document.getElementById('translationPlaylistModal'), m(playlistModal.playlistModalComponent, {
-        //     playlistName: translationPlaylistName,
-        //     addButtonDOM: addButtonDOM,
-        //     modalName: 'translation'
-        // }))
-    m.mount(document.getElementById('song'), m(buttons(), {
-        songID: song._id,
+        playlistName: songPlaylistName,
+        addButtonDOM: addButtonDOM,
+    }));
+    m.mount(document.getElementById('groupSong'), m(buttons(), {
+        songID: leftSong._id,
         addButtonDOM: addButtonDOM,
         playlistName: songPlaylistName,
         playlistModal: playlistModal,
-        modalName: 'song',
         inLibrary: inLibrary
-    }))
-    m.mount(document.getElementById('chooseLanguage'), chooseLanguage())
-        // if (translationExists) {
-        //     m.mount(document.getElementById('translation'), m(buttons(), {
-        //         songID: translation._id,
-        //         addButtonDOM: addButtonDOM,
-        //         playlistName: translationPlaylistName,
-        //         playlistModal: playlistModal,
-        //         modalName: 'translation',
-        //         inLibrary: inLibrary
-        //     }))
-        // }
+    }));
+    m.mount(document.getElementById('chooseLanguage'), chooseLanguage());
+    m.mount(document.getElementById('leftSongLikeButton'), m(addOrDeleteButtonComponent.addOrDeleteButton, {
+        songID: leftSong._id,
+        url: '/',
+        inLibrary: inLibrary,
+        className: 'btn-sm'
+    }));
+    m.mount(document.getElementById('rightSongLikeButton'), m(addOrDeleteButtonComponent.addOrDeleteButton, {
+        songID: rightSong._id,
+        url: '/',
+        inLibrary: inLibrary,
+        className: 'btn-sm'
+    }));
 })()
