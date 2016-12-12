@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  .container
+    h1 Account Information
+    hr
+    form
+      .row
+
+        div.form-group
+          label Username
+          input.form-control(value="#{user.username}" disabled=true)
+        div.form-group
+          label Email
+          input.form-control(value="#{user.email}" disabled=true)
+        div
+          a(href="#") Change password
+        hr
+        
+    div
+      table.table
+        tr
+          th(colspan="2") Statistics
+        tr
+          td Songs:
+          td #{counts.songs}
+        tr
+          td Playlists:
+          td #{counts.playlists}
+
+  hr
+  include footer

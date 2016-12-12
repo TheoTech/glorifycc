@@ -29,10 +29,10 @@ header.navbar.navbar-default
             ul.nav.navbar-nav.navbar-right
                 if login
                     li
-                        a #{user.username}
+                        a(href="/user/account") #{user.username}
                     li
                         a(href="/user/logout") Log Out
-                else 
+                else
                     li
                         a(href="/user/login") Log In
                     li
