@@ -27,13 +27,6 @@ function songForm(obj) {
     var copypaste = []
     var errors = [];
 
-    $(window).load(function() {
-        //if the user wants to add a new song, show the modal for copy paste immediately on page load
-        if (obj.song.title === '') {
-            $('#copypaste' + obj.formID).modal('show');
-        }
-    });
-
     function addSong() {
         m.request({
                 method: 'post',
@@ -59,6 +52,7 @@ function songForm(obj) {
                 }
             })
     }
+
     var addStanza = {
         view: function(ctrl, args) {
             return m('.form-group', [
@@ -124,6 +118,11 @@ function songForm(obj) {
                                             })
                                         }
                                     });
+
+                                    // auto-open this modal if appropriate
+                                    if (obj.song.title === '') {
+                                      $('#copypaste' + obj.formID).modal('show');
+                                    }
                                 }
                             }
                         }),
@@ -226,7 +225,7 @@ function songForm(obj) {
                         })
                     ]),
                     m('.form-group', [
-                        m('label', 'Publisher and year'),
+                        m('label', 'Publisher and/or year'),
                         m('input.form-control', {
                             placeholder: 'If the song has a publisher, include the publisher and year',
                             value: year(),
