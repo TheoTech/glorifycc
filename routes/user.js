@@ -220,6 +220,35 @@ router.route('/forgot')
         });
     });
 
+router.route('/account')
+  .all(passportFunction.loggedIn)
+  .get(function (req, res, next) {
+    var songCount = 0;
+    var playlistCount = 0;
+    User.findById(req.user._id)
+        .exec(function(err, user) {
+            if (err) return next(err);
+            Playlist.find({
+                owner: user._id,
+                song: {
+                    $exists: false
+                }
+            }, function(err, playlists) {
+                songCount = user.library.length;
+                playlistCount = playlists.length;
+
+                if (err) return next(err);
+                res.render('account', {
+                  counts: {
+                    songs: songCount,
+                    playlists: playlistCount
+                  },
+                  user: user
+                });
+            });
+        });
+  });
+
 
 router.route('/reset/:token')
     .all(passportFunction.notLoggedIn)
