@@ -181,8 +181,9 @@ function songForm(obj) {
                     }
                 }, [
                     m('.form-group', [
-                        m('label', 'Title'),
+                        m('label', 'Title*'),
                         m('input.form-control', {
+                            placeholder: 'Enter the title of the song in the selected language',
                             value: title(),
                             onchange: m.withAttr('value', title),
                             config: function(elem, isInit) {
@@ -195,8 +196,9 @@ function songForm(obj) {
                         })
                     ]),
                     m('.form-group', [
-                        m('label', 'Author'),
+                        m('label', 'Author*'),
                         m('input.form-control', {
+                            placeholder: 'The author(s) and/or composer(s) of the song',
                             value: author(),
                             onchange: m.withAttr('value', author),
                             config: function(elem, isInit) {
@@ -211,6 +213,7 @@ function songForm(obj) {
                     m('.form-group', [
                         m('label', 'Translator'),
                         m('input.form-control', {
+                            placeholder: 'The translator of the song',
                             value: translator(),
                             onchange: m.withAttr('value', translator),
                             config: function(elem, isInit) {
@@ -223,8 +226,9 @@ function songForm(obj) {
                         })
                     ]),
                     m('.form-group', [
-                        m('label', 'Year Published'),
+                        m('label', 'Publisher and year'),
                         m('input.form-control', {
+                            placeholder: 'If the song has a publisher, include the publisher and year',
                             value: year(),
                             onchange: m.withAttr('value', year),
                             config: function(elem, isInit) {
@@ -237,7 +241,7 @@ function songForm(obj) {
                         })
                     ]),
                     m('.form-group', [
-                        m('label', 'Language'),
+                        m('label', 'Language*'),
                         m('select.form-control', {
                             onchange: m.withAttr('value', lang),
                             config: function(elem, isInit) {
@@ -257,7 +261,7 @@ function songForm(obj) {
                         ])
                     ]),
                     m('.form-group', [
-                        m('label', 'Copyright'),
+                        m('label', 'Copyright*'),
                         m('select.form-control.capitalize', {
                             onchange: m.withAttr('value', copyright),
                             config: function(elem, isInit) {
@@ -277,6 +281,7 @@ function songForm(obj) {
                     m('.form-group', [
                         m('label', 'Youtube Video Link'),
                         m('input.form-control', {
+                            placeholder: 'A link to a video so users can hear the song',
                             value: youtubeLink(),
                             onchange: m.withAttr('value', youtubeLink),
                             config: function(elem, isInit) {
