@@ -88,13 +88,13 @@ router.route('/add')
                                 user.save(function(err) {
                                     if (err) next(err)
                                     res.send({
-                                        url: '/user/library'
+                                        url: '/song/' + newSong._id
                                     });
                                 });
                             });
                         } else {
                             res.send({
-                                url: '/user/library'
+                                url: '/song/' + newSong._id
                             });
                         }
                     });
