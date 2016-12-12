@@ -31,6 +31,7 @@ var language = require('./routes/language');
 var contact = require('./routes/contact');
 var discover = require('./routes/discover');
 var help = require('./routes/help');
+var legal = require('./routes/legal');
 
 
 var mongoConfig = require('./lib/mongoConfig');
@@ -113,6 +114,7 @@ app.use('/language', language);
 app.use('/contact', contact);
 app.use('/discover', discover);
 app.use('/help', help);
+app.use('/legal', legal);
 
 app.get('/api', function(req, res, next) {
     app.render('songs-in-pdf', function(err, html) {
