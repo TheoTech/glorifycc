@@ -28,7 +28,7 @@ mongoose.connect(MongoURI, function(err, database) {
         console.log('Error connecting to: ' + MongoURI + '. ' + err);
     } else {
         function updateSong(song, code, info, i, length) {
-            Language.find({
+            Language.findOne({
                 code: code
             }, (err, language) => {
                 song.lang = language._id;
@@ -41,8 +41,9 @@ mongoose.connect(MongoURI, function(err, database) {
                         info.success++
                     }
                     if (i === length - 1) {
-                        console.log(info.sucess + ' songs migrated successfully, ' + info.error + ' errors')
-                        console.log('Closing DB connection');
+                        console.log('\nTotal songs: ' + length)
+                        console.log(info.success + ' songs migrated successfully, ' + info.error + ' errors')
+                        console.log('\nClosing DB connection');
                         mongoose.connection.close();
                     }
                 });

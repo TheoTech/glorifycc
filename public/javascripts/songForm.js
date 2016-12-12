@@ -269,7 +269,7 @@ function songForm(obj) {
                                 }
                             }
                         }, [
-                            copyrightLists.map((cp) => {
+                            copyrightTypes.map((cp) => {
                                 return m('option', cp)
                             })
                         ])
