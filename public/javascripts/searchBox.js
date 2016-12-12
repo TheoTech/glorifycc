@@ -8,6 +8,32 @@ var searchBoxComponent = (function() {
     }
 
     var searchBox = {
+        controller: function () {
+
+          this.languageFilter = (args) => {
+            if (args.langsExist.length === 0) {
+                return m('li', 'There are no languages to filter by.');
+            }
+            var checkboxes = args.langsExist.map((lang) => {
+                return m('li.capitalize', [
+                    m('input[type=checkbox]', {
+                        onclick: function() {
+                            if (this.checked) {
+                                args.langFilter().push(lang._id)
+                            } else {
+                                _.remove(args.langFilter(), (n) => n === lang._id)
+                            }
+                            args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
+                        }
+                    })
+                ], lang.label)
+            });
+            checkboxes.unshift(m('li', 'Show songs that have translations in: '));
+
+            return checkboxes;
+          };
+          return this;
+        },
         view: function(ctrl, args) {
             return m('#searchInput.input-group', {
                 style: {
@@ -41,25 +67,11 @@ var searchBoxComponent = (function() {
                         }, [
                             m('i.glyphicon.glyphicon-cog')
                         ]),
-                        m('ul.dropdown-menu', [
-                            m('li', [
-                                m('h5', 'Show songs that have translations in: ')
-                            ]),
-                            args.langsExist.map((lang) => {
-                                return m('li.capitalize', [
-                                    m('input[type=checkbox]', {
-                                        onclick: function() {
-                                            if (this.checked) {
-                                                args.langFilter().push(lang._id)
-                                            } else {
-                                                _.remove(args.langFilter(), (n) => n === lang._id)
-                                            }
-                                            args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
-                                        }
-                                    })
-                                ], lang.label)
-                            })
-                        ])
+                        m('ul.dropdown-menu', {
+                          style: {
+                            'padding': '10px'
+                          }
+                        }, ctrl.languageFilter(args))
                     ])
                 ])
             ])
