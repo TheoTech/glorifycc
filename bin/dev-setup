@@ -4,6 +4,6 @@ var dbUtils = require('../lib/dbUtils');
 
 // this is necessary to set the data location relative to this script
 // so this script can be run from any directory
-var songsPath = path.join(__dirname, '../init_data');
+var songsPath = path.join(__dirname, '../init_data/songs');
 
 dbUtils.loadSongsFromDirectory(songsPath);
