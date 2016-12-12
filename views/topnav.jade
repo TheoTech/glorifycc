@@ -15,6 +15,8 @@ header.navbar.navbar-default
                     a(href='/discover') Discover Songs
                 - if(login && user.username !== 'admin')
                     li
+                        a(href="/songlist-db/add") Add Song
+                    li
                         a(href="/user/library") Library
                     li
                         a(href="/user/playlist") Playlist
@@ -32,7 +34,7 @@ header.navbar.navbar-default
                         a #{user.username}
                     li
                         a(href="/user/logout") Log Out
-                else 
+                else
                     li
                         a(href="/user/login") Log In
                     li
