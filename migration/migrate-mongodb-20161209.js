@@ -14,6 +14,13 @@
       label: 'English', (String)
       code: 'en' (String)
   }
+
+  Solution:
+      1. change Song.lang to the id reference of the language schema
+      2. update the lang field in Song.js under models folder to have {
+          type: Schema.Types.ObjectId,
+          ref: 'Language'
+      } instead of String
 */
 
 var mongoose = require('mongoose');

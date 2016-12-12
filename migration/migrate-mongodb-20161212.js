@@ -11,8 +11,10 @@
   }]
 
   the solution is:
-      1. Store the value in lyric field to lyrics field
-      2. Delete the lyric field from the document
+      1. Update the song.js under folder models to have field lyrics
+      2. Store the value in lyric field to lyrics field
+      3. Delete the lyric field from the document
+      4. Delete the lyric field from song.js under folder models
 */
 
 var mongoose = require('mongoose');
@@ -31,21 +33,23 @@ mongoose.connect(MongoURI, function(err, database) {
                 error: 0
             };
             songs.forEach((song, i, arr) => {
-                song.lyrics = song.lyric;
-                song.save((err) => {
+                Song.update({
+                    _id: song._id
+                }, {
+                    $set: {
+                        lyrics: song.lyric
+                    }
+                }, (err) => {
                     if (err) {
                         console.log('Error saving lyrics field for ' + song.title);;
                         info.error++
                     } else {
-                        //if song.lyrics already contains the data, delete the lyric field from document
                         Song.update({
                             _id: song._id
                         }, {
                             $unset: {
                                 lyric: ''
                             }
-                        }, {
-                            multi: true
                         }, (err) => {
                             if (err) {
                                 console.log('error deleting lyric field for ' + song.title);
@@ -53,17 +57,17 @@ mongoose.connect(MongoURI, function(err, database) {
                             } else {
                                 console.log('Migrating ' + song.title + ': change the field name lyric to lyrics');
                                 info.success++;
+                                if (i === arr.length - 1) {
+                                    console.log('\nTotal songs: ' + arr.length);
+                                    console.log(info.success + ' songs migrated successfully, ' + info.error + ' errors');
+                                    console.log('\nClosing DB connection');
+                                    mongoose.connection.close();
+                                }
                             }
-                        })
+                        });
                     }
-                    if (i === arr.length - 1) {
-                        console.log('\nTotal songs: ' + arr.length);
-                        console.log(info.success + ' songs migrated successfully, ' + info.error + ' errors');
-                        console.log('\nClosing DB connection');
-                        mongoose.connection.close();
-                    }
-                })
-            })
-        })
+                });
+            });
+        });
     }
 });
