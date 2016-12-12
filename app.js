@@ -18,6 +18,8 @@ var config = require('config');
 var _ = require('lodash');
 
 var app = module.exports = express();
+var helmet = require('helmet');
+app.use(helmet());
 
 var index = require('./routes/index');
 var songlistdb = require('./routes/songlist-db');
