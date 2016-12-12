@@ -12,7 +12,8 @@ block content
                 .alert.alert-danger
                     each error in errors
                         p #{error.msg}
-            form(role="form", method="post", action='')
+            //- to prevent spambots, add the method and action after a page load timeout.
+            form(role="form" id="contact-us-form")
                 .form-group
                     label Email:
                     input.form-control(name='email' placeholder='you@domain.com')
@@ -21,3 +22,10 @@ block content
                     input.form-control(name='subject' style='margin-bottom: 4px' placeholder='Subject (optional but helpful)')
                     textarea.form-control(name='message' style='height:100px')
                 button.btn.btn-default Submit
+
+    script(type="text/javascript").
+        // 1 second delay before setting form attributes to prevent bots from submitting the form.
+        setTimeout(function () {
+          $('#contact-us-form').prop('action', '/contact');
+          $('#contact-us-form').prop('method', 'post');
+        }, 1000);
