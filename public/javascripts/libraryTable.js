@@ -46,7 +46,7 @@ var libraryTableComponent = (function() {
                                     ]),
                                     m('td.alignWithTitle', [
                                         m('a', {
-                                            href: '/song/' + s._id
+                                            href: '/song/' + s._id + '?left=' + s.lang.code +  '&right='
                                         }, s.title)
                                     ]),
                                     m('td.alignWithTitle', s.author),

@@ -24,7 +24,7 @@ var playlistClickedComponent = (function() {
                                 m('tr', [
                                     m('td', [
                                         m('a', {
-                                            href: '/song/' + s._id
+                                            href: '/song/' + s._id + '?left=' + s.lang.code +  '&right='
                                         }, s.title),
                                         m('span', ' by ' + s.author)
                                     ]),
