@@ -51,7 +51,18 @@ var playlistTableComponent = (function() {
                     m('.modal-dialog.modal-sm', [
                         m('.modal-content', [
                             m('.modal-header', [
-                                m('h4', 'New Playlist')
+                                m('.modal-title', [
+                                    m('h4', [
+                                        'Create Playlist',
+                                        m('button.close[data-dismiss="modal"]', {
+                                          style: {
+                                            color: 'white'
+                                          }
+                                        }, [
+                                          m('span', m.trust('&times;'))
+                                        ])
+                                    ])
+                                ])
                             ]),
                             m('.modal-body', [
                                 m('label', 'Enter Playlist Name'),
@@ -89,7 +100,8 @@ var playlistTableComponent = (function() {
                     m('thead', [
                         m('th', {
                             style: {
-                                'font-size': '18px'
+                                'font-size': '18px',
+                                'padding': '10px'
                             }
                         }, 'Playlist Name')
                     ]),
