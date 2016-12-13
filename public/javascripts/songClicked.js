@@ -21,10 +21,12 @@ var songClicked = (function() {
         inLibrary: inLibrary,
         className: 'btn-sm'
     }));
-    m.mount(document.getElementById('rightSongLikeButton'), m(addOrDeleteButtonComponent.addOrDeleteButton, {
-        songID: rightSong._id,
-        url: '/',
-        inLibrary: inLibrary,
-        className: 'btn-sm'
-    }));
+    if (rightSong._id) {
+        m.mount(document.getElementById('rightSongLikeButton'), m(addOrDeleteButtonComponent.addOrDeleteButton, {
+            songID: rightSong._id,
+            url: '/',
+            inLibrary: inLibrary,
+            className: 'btn-sm'
+        }));
+    }
 })()

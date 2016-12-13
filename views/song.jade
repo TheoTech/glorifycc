@@ -4,7 +4,7 @@ block content
     .container
         .text-center
             h1 #{leftSong.title}
-            h3 by #{leftSong.author}
+            p.lead by #{leftSong.author}
             #groupSong
         br
         br
@@ -31,15 +31,15 @@ block content
                     each line in leftSong.lyrics[i]
                         span #{line}
                         br
-                    br            
+                    br
                 .container.col-xs-6
                     if rightSongExists
                         each line in rightSong.lyrics[i]
                             span #{line}
                             br
                     br
-            #songPlaylistModal  
-            #translationPlaylistModal           
+            #songPlaylistModal
+            #translationPlaylistModal
     script.
         var leftSong = !{JSON.stringify(leftSong).replace(/<\//g, "<\\/")}
         var rightSong = !{JSON.stringify(rightSong).replace(/<\//g, "<\\/")}

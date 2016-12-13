@@ -20,6 +20,7 @@ var buttons = function() {
                         }
                     }
                 }, args.label()),
+                m.trust('&nbsp;'),
                 m('button.btn.btn-default', {
                     onclick: function() {
                         window.location.href = args.songID + '/add-translation'
