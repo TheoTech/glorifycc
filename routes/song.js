@@ -14,7 +14,8 @@ var _ = require('lodash');
 
 router.route('/:song_id')
     .all(function(req, res, next) {
-        lang = req.query.lang || '';
+        left = req.query.left || '';
+        right = req.query.right || '';
         song_id = req.params.song_id;
         song = {};
         Song.findById(song_id)
@@ -42,7 +43,6 @@ router.route('/:song_id')
         }
 
         function findSong() {
-
             Song.find({
                     $or: [{
                         $and: [{
@@ -51,15 +51,13 @@ router.route('/:song_id')
                             source: {
                                 $exists: true
                             }
-                        }, {
-                            lang: {
-                                $ne: song.lang._id
-                            }
                         }]
                     }, {
                         _id: song.source
                     }, {
                         source: song._id
+                    }, {
+                        _id: song._id
                     }]
                 })
                 .populate('lang')
@@ -69,8 +67,9 @@ router.route('/:song_id')
                     }
                     //The user sees a song on the left. If they want to view a translation, it appears on the right.
                     //rightTranslation is the song obj in the language that the user picks in the dropdown
-                    var rightTranslation = translations.find((translation) => translation.lang._id == lang) || {};
-                    var translationExists = !_.isEmpty(rightTranslation);
+                    var leftSong = translations.find((translation) => translation.lang.code === left) || {};
+                    var rightSong = translations.find((translation) => translation.lang.code === right) || {};
+                    var rightSongExists = !_.isEmpty(rightSong);
                     if (req.isAuthenticated()) {
                         Playlist.find({
                             owner: req.user._id,
@@ -82,9 +81,9 @@ router.route('/:song_id')
                                 _id: req.user._id
                             }, function(err, user) {
                                 res.render('song', {
-                                    song: song,
-                                    rightTranslation: rightTranslation,
-                                    translationExists: translationExists,
+                                    leftSong: leftSong,
+                                    rightSong: rightSong,
+                                    rightSongExists: rightSongExists,
                                     translations: translations,
                                     playlists: playlists,
                                     inLibrary: user.library
@@ -93,9 +92,9 @@ router.route('/:song_id')
                         });
                     } else {
                         res.render('song', {
-                            song: song,
-                            rightTranslation: rightTranslation,
-                            translationExists: translationExists,
+                            leftSong: leftSong,
+                            rightSong: rightSong,
+                            rightSongExists: rightSongExists,
                             translations: translations,
                             playlists: [],
                             inLibrary: []
@@ -177,7 +176,7 @@ router.route('/:song_id/add-translation')
             });
         } else {
             var data = req.body;
-                //find for all cases, where song is parent song or child song
+            //find for all cases, where song is parent song or child song
             Song.findOne({
                 $or: [{
                     source: song.source

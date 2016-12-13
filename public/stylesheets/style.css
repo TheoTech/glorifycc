@@ -80,6 +80,22 @@ footer.footer {
     font-weight: 300;
 }
 
+.row0 {
+    background-color: black;
+}
+
+.row1 {
+    background-color: white;
+}
+
+select option[disabled]:first-child {
+    display: none;
+}
+
+.inline-block {
+    display: inline-block
+}
+
 @media screen and (max-width: 570px) {
     #searchBoxHome {
         width: 300px;

@@ -17,7 +17,7 @@ var playlistModal = (function() {
                     currentPlaylists(res.playlists)
                     args.playlistName(name)
                     //hide it once it is finished adding playlist
-                    $('#newPlaylist' + args.modalName).modal('hide')
+                    $('#newPlaylist').modal('hide')
                     args.addButtonDOM().trigger('click')
                 }
             })
@@ -40,19 +40,6 @@ var playlistModal = (function() {
                     args.disabled(false);
                     m.redraw()
                 }, 3000);
-
-                /*
-                  there are two different behaviors between adding to playlist from songpage and
-                  from songtable. in songpage you want the user to always choose which playlist they want
-                  to add the song to whereas in songtable the user only choose once and it becomes the
-                  default playlist.
-                  To fix that we need to have if statement that checks if the request came from songpage then
-                  reset the playlistname. Therefore, the user has to choose playlist everytime
-                  he clicks 'add to playlist' button
-                */
-                if (args.modalName !== '') {
-                    args.playlistName('')
-                }
             })
     }
 
@@ -66,7 +53,7 @@ var playlistModal = (function() {
 
     function createNewPlaylist(args) {
         return m('.modal.fade[role=dialog]', {
-            id: 'newPlaylist' + args.modalName
+            id: 'newPlaylist'
         }, [
             m('.modal-dialog.modal-sm', [
                 m('.modal-content', [
@@ -102,7 +89,7 @@ var playlistModal = (function() {
 
     function choosePlaylist(args) {
         return m('.modal.fade[role=dialog]', {
-            id: 'choosePlaylist' + args.modalName
+            id: 'choosePlaylist'
         }, [
             m('.modal-dialog.modal-sm', [
                 m('.modal-content', [
@@ -122,8 +109,8 @@ var playlistModal = (function() {
                                     }
                                 },
                                 onclick: function() {
-                                    $('#choosePlaylist' + args.modalName).modal('hide')
-                                    $('#newPlaylist' + args.modalName).modal('show')
+                                    $('#choosePlaylist').modal('hide')
+                                    $('#newPlaylist').modal('show')
                                 }
                             }, [
                                 m('span.glyphicon.glyphicon-plus')

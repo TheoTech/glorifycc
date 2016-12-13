@@ -37,7 +37,7 @@ var addOrDeleteButtonComponent = (function() {
             };
             this.buttonTxt = function() {
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
-                return m(isInLibrary ? 'i.glyphicon.glyphicon-remove' : 'i.glyphicon.glyphicon-plus');
+                return m(isInLibrary ? 'i.glyphicon.glyphicon-heart' : 'i.glyphicon.glyphicon-heart-empty');
             }
             this.addOrDelete = function(){
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
@@ -52,6 +52,7 @@ var addOrDeleteButtonComponent = (function() {
         view: function(ctrl, args) {
             return m('div', [
                 m('button.btn.btn-default', {
+                    className: args.className,
                     title: ctrl.buttonTitle(),
                     onclick: function() {
                         if (!isLoggedIn) {
