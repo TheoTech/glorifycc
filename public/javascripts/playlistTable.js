@@ -104,8 +104,10 @@ var playlistTableComponent = (function() {
                                 m('td', [
                                     m('button.btn.btn-default.pull-right', {
                                         onclick: function() {
-                                            deletePlaylist(pl.name)
-                                            _.remove(playlists, (n) => n.name === pl.name)
+                                            if (confirm('Do you want to delete this playlist?')) {
+                                                deletePlaylist(pl.name)
+                                                _.remove(playlists, (n) => n.name === pl.name)
+                                            }
                                         }
                                     }, 'Delete Playlist')
                                 ])
