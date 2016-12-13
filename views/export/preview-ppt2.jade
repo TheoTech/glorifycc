@@ -1,15 +1,15 @@
 extends ../layout
 
 block content
-    h1 Preview
+    include previewHeader
     #exportOption
     include exportButton
-    hr.preview
+    hr
     //Note: songs2d = [[Song Schema that the user checked]]
     each songs in songs2d
-        h1
+        h4.text-center
             each song in songs
-                span #{song.title} 
+                span #{song.title}
             span .pptx
         div(style='font-size: 12px; text-align: center; height: 330px; width: 500px; margin: auto; background-color: black;')
             each song in songs
@@ -17,8 +17,8 @@ block content
                 each line in song.lyrics[0]
                     p #{line}
         br
-        hr.preview
-    include exportButton  
+        hr
+    include exportButton
 
     script.
         var maxNumberOfSongs = !{JSON.stringify(maxNumberOfSongs).replace(/<\//g, "<\\/")}
