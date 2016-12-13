@@ -27,9 +27,10 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
         ])
     }
 
-    function pdfOption() {
+    function numberOfLanguageOptions() {
         if (languagePerSlide !== 0) {
             return m('div', [
+                m('hr'),
                 radio('?language=1', 1, '1 language per slide', 'optradio2'),
                 radio('?language=2', 2, '2 languages per slide', 'optradio2'),
                 radio('?language=3', 3, '3 or more languages per slide', 'optradio2')
@@ -59,7 +60,7 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
                                     }
                                 }
                             })
-                        ], 'PDF')
+                        ], 'PDF (handouts)')
                     ]),
                     m('.radio', [
                         m('label', [
@@ -78,10 +79,10 @@ function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
                                     }
                                 }
                             })
-                        ], 'PPT')
+                        ], 'PPT (slides)')
                     ])
                 ]),
-                pdfOption()
+                numberOfLanguageOptions()
             ]
         }
     }
