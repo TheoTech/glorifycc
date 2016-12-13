@@ -37,8 +37,6 @@ router.route('/:song_id')
                 //otherwise dont show the song
                 res.render('noaccess');
             }
-        } else if (!left) {
-            res.redirect('/song/' + song._id + '?left=' + song.lang.code +  '&right=')
         } else {
             //if it is not a private song then show the song
             findSong();
@@ -73,6 +71,9 @@ router.route('/:song_id')
                     var rightSong = translations.find((translation) => translation.lang.code === right) || {};
                     var rightSongExists = !_.isEmpty(rightSong);
                     var leftSongExists = !_.isEmpty(leftSong);
+                    if (!leftSongExists) {
+                        res.redirect('/song/' + song._id + '?left=' + song.lang.code +  '&right=')
+                    }
                     if (req.isAuthenticated()) {
                         Playlist.find({
                             owner: req.user._id,
@@ -87,7 +88,6 @@ router.route('/:song_id')
                                     leftSong: leftSong,
                                     rightSong: rightSong,
                                     rightSongExists: rightSongExists,
-                                    leftSongExists: leftSongExists,
                                     translations: translations,
                                     playlists: playlists,
                                     inLibrary: user.library
@@ -99,7 +99,6 @@ router.route('/:song_id')
                             leftSong: leftSong,
                             rightSong: rightSong,
                             rightSongExists: rightSongExists,
-                            leftSongExists: leftSongExists,
                             translations: translations,
                             playlists: [],
                             inLibrary: []
