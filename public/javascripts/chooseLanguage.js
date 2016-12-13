@@ -32,7 +32,7 @@ function chooseLanguage() {
                         //get the langCode string, +2 because the code is only two characters
                         var langCode = window.location.href.substring(startIndex, startIndex + 2);
                         if (langCode !== '') {
-                            //make seletpicker to show the language of the song
+                            //make selectpicker to show the language of the song
                             $(elem).prop('value', langCode)
                         }
                     }
