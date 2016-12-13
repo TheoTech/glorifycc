@@ -1,20 +1,20 @@
 extends ../layout
 
 block content
-    h1 Preview
+    include previewHeader
     #exportOption
     include exportButton
-    hr.preview
+    hr
     //Note: songs2d = [[Song Schema that the user checked]]
     each songs in songs2d
         each song in songs
-            h1 #{song.title}.pptx
+            h4.text-center #{song.title}.pptx
             div(style='font-size: 20px; text-align: center; height: 330px; width: 500px; margin: auto; background-color: black; display: table')
                 div(style='display: table-cell; vertical-align: middle')
                     each line in song.lyrics[0]
                         p #{line}
             br
-            hr.preview         
+            hr
     include exportButton
 
     script.

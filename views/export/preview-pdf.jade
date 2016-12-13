@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-    h1 Preview
+    include previewHeader
     #exportOption
     include exportButton
     //Note: songs2d = [[Songs that the user checked]]
@@ -25,7 +25,7 @@ block content
                                     br
                                 br
                             -j++
-                            -while(j % 3 !== 0 && j < songs.length)            
+                            -while(j % 3 !== 0 && j < songs.length)
                                 td
                                     -for(var x = 0; x < songs[j].lyrics[index].length; x++)
                                         !{songs[j].lyrics[index][x]}
@@ -33,7 +33,7 @@ block content
                                 -j++
                             -j = 0
     include exportButton
-    
+
     script.
         var maxNumberOfSongs = !{JSON.stringify(maxNumberOfSongs).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/exportOption.js')
