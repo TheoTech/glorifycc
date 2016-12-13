@@ -16,7 +16,7 @@ block content
                         #leftSongLikeButton
                     li
                         h3 #{leftSong.title}
-                h4 #{leftSong.lang.label}
+                p.lead #{leftSong.lang.label}
             .col-xs-6
                 if rightSongExists
                     ul.list-inline
@@ -24,7 +24,7 @@ block content
                             #rightSongLikeButton.inline-block
                         li
                             h3.inline-block #{leftSong.title}
-                    h4 #{rightSong.lang.label}
+                    p.lead #{rightSong.lang.label}
         -for (var i = 0; i < leftSong.lyrics.length; i++)
             .row
                 .container.col-xs-6

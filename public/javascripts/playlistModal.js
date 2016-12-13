@@ -58,7 +58,16 @@ var playlistModal = (function() {
             m('.modal-dialog.modal-sm', [
                 m('.modal-content', [
                     m('.modal-header', [
-                        m('h4', 'New Playlist')
+                        m('.modal-title', m('h4', [
+                            'New Playlist',
+                            m('button.close[data-dismiss="modal"]', {
+                              style: {
+                                color: 'white'
+                              }
+                            }, [
+                              m('span', m.trust('&times;'))
+                            ])
+                        ])),
                     ]),
                     m('.modal-body', [
                         m('label', 'Enter Playlist Name'),
@@ -94,30 +103,36 @@ var playlistModal = (function() {
             m('.modal-dialog.modal-sm', [
                 m('.modal-content', [
                     m('.modal-header', [
-                        m('h4', {
-                            style: {
-                                'margin-left': '40px'
-                            }
-                        }, 'Select Playlist', [
-                            m('button#test.btn.btn-default.btn-sm.pull-right', {
-                                'data-toggle': 'tooltip',
-                                'data-placement': 'right',
-                                title: 'Add New Playlist',
-                                config: function(elem, isInit) {
-                                    if (!isInit) {
-                                        $(elem).tooltip()
-                                    }
-                                },
-                                onclick: function() {
-                                    $('#choosePlaylist').modal('hide')
-                                    $('#newPlaylist').modal('show')
-                                }
-                            }, [
-                                m('span.glyphicon.glyphicon-plus')
+                        m('.modal-title', [
+                            m('h4', [
+                                'Select Playlist',
+                                m('button.close[data-dismiss="modal"]', {
+                                  style: {
+                                    color: 'white'
+                                  }
+                                }, [
+                                  m('span', m.trust('&times;'))
+                                ])
                             ])
                         ])
                     ]),
                     m('.modal-body', [
+                        m('button.btn.btn-default.btn-sm.pull-right', {
+                            'data-toggle': 'tooltip',
+                            'data-placement': 'right',
+                            title: 'Add New Playlist',
+                            config: function(elem, isInit) {
+                                if (!isInit) {
+                                    $(elem).tooltip()
+                                }
+                            },
+                            onclick: function() {
+                                $('#choosePlaylist').modal('hide')
+                                $('#newPlaylist').modal('show')
+                            }
+                        }, [
+                            m('span.glyphicon.glyphicon-plus')
+                        ]),
                         currentPlaylists().map((pl) => {
                             return [
                                 m('p', [
