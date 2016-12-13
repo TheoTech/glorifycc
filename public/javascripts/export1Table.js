@@ -1,16 +1,23 @@
 var export1TableComponent = (function() {
     //Note: var uniqueLanguages, var songs, var playlistName are defined on export1.jade
-
+    var errorMsg = m.prop('');
     var saveTranslationsChecked = function(songs) {
-
-        m.request({
-                method: 'POST',
-                url: '/user/playlist/' + encodeURIComponent(playlistName) + '/export1',
-                data: songs
-            })
-            .then(function(res) {
-                window.location.href = '/user/playlist/' + encodeURIComponent(playlistName)+ '/export3'
-            })
+        var totalLyricsChecked = songs.reduce(function (a, b) {
+            return a.translationsChecked.length + b.translationsChecked.length;
+        });
+        if (totalLyricsChecked === 0) {
+            errorMsg('Please select at least one language to export a song in.');
+        } else {
+            errorMsg('');
+            m.request({
+                    method: 'POST',
+                    url: '/user/playlist/' + encodeURIComponent(playlistName) + '/export1',
+                    data: songs
+                })
+                .then(function(res) {
+                    window.location.href = '/user/playlist/' + encodeURIComponent(playlistName)+ '/export3'
+                });
+        }
     }
 
     var selectAll = function(elem, lang) {
@@ -18,12 +25,23 @@ var export1TableComponent = (function() {
             if ($(obj).prop('checked') !== $(elem).prop('checked')) {
                 $(obj).trigger('click');
             }
-        })
+        });
     }
 
     var export1Table = {
-        view: function() {
+        controller: function (args) {
+            this.alert = () => {
+                if (errorMsg() !== '') {
+                  return m('.alert.alert-danger', errorMsg());
+                } else {
+                  return '';
+                }
+            };
+            return this;
+        },
+        view: function (ctrl) {
             return [
+                ctrl.alert(),
                 m('table.table', [
                     m('thead', [
                         m('th', {
