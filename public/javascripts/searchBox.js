@@ -15,8 +15,11 @@ var searchBoxComponent = (function() {
                 return m('li', 'There are no languages to filter by.');
             }
             var checkboxes = args.langsExist.map((lang) => {
-                return m('li.capitalize', [
+                return m('li', [
                     m('input[type=checkbox]', {
+                        style: {
+                          'margin-right': '5px'
+                        },
                         onclick: function() {
                             if (this.checked) {
                                 args.langFilter().push(lang._id)

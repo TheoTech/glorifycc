@@ -33,7 +33,7 @@ var addOrDeleteButtonComponent = (function() {
         controller: function(args) {
             this.buttonTitle = function() {
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
-                return isInLibrary ? 'Removing from Library...' : 'Adding to Library...';
+                return isInLibrary ? 'Removing from Favorites...' : 'Adding to Favorites...';
             };
             this.buttonTxt = function() {
                 var isInLibrary = _.includes(args.inLibrary(), args.songID);
