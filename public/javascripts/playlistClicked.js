@@ -14,9 +14,24 @@ var playlistClickedComponent = (function() {
             })
     }
     var playlistClicked = {
-        view: function() {
+        controller: function () {
+            this.noSongsPlaceholder = (songs) => {
+              if (songs.length === 0) {
+                return m('div', [
+                    'There are no songs in this playlist.',
+                    m('br'),
+                    m('a[href="/discover"]', 'Add songs to playlist.')
+                ]);
+              } else {
+                return m('p');
+              }
+            };
+            return this;
+        },
+        view: function (ctrl) {
             return [
                 m('h1', playlistName()),
+                ctrl.noSongsPlaceholder(songs()),
                 m('table.table', [
                     m('tbody', [
                         songs().map((s) => {
@@ -47,7 +62,9 @@ var playlistClickedComponent = (function() {
                     }, 'Export Playlist'),
                     m('button.btn.btn-default.pull-right', {
                         onclick: function() {
-                            deletePlaylist(playlistName())
+                            if (confirm('Do you want to delete this playlist?')) {
+                                deletePlaylist(playlistName());
+                            }
                         }
                     }, 'Delete Playlist')
                 ])
