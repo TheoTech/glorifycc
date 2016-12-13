@@ -26,10 +26,16 @@ var export1TableComponent = (function() {
             return [
                 m('table.table', [
                     m('thead', [
-                        m('th', 'Title'),
+                        m('th', {
+                          style: {
+                            padding: '10px'
+                          }
+                        }, 'Title'),
                         uniqueLanguages.map((lang) => {
                             return m('th.text-center', {
-                                margin: 'auto'
+                                style: {
+                                    padding: '10px'
+                                }
                             }, lang.label)
                         })
                     ]),
@@ -87,7 +93,7 @@ var export1TableComponent = (function() {
                             }
                         }))
                     }
-                }, 'Next')
+                }, 'Preview')
             ]
         }
     }

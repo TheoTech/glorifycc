@@ -13,11 +13,11 @@ function selectPlaylist() {
         }, args.playlistName() ? 'Selected Playlist: ' + args.playlistName() : 'Select Playlist')
     }
 
-    var selectPLaylistComponent = {
+    var selectPlaylistComponent = {
         view: function(ctrl, args) {
             return button(args)
         }
     }
 
-    return selectPLaylistComponent
+    return selectPlaylistComponent
 }
