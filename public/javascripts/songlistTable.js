@@ -41,7 +41,7 @@ var songlistTable = {
                                     ]),
                                     m('td.alignWithTitle', [
                                         m('a', {
-                                            href: '/song/' + s._id + '?left=' + s.lang.code +  '&right='
+                                            href: '/song/' + s._id
                                         }, s.title)
                                     ]),
                                     m('td.alignWithTitle', s.author),

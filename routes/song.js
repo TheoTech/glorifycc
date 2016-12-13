@@ -14,8 +14,8 @@ var _ = require('lodash');
 
 router.route('/:song_id')
     .all(function(req, res, next) {
-        left = req.query.left || '';
-        right = req.query.right || '';
+        left = req.query.left;
+        right = req.query.right;
         song_id = req.params.song_id;
         song = {};
         Song.findById(song_id)
@@ -70,6 +70,10 @@ router.route('/:song_id')
                     var leftSong = translations.find((translation) => translation.lang.code === left) || {};
                     var rightSong = translations.find((translation) => translation.lang.code === right) || {};
                     var rightSongExists = !_.isEmpty(rightSong);
+                    var leftSongExists = !_.isEmpty(leftSong);
+                    if (!leftSongExists) {
+                        res.redirect('/song/' + song._id + '?left=' + song.lang.code +  '&right=')
+                    }
                     if (req.isAuthenticated()) {
                         Playlist.find({
                             owner: req.user._id,

@@ -31,7 +31,12 @@ function chooseLanguage() {
 
                         //get the langCode string, +2 because the code is only two characters
                         var langCode = window.location.href.substring(startIndex, startIndex + 2);
-                        if (langCode !== '') {
+                        if (songPosition === 'right' && rightSongExists) {
+                            //make selectpicker to show the language of the song
+                            $(elem).prop('value', langCode)
+                        } else if (songPosition === 'left') {
+                            //left will always exists because handle this case already in the server side so we only need to check
+                            //whether it is the left picker or not
                             //make selectpicker to show the language of the song
                             $(elem).prop('value', langCode)
                         }
