@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 var path = require('path');
 var dbUtils = require('../lib/dbUtils');
+var Language = require('../models/language');
 
 // this is necessary to set the data location relative to this script
 // so this script can be run from any directory
+var languagesPath = path.join(__dirname, '../init_data/languages.json');
 var songsPath = path.join(__dirname, '../init_data/songs');
 
-dbUtils.loadSongsFromDirectory(songsPath);
+dbUtils.connectAndRun(function() {
+  return dbUtils.loadFromFile(Language, languagesPath).then(function () {
+    return dbUtils.loadSongsFromDirectory(songsPath);
+  });
+});
