@@ -7,7 +7,7 @@ var express = require('express'),
     Language = require('../models/language'),
     passportFunction = require('../lib/passport');
 
-router.route('/').all(passportFunction.loggedIn)
+router.route('/').all(passportFunction.adminLoggedIn)
   .get(function(req, res, next) {
       Language.find(function(err, languages) {
           if (err) next(err);
