@@ -4,9 +4,16 @@ block content
     h2 Available Language:
     ol
         each language in languages
-            li
-              a(href="./#{language.code}") #{language.label}
-              span (#{language.code})
+            li(id="#{language.code}")
+              span.display
+                a(href="#" onclick="editLanguage('#{language.code}')") #{language.label}
+                span &nbsp; (#{language.code})
+              form.editor(style="display:none" method="post" action="/language")
+                input(type="hidden" name="code" value="#{language.code}")
+                input.form-control(name="label" value="#{language.label}")
+                button(type="submit").btn.btn-primary Save
+                a(href="#").btn.btn-default(onclick="cancelEdit('#{language.code}')") Cancel
+
 
     form(method='post')
         .col-xs-3.form-group
@@ -15,3 +22,14 @@ block content
             label Language code:
             input.form-control(name='code')
             button.btn.btn-default Add
+
+    script(type="text/javascript").
+        function editLanguage (code) {
+          $('#' + code + ' .display').hide();
+          $('#' + code + ' .editor').show();
+        }
+
+        function cancelEdit (code) {
+          $('#' + code + ' .display').show();
+          $('.editor').hide();
+        }
