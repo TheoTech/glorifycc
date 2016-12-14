@@ -7,7 +7,6 @@ var express = require('express'),
     Language = require('../models/language'),
     passportFunction = require('../lib/passport');
 
-router.all(passportFunction.loggedIn);
 router.route('/').all(passportFunction.loggedIn)
   .get(function(req, res, next) {
       Language.find(function(err, languages) {
@@ -34,8 +33,14 @@ router.route('/').all(passportFunction.loggedIn)
                   res.redirect('/language');
               })
           } else {
-              req.flash('error_messages', 'Language already in the dabase');
-              res.redirect('/language');
+              Language.update({
+                  code: code
+              }, {
+                  label: label
+              }, {}, function (err, updated) {
+                  if (err) next(err);
+                  res.redirect('/language');
+              });
           }
       })
   });
