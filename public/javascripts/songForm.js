@@ -107,7 +107,7 @@ function songForm(obj) {
                         m('label', 'Lyrics:'),
                         m('textarea.form-control', {
                             rows: '25',
-                            placeholder: 'Write the lyric with new line as a separator between stanzas',
+                            placeholder: 'Enter the lyrics of your new song separating each stanza with a blank line. Then press "Done" to start entering other details for the song.',
                             config: function(elem, isInit) {
                                 if (!isInit) {
                                     $(elem).bind('input propertychange', function() {
@@ -126,28 +126,36 @@ function songForm(obj) {
                                 }
                             }
                         }),
-                        m('button.btn.btn-default', {
-                            onclick: function() {
-                                $('#copypaste' + obj.formID).modal('hide')
-                                $('#copypaste' + obj.formID).find('textarea').val('')
-                            }
-                        }, 'Cancel'),
-                        m('button.btn.btn-default', {
-                            onclick: function() {
-                                var isConfirmed = true;
-                                $('#stanzas' + obj.formID).children().each(function() {
-                                    if ($(this).find('textarea').val().replace(/\s/g, '') !== '') {
-                                        isConfirmed = confirm('Do you want to overwrite your existing lyric ?')
-                                        return;
-                                    }
-                                })
-                                if (isConfirmed) {
-                                    lyrics = copypaste
-                                    $('#copypaste' + obj.formID).modal('hide')
-                                    $('#copypaste' + obj.formID).find('textarea').val('')
-                                }
-                            }
-                        }, 'Done')
+                        m('div', {
+                          style: {
+                            'text-align': 'right',
+                            'margin-top': '5px'
+                          }
+                        }, [
+                          m('button.btn.btn-default', {
+                              onclick: function() {
+                                  $('#copypaste' + obj.formID).modal('hide')
+                                  $('#copypaste' + obj.formID).find('textarea').val('')
+                              }
+                          }, 'Cancel'),
+                          m.trust('&nbsp;'),
+                          m('button.btn.btn-primary', {
+                              onclick: function() {
+                                  var isConfirmed = true;
+                                  $('#stanzas' + obj.formID).children().each(function() {
+                                      if ($(this).find('textarea').val().replace(/\s/g, '') !== '') {
+                                          isConfirmed = confirm('Do you want to overwrite your existing lyric ?')
+                                          return;
+                                      }
+                                  })
+                                  if (isConfirmed) {
+                                      lyrics = copypaste
+                                      $('#copypaste' + obj.formID).modal('hide')
+                                      $('#copypaste' + obj.formID).find('textarea').val('')
+                                  }
+                              }
+                          }, 'Done')
+                        ])
                     ])
                 ])
             ])

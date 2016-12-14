@@ -6,7 +6,7 @@ var libraryTableComponent = (function() {
     var libraryTable = {
         view: function() {
             if (_.isEmpty(songs())) {
-                return m('h4', 'Your library is empty')
+                return m('h4', 'Your library of favorites is empty.')
             } else {
                 return [
                     m('table.table', [

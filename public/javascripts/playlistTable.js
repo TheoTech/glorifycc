@@ -94,7 +94,7 @@ var playlistTableComponent = (function() {
     var playlistTable = {
         view: function() {
             if (_.isEmpty(playlists)) {
-                return m('h4', 'You have no playlist')
+                return m('h4', 'You have no playlists yet.')
             } else {
                 return m('table.table', [
                     m('thead', [
