@@ -4,7 +4,9 @@ block content
     h2 Available Language:
     ol
         each language in languages
-            li #{language.label} (#{language.code})
+            li
+              a(href="./#{language.code}") #{language.label}
+              span (#{language.code})
 
     form(method='post')
         .col-xs-3.form-group
