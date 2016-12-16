@@ -1,7 +1,7 @@
 var discover = (function() {
     var inLibrary = m.prop(currentInLibrary);
     var displayedSongs = m.prop(songs);
-    var numberOfSongsToShow = 10;
+    var numberOfSongsToShow = 20;
 
     //langShown store the language id. it is for showing the songs title in 'langShown'
     var langShown = m.prop('all');

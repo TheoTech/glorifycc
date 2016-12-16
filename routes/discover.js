@@ -21,11 +21,12 @@ router.get('/', function(req, res, next) {
         .sort({
             title: 1
         })
+        .limit(20)
         .exec(function(err, songs) {
             if (err) {
                 next(err);
             }
-                //to get what languages we need to include in the dropdown for filtering feature
+            //to get what languages we need to include in the dropdown for filtering feature
             langsExist = _.uniq(songs.map((s) => s.lang));
             if (req.isAuthenticated()) {
                 User.findOne({
@@ -59,7 +60,7 @@ router.get('/', function(req, res, next) {
                     playlistName: playlistName
                 });
             }
-        })
+        });
 });
 
 router.put('/', function(req, res, next) {
@@ -146,7 +147,7 @@ router.put('/', function(req, res, next) {
                 done(null, songs2d);
             });
         }
-    }
+    };
 
     //apply 'show songs that have translations in' filter
     var applyFilter = function(songs2d, done) {
@@ -163,7 +164,7 @@ router.put('/', function(req, res, next) {
             });
         }
         done(null, songs2d);
-    }
+    };
 
     //turn 2d array to 1d array
     var concatSongs = function(songs2d, done) {
@@ -173,8 +174,9 @@ router.put('/', function(req, res, next) {
             }), ['title']);
         }
         done(null, songs2d);
-    }
+    };
 
+    // TODO implement this via the mongo query directly.
     var loadMore = function(songs2d, done) {
         if (langShown !== 'all') {
             //apply 'show songs in' filter
@@ -184,7 +186,7 @@ router.put('/', function(req, res, next) {
             songs2d = songs2d.slice(0, totalSongsDisplayed);
         }
         done(null, songs2d);
-    }
+    };
 
     var finalize = function(err, songs2d) {
         if (err) {
@@ -194,7 +196,7 @@ router.put('/', function(req, res, next) {
                 songs: songs2d
             });
         }
-    }
+    };
 
     async.waterfall([findOriginalSong, findTranslations, applyFilter, concatSongs, loadMore], finalize);
 
