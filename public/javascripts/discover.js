@@ -1,7 +1,7 @@
 var discover = (function() {
     var inLibrary = m.prop(currentInLibrary);
     var displayedSongs = m.prop(songs);
-    var initial = 10;
+    var numberOfSongsToShow = 10;
 
     //langShown store the language id. it is for showing the songs title in 'langShown'
     var langShown = m.prop('all');
@@ -17,25 +17,31 @@ var discover = (function() {
     var addButtonDOM = m.prop();
 
     var loadMoreAndApplyFilter = function(totalSongsDisplayed, langShown, langFilter, searchString) {
+        console.log({
+            totalSongsDisplayed: totalSongsDisplayed,
+            langShown: langShown,
+            langFilter: langFilter,
+            searchString: searchString
+        });
         m.request({
-                method: 'PUT',
-                url: '/discover',
-                data: {
-                    totalSongsDisplayed: totalSongsDisplayed,
-                    langShown: langShown,
-                    langFilter: langFilter,
-                    searchString: searchString
-                }
-            })
-            .then(function(res) {
-                displayedSongs(res.songs);
-            })
+            method: 'PUT',
+            url: '/discover',
+            data: {
+                totalSongsDisplayed: totalSongsDisplayed,
+                langShown: langShown,
+                langFilter: langFilter,
+                searchString: searchString
+            }
+        })
+        .then(function(res) {
+            displayedSongs(res.songs);
+        })
     }
 
     $(window).scroll(function() {
         if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-            initial += 5;
-            loadMoreAndApplyFilter(initial, langShown(), langFilter(), searchString())
+            numberOfSongsToShow += 10;
+            loadMoreAndApplyFilter(numberOfSongsToShow, langShown(), langFilter(), searchString())
         }
     });
 
@@ -46,7 +52,7 @@ var discover = (function() {
                 langShown: langShown,
                 langFilter: langFilter,
                 loadMoreAndApplyFilter: loadMoreAndApplyFilter,
-                initial: initial,
+                initial: numberOfSongsToShow,
                 searchString: searchString,
                 langsExist: langsExist
             }))
@@ -54,7 +60,7 @@ var discover = (function() {
                 langShown: langShown,
                 langFilter: langFilter,
                 loadMoreAndApplyFilter: loadMoreAndApplyFilter,
-                initial: initial,
+                initial: numberOfSongsToShow,
                 displayedSongs: displayedSongs,
                 playlistName: playlistName,
                 inLibrary: inLibrary,

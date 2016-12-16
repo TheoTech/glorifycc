@@ -17,6 +17,7 @@ var searchBoxComponent = (function() {
             var checkboxes = args.langsExist.map((lang) => {
                 return m('li', [
                     m('input[type=checkbox]', {
+                        id: 'langFilter-' + lang._id,
                         style: {
                           'margin-right': '5px'
                         },
@@ -29,7 +30,9 @@ var searchBoxComponent = (function() {
                             args.loadMoreAndApplyFilter(args.initial, args.langShown(), args.langFilter(), args.searchString())
                         }
                     })
-                ], lang.label)
+                ], m('label', {
+                  for: 'langFilter-' + lang._id
+                }, lang.label))
             });
             checkboxes.unshift(m('li', 'Show songs that have translations in: '));
 

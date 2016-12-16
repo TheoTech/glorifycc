@@ -175,9 +175,9 @@ router.put('/', function(req, res, next) {
         done(null, songs2d);
     }
 
-    //apply 'show songs in' filter
     var loadMore = function(songs2d, done) {
         if (langShown !== 'all') {
+            //apply 'show songs in' filter
             songs2d = songs2d.filter((s) => s.lang.toString() === langShown);
         }
         if (songs2d.length >= totalSongsDisplayed) {
