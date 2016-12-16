@@ -1,17 +1,14 @@
 #!/usr/bin/env node
 var path = require('path');
 var dbUtils = require('../lib/dbUtils');
-var Language = require('../models/language');
 
 // this is necessary to set the data location relative to this script
 // so this script can be run from any directory
-var languagesPath = path.join(__dirname, '../init_data/languages.json');
 var songsPath = path.join(__dirname, '../init_data/songs');
 
 dbUtils.connectAndRun(function() {
-  // upload languages
-  return dbUtils.loadFromFile(Language, languagesPath).then(function () {
-    // upload songs
-    return dbUtils.loadSongsFromDirectory(songsPath);
-  });
+  return dbUtils.loadSongsFromDirectory(songsPath);
 });
+
+// To upload to the prod database,
+// also change lib/mongoConfig.js MongoURI to the prod URI
