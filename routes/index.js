@@ -98,74 +98,64 @@ router.delete('/', function(req, res, next) {
     });
 })
 
+function songFields(query) {
+  return {
+    $or: [{
+        title: {
+            $regex: query,
+            $options: 'si' //s option to allow dot character to match all characters including new line
+        }
+    }, {
+        author: {
+            $regex: query,
+            $options: 'si'
+        }
+    }, {
+        lyrics: {
+          $elemMatch: {
+            $elemMatch: {
+              $in: [query]
+            }
+
+          }
+        }
+    }]
+  };
+}
+
+function copyrightFields(username) {
+  if (username) {
+    return {
+      $or: [{
+          copyright: copyrightTypes.private,
+          contributor: req.user.username
+      }, {
+          copyright: {
+              $ne: copyrightTypes.private
+          }
+      }]
+    };
+  } else {
+    return {
+      copyright: {
+          $ne: copyrightTypes.private
+      }
+    };
+  }
+}
+
+
 router.get('/search', function(req, res, next) {
     var searchString = req.query.q;
+    var query = new RegExp('.*' + searchString + '.*', 'im');
 
-    function findSongsLoggedIn(done) {
-        var query = new RegExp('.*' + searchString + '.*');
+    function findSongs(username) {
+      return function (done) {
         Song.find({
-                    $and: [{
-                        $or: [{
-                            title: {
-                                $regex: query,
-                                $options: 'si' //s option to allow dot character to match all characters including new line
-                            }
-                        }, {
-                            author: {
-                                $regex: query,
-                                $options: 'si'
-                            }
-                        }, {
-                            lyrics: {
-                                $regex: query,
-                                $options: 'si'
-                            }
-                        }]
-                    }, {
-                        $or: [{
-                            copyright: copyrightTypes.private,
-                            contributor: req.user.username
-                        }, {
-                            copyright: {
-                                $ne: copyrightTypes.private
-                            }
-                        }]
-                    }]
-                },
-                function(err, songs) {
-                    done(null, songs)
-                })
-            .sort({
-                title: 1
-            });
-    }
-
-    function findSongsNotLoggedIn(done) {
-        var query = new RegExp('.*' + searchString + '.*');
-        Song.find({
-                    $or: [{
-                        title: {
-                            $regex: query,
-                            $options: 'si' //s option to allow dot character to match all characters including new line
-                        }
-                    }, {
-                        author: {
-                            $regex: query,
-                            $options: 'si'
-                        }
-                    }, {
-                        lyrics: {
-                          $elemMatch: {
-                            $elemMatch: {
-                              $in: [new RegExp(query)]
-                            }
-
-                          }
-                        }
-                    }],
-                    copyright: {
-                        $ne: copyrightTypes.private
-                    }
+                    $and: [
+                      songFields(query),
+                      copyrightFields(username)
+                    ]
                 },
                 function(err, songs) {
                     if (err) {
@@ -176,6 +166,7 @@ router.get('/search', function(req, res, next) {
             .sort({
                 title: 1
             });
+      }
     }
 
     function findInLibraryAndPlaylist(songs, done) {
@@ -207,11 +198,11 @@ router.get('/search', function(req, res, next) {
 
     if (searchString) {
         if (req.isAuthenticated()) {
-            async.waterfall([findSongsLoggedIn, findInLibraryAndPlaylist], finalize);
+            async.waterfall([findSongs(req.user.username), findInLibraryAndPlaylist], finalize);
         } else {
             //if the user not logged in then we dont need to findInLibraryAndPlaylist and just pass empty array
             //for inLibrary and playlists at the render
-            async.waterfall([findSongsNotLoggedIn], finalize);
+            async.waterfall([findSongs()], finalize);
         }
     } else {
         res.render('search', {
