@@ -155,8 +155,12 @@ router.get('/search', function(req, res, next) {
                         }
                     }, {
                         lyrics: {
-                            $regex: query,
-                            $options: 'si'
+                          $elemMatch: {
+                            $elemMatch: {
+                              $in: [new RegExp(query)]
+                            }
+
+                          }
                         }
                     }],
                     copyright: {
@@ -164,6 +168,9 @@ router.get('/search', function(req, res, next) {
                     }
                 },
                 function(err, songs) {
+                    if (err) {
+                      console.log(err);
+                    }
                     done(null, songs)
                 })
             .sort({
