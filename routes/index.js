@@ -1,12 +1,12 @@
-var express = require('express');
-var router = express.Router();
-var Song = require('../models/song');
-var User = require('../models/user');
-var _ = require('lodash');
-var Playlist = require('../models/playlist');
-var async = require('async');
-var Language = require('../models/language');
-var copyrightTypes = require('../lib/copyrightTypes');
+const express = require('express');
+const router = express.Router();
+const Song = require('../models/song');
+const User = require('../models/user');
+const _ = require('lodash');
+const Playlist = require('../models/playlist');
+const async = require('async');
+const Language = require('../models/language');
+const copyrightTypes = require('../lib/copyrightTypes');
 
 
 router.get('/', function(req, res, next) {
