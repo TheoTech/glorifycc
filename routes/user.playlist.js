@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
         }
     }, function(err, playlists) {
         if (err) return next(err);
-        res.render('playlist', {
+        res.render('playlist/playlist', {
             playlists: playlists
         });
     });
@@ -131,7 +131,7 @@ router.get('/:playlist_name', function(req, res, next) {
                 }
             });
             async.waterfall(task, function(err) {
-                res.render('playlistClicked', {
+                res.render('playlist/playlistClicked', {
                     //pass the array of songs in the playlist
                     songs: playlists.map((pl) => pl.song),
                     playlistName: playlistName
