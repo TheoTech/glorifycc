@@ -1,42 +1,42 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var session = require('express-session');
-var passport = require('passport');
-var Song = require('./models/song');
-var flash = require('connect-flash');
-var validator = require('express-validator');
-var MongoStore = require('connect-mongo')(session);
-var pdf = require('html-pdf');
-var fs = require('file-system');
-var nodemailer = require('nodemailer');
-var config = require('config');
-var _ = require('lodash');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const Song = require('./models/song');
+const flash = require('connect-flash');
+const validator = require('express-validator');
+const MongoStore = require('connect-mongo')(session);
+const pdf = require('html-pdf');
+const fs = require('file-system');
+const nodemailer = require('nodemailer');
+const config = require('config');
+const _ = require('lodash');
 
-var app = (module.exports = express());
-var helmet = require('helmet');
+const app = (module.exports = express());
+const helmet = require('helmet');
 app.use(helmet());
 
-var index = require('./routes/index');
-var songlistdb = require('./routes/songlist-db');
-var user = require('./routes/user');
-var usersignup = require('./routes/user.signup');
-var userplaylist = require('./routes/user.playlist');
-var userlist = require('./routes/userlist');
-var songlist = require('./routes/songlist');
-var song = require('./routes/song');
-var language = require('./routes/language');
-var contact = require('./routes/contact');
-var discover = require('./routes/discover');
-var help = require('./routes/help');
-var legal = require('./routes/legal');
-var give = require('./routes/give');
+const index = require('./routes/index');
+const songlistdb = require('./routes/songlist-db');
+const user = require('./routes/user');
+const usersignup = require('./routes/user.signup');
+const userplaylist = require('./routes/user.playlist');
+const userlist = require('./routes/userlist');
+const songlist = require('./routes/songlist');
+const song = require('./routes/song');
+const language = require('./routes/language');
+const contact = require('./routes/contact');
+const discover = require('./routes/discover');
+const help = require('./routes/help');
+const legal = require('./routes/legal');
+const give = require('./routes/give');
 
-var mongoConfig = require('./lib/mongoConfig');
+const mongoConfig = require('./lib/mongoConfig');
 mongoose.connect(mongoConfig.uri, function(err, database) {
   if (err) {
     console.log('Error connecting to: ' + mongoConfig.uri + '. ' + err);
@@ -48,7 +48,7 @@ require('./lib/passport');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
