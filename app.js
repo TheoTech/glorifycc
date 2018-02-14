@@ -6,10 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
-var passport = require('passport')
+var passport = require('passport');
 var Song = require('./models/song');
 var flash = require('connect-flash');
-var validator = require('express-validator')
+var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var pdf = require('html-pdf');
 var fs = require('file-system');
@@ -17,7 +17,7 @@ var nodemailer = require('nodemailer');
 var config = require('config');
 var _ = require('lodash');
 
-var app = module.exports = express();
+var app = (module.exports = express());
 var helmet = require('helmet');
 app.use(helmet());
 
@@ -36,14 +36,13 @@ var help = require('./routes/help');
 var legal = require('./routes/legal');
 var give = require('./routes/give');
 
-
 var mongoConfig = require('./lib/mongoConfig');
 mongoose.connect(mongoConfig.uri, function(err, database) {
-    if (err) {
-        console.log('Error connecting to: ' + mongoConfig.uri + '. ' + err);
-    } else {
-        console.log('MongoDB connected successfully to ' + mongoConfig.uri);
-    }
+  if (err) {
+    console.log('Error connecting to: ' + mongoConfig.uri + '. ' + err);
+  } else {
+    console.log('MongoDB connected successfully to ' + mongoConfig.uri);
+  }
 });
 require('./lib/passport');
 
@@ -55,55 +54,60 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(
+  bodyParser.urlencoded({
     extended: false
-}));
+  })
+);
 app.use(cookieParser());
-app.use(session({
-    secret: process.env.SESSION_KEY || config.get('Session.key'),
-}));
-app.use(flash())
+app.use(
+  session({
+    secret: process.env.SESSION_KEY || config.get('Session.key')
+  })
+);
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
 //Validator
-app.use(validator({
+app.use(
+  validator({
     errorFormatter: function(param, msg, value) {
-        var namespace = param.split('.'),
-            root = namespace.shift(),
-            formParam = root;
+      var namespace = param.split('.'),
+        root = namespace.shift(),
+        formParam = root;
 
-        while (namespace.length) {
-            formParam += '[' + namespace.shift() + ']';
-        }
-        return {
-            param: formParam,
-            msg: msg,
-            value: value
-        };
+      while (namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+      }
+      return {
+        param: formParam,
+        msg: msg,
+        value: value
+      };
     },
     customValidators: {
-        arrayNotEmpty: function(arr) {
-            return _.isEmpty(arr)
-        }
+      arrayNotEmpty: function(arr) {
+        return _.isEmpty(arr);
+      }
     }
-}));
+  })
+);
 
 //Global Variable
 app.use(function(req, res, next) {
-    res.locals.session = req.session;
-    res.locals.login = req.isAuthenticated();
-    res.locals.user = req.user;
-    res.locals.success_messages = req.flash('success_messages');
-    res.locals.error_messages = req.flash('error_messages');
-    next();
-})
+  res.locals.session = req.session;
+  res.locals.login = req.isAuthenticated();
+  res.locals.user = req.user;
+  res.locals.success_messages = req.flash('success_messages');
+  res.locals.error_messages = req.flash('error_messages');
+  next();
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')))
-app.use('/dist', express.static(path.join(__dirname, 'dist')))
-app.use('/images', express.static(path.join(__dirname, 'images')))
-
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
+app.use('/dist', express.static(path.join(__dirname, 'dist')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/', index);
 app.use('/songlist', songlist);
@@ -121,24 +125,23 @@ app.use('/legal', legal);
 app.use('/give', give);
 
 app.get('/api', function(req, res, next) {
-    app.render('songs-in-pdf', function(err, html) {
-        pdf.create(html).toStream(function(err, stream) {
-            stream.pipe(fs.createWriteStream('./foo.pdf'));
-        });
+  app.render('songs-in-pdf', function(err, html) {
+    pdf.create(html).toStream(function(err, stream) {
+      stream.pipe(fs.createWriteStream('./foo.pdf'));
     });
-    res.download('./foo.pdf')
-        // pdf.create(html).toBuffer(function(err, buffer){
-        //     console.log('This is a buffer:', Buffer.isBuffer(buffer));
-        //     res.download(buffer);
-        // });
+  });
+  res.download('./foo.pdf');
+  // pdf.create(html).toBuffer(function(err, buffer){
+  //     console.log('This is a buffer:', Buffer.isBuffer(buffer));
+  //     res.download(buffer);
+  // });
 });
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handlers
@@ -146,21 +149,21 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
     });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });

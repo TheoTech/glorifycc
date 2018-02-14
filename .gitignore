@@ -1,7 +1,6 @@
 /node_modules
 *.pdf
 .DS_Store
-bower_components
 /config
 /dist
 *.pptx
