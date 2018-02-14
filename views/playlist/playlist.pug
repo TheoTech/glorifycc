@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    h1 Playlists
+    #searchBox
+    br
+    #addNewPlaylistButton
+    br
+    #playlist
+
+    script.
+        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+    script(src='/dist/javascripts/deleteButton.js')
+    script(src='/dist/javascripts/searchBox.js')
+    script(src='/dist/javascripts/playlistTable.js')
+    script.
+        m.mount(document.getElementById('playlist'), playlistTableComponent.playlistTable)
+        m.mount(document.getElementById('addNewPlaylistButton'), playlistTableComponent.addNewPlaylist)
