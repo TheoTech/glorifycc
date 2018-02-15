@@ -8,15 +8,12 @@ block content
     #songlistTable
 
     script.
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var inLibrary = m.prop(!{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")})
-        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+        var songsRaw = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var inLibraryRaw = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+        var playlistsRaw = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/songsNotFound.js')
-    script(src='/dist/javascripts/playlistModal.js')
-    script(src='/dist/javascripts/addOrDeleteButton.js')
-    script(src='/dist/javascripts/selectPlaylist.js')
-    script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/search.js')
+
+    script(src='/dist/js/index.js')
     script.
-        search.init(document.getElementById('songlistTable'))
+      glorifyApp.initSearchPage();
+        

@@ -40,6 +40,6 @@ header.navbar.navbar-default
                     li
                         a(href="/user/signup") Sign Up
 if !withoutSearchbox
-    script(src='/dist/javascripts/searchBoxHome.js')
+    script(src='/dist/js/index.js')
     script.
-        m.mount(document.getElementById('searchBox'), searchBoxHome().searchBoxHomeComponent)
+        glorifyApp.initSearchBoxHome();
