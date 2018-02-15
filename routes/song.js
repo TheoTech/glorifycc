@@ -84,7 +84,7 @@ router.route('/:song_id')
                             User.findOne({
                                 _id: req.user._id
                             }, function(err, user) {
-                                res.render('song', {
+                                res.render('songs/song', {
                                     leftSong: leftSong,
                                     rightSong: rightSong,
                                     rightSongExists: rightSongExists,
@@ -95,7 +95,7 @@ router.route('/:song_id')
                             });
                         });
                     } else {
-                        res.render('song', {
+                        res.render('songs/song', {
                             leftSong: leftSong,
                             rightSong: rightSong,
                             rightSongExists: rightSongExists,
