@@ -36,7 +36,7 @@ router.route('/add')
         Language.find(function(err, languages) {
             if (err) next(err);
             createDefaultSong(function(defaultSong) {
-                res.render('addSong', {
+                res.render('songs/addSong', {
                     song: defaultSong,
                     availableLanguages: languages,
                     copyrightTypes: _.values(copyrightTypes)
