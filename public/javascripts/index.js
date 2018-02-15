@@ -21,9 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-glorifyApp.initSearchBoxHome = function() {
+glorifyApp.initSearchBoxHome = function(elemId) {
+  if (!elemId) {
+    elemId = 'searchBox';
+  }
   loadHandlers.push(() => {
-    m.mount(document.getElementById('searchBox'), search.searchBoxHome);
+    m.mount(document.getElementById(elemId), search.searchBoxHome);
   });
 };
 

@@ -86,6 +86,6 @@ html
         br
         include footer
 
-        script(src='/dist/javascripts/searchBoxHome.js')
+        script(src='/dist/js/index.js')
         script.
-            m.mount(document.getElementById('searchBoxHome'), searchBoxHome().searchBoxHomeComponent)
+            glorifyApp.initSearchBoxHome('searchBoxHome');
