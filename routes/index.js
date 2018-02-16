@@ -150,7 +150,6 @@ router.get('/search', function(req, res, next) {
     var query = new RegExp('.*' + searchString + '.*', 'im');
 
     function findSongs(username) {
-        consloe.log(username);
         return function (done) {
         Song.find({
                     $and: [
