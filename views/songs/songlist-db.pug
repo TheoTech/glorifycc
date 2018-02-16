@@ -24,7 +24,7 @@ block content
                     td
                         input(type="checkbox", id=song.id)
                     td 
-                        a(href='/song/#{song.id}?left=#{song.lang._id}&right=', font-size="5em") #{song.title}
+                        a(href=`/song/${song.id}?left=${song.lang._id}&right=`, font-size="5em") #{song.title}
                     td #{song.author}
                     td #{song.year}
                     td #{song.lang.label}
@@ -32,7 +32,7 @@ block content
                     td #{song.contributor}
                     td.capitalize #{song.copyright}
                     td 
-                        a.btn.btn-default(href='/song/#{song.id}/edit') Edit
+                        a.btn.btn-default(href=`/song/${song.id}/edit`) Edit
     
     script.
         $('#delete').on('click', function(e) {
