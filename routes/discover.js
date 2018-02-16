@@ -40,7 +40,7 @@ router.get('/', function(req, res, next) {
                         }
                     }, function(err, playlists) {
                         if (err) next(err);
-                        res.render('discover', {
+                        res.render('songs/discover', {
                             songs: songs,
                             inLibrary: user.library,
                             playlists: playlists,
@@ -51,7 +51,7 @@ router.get('/', function(req, res, next) {
                     })
                 })
             } else {
-                res.render('discover', {
+                res.render('songs/discover', {
                     songs: songs,
                     inLibrary: [],
                     playlists: [],

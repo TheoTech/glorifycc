@@ -219,7 +219,7 @@ router.post('/:playlist_name/export1', function(req, res, next) {
 
 //this route is for step 2 of exporting playlist
 router.get('/:playlist_name/export2', function(req, res, next) {
-    res.render('export2', {
+    res.render('songs/export2', {
         playlistName: req.params.playlist_name
     });
 });

@@ -14,7 +14,7 @@ router.get('/', passportFunction.adminLoggedIn, function(req, res, next) {
         .populate('lang')
         .exec(function(err, songs) {
             if (err) return next(err);
-            res.render('songlist-db', {
+            res.render('songs/songlist-db', {
                 songs: songs
             });
         });

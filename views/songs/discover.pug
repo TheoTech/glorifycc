@@ -1,17 +1,17 @@
 doctype html
 html
     head
-        include headContent
+        include ../headContent
     body
         //this var is to omit the searchbox on topbar
         -var withoutSearchbox = true;
-        include importJS
-        include topnav
+        include ../importJS
+        include ../topnav
         .container-fluid
             h1 Discover Songs
             p.lead Find Public Domain and CC0 Worship Songs in Many Languages
             #discoverBox
-            include partials/googleads
+            include ../partials/googleads
 
             #songlistTable
 

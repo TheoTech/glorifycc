@@ -3,7 +3,7 @@ var router = express.Router();
 var smtp = require('../lib/smtp');
 
 router.get('/', function(req, res, next) {
-    res.render('contact');
+    res.render('tools/contact');
 });
 
 router.post('/', function(req, res, next) {
@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
     var question = req.body.message;
     var errors = req.validationErrors();
     if (errors) {
-        res.render('contact', {
+        res.render('tools/contact', {
             errors: errors
         })
     } else {

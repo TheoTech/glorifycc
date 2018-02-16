@@ -57,7 +57,7 @@ emailVerification.generateTempUserModel(User, function(err, tempUserModel) {
 router.use('/', passportFunction.notLoggedIn);
 
 router.get('/', function(req, res, next) {
-    res.render('signup', {});
+    res.render('account/signup', {});
 })
 
 
@@ -71,7 +71,7 @@ router.post('/', function(req, res, next) {
     var messages = req.validationErrors();
 
     if (messages) {
-        res.render('signup', {
+        res.render('account/signup', {
             messages: messages,
             info: 'btn-danger'
         });
@@ -92,7 +92,7 @@ router.post('/', function(req, res, next) {
         }, function(err, tu) {
             if (err) return next(err);
             if (tu) {
-                res.render('signup', {
+                res.render('account/signup', {
                     messages: [{
                         msg: 'Username already exists.'
                     }],
@@ -107,7 +107,7 @@ router.post('/', function(req, res, next) {
 
                     // user already exists in persistent collection
                     if (existingPersistentUser) {
-                        res.render('signup', {
+                        res.render('account/signup', {
                             messages: [{
                                 msg: 'You have already signed up and confirmed your account. Did you forget your password?'
                             }],
@@ -122,7 +122,7 @@ router.post('/', function(req, res, next) {
                             if (err) {
                                 return res.status(404).send('ERROR: sending verification email FAILED');
                             }
-                            res.render('signup', {
+                            res.render('account/signup', {
                                 messages: [{
                                     msg: 'An email has been sent to you. Please check it to verify your account.'
                                 }],
@@ -132,7 +132,7 @@ router.post('/', function(req, res, next) {
                         });
                     } else {
                         // user already exists in temporary collection compared by email
-                        res.render('signup', {
+                        res.render('account/signup', {
                             messages: [{
                                 msg: 'You have already signed up. Please check your email to verify your account.'
                             }],
@@ -148,7 +148,7 @@ router.post('/', function(req, res, next) {
 
 router.get('/resend', function(req, res, next) {
     var messages = req.flash();
-    res.render('resend', {
+    res.render('account/resend', {
         messages: messages
     });
 });
@@ -176,7 +176,7 @@ router.get('/email-verification/:URL', function(req, res, next) {
                 if (err) {
                     return res.status(404).send('ERROR: sending confirmation email FAILED');
                 }
-                res.render('success');
+                res.render('messages/success');
             });
         } else {
             return res.status(404).send('ERROR: confirming temp user FAILED');
