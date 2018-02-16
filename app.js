@@ -110,7 +110,7 @@ app.use('/dist', express.static(path.join(__dirname, 'dist')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/', index);
-app.use('/songlist', songlist);
+app.use('/sglonist', songlist);
 app.use('/user', user);
 app.use('/songlist-db', songlistdb);
 app.use('/userlist', userlist);
