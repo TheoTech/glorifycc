@@ -19,6 +19,6 @@ block content
                     td 
                         a(href="/userlist/user") #{user.username}
                     td 
-                        a(href="mailto:#{user.email}") #{user.email}
+                        a(href=`mailto:${user.email}`) #{user.email}
                     td
                         a.btn.btn-default View User Contributed Songs
