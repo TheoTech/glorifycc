@@ -4,15 +4,15 @@ block content
     h2 Available Language:
     ol
         each language in languages
-            li(id="#{language.code}")
+            li(id=`${language.code}`)
               span.display
-                a(href="#" onclick="editLanguage('#{language.code}')") #{language.label}
+                a(href="#" onclick=`editLanguage('${language.code}')`) #{language.label}
                 span &nbsp; (#{language.code})
               form.editor(style="display:none" method="post" action="/language")
-                input(type="hidden" name="code" value="#{language.code}")
-                input.form-control(name="label" value="#{language.label}")
+                input(type="hidden" name="code" value=`${language.code}`)
+                input.form-control(name="label" value=`${language.label}`)
                 button(type="submit").btn.btn-primary Save
-                a(href="#").btn.btn-default(onclick="cancelEdit('#{language.code}')") Cancel
+                a(href="#").btn.btn-default(onclick=`cancelEdit('${language.code}')`) Cancel
 
 
     form(method='post')
