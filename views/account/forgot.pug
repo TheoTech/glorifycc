@@ -1,15 +1,15 @@
-extends layout
+extends ../layout
 
 block content
     form(method='POST')
-        legend Resend Verification Link
+        legend Forgot Password
         if messages.error
             .alert.alert-danger
                 div= messages.error
-        if messages.success
-            .alert.alert-success
-                div= messages.success
+        if messages.info
+            .alert.alert-info
+                div= messages.info
         .form-group
             label(for='email') Email
             input.form-control(type='text', name='email', autofocus)
-        button.btn.btn-primary(type='submit') Resend
+        button.btn.btn-primary(type='submit') Reset Password

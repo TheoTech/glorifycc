@@ -36,7 +36,7 @@ router
           },
           function(err, playlists) {
             if (err) return next(err);
-            res.render('library', {
+            res.render('songs/library', {
               songs: user.library,
               playlists: playlists,
               messages: messages,
@@ -163,7 +163,7 @@ router
   .all(passportFunction.notLoggedIn)
   .get(function(req, res, next) {
     var messages = req.flash('error');
-    res.render('login', {
+    res.render('account/login', {
       messages: messages,
       hasErrors: messages.length > 0
     });
@@ -187,7 +187,7 @@ router
   .all(passportFunction.notLoggedIn)
   .get(function(req, res, next) {
     var messages = req.flash();
-    res.render('forgot', {
+    res.render('account/forgot', {
       user: req.user,
       messages: messages
     });
@@ -278,7 +278,7 @@ router
           playlistCount = playlists.length;
 
           if (err) return next(err);
-          res.render('account', {
+          res.render('account/account', {
             counts: {
               songs: songCount,
               playlists: playlistCount
@@ -306,7 +306,7 @@ router
           req.flash('error', 'Password reset token is invalid or has expired.');
           return res.redirect('/user/forgot');
         }
-        res.render('reset', {
+        res.render('account/reset', {
           user: req.user
         });
       }
@@ -319,7 +319,7 @@ router
       .equals(req.body.password);
     var errors = req.validationErrors();
     if (errors) {
-      res.render('reset', {
+      res.render('account/reset', {
         errors: errors
       });
     } else {

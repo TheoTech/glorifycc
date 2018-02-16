@@ -11,7 +11,7 @@ router.route('/').all(passportFunction.adminLoggedIn)
   .get(function(req, res, next) {
       Language.find(function(err, languages) {
           if (err) next(err);
-          res.render('language', {
+          res.render('songs/language', {
               languages: languages
           })
       })

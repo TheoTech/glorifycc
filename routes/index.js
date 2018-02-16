@@ -150,7 +150,7 @@ router.get('/search', function(req, res, next) {
     var query = new RegExp('.*' + searchString + '.*', 'im');
 
     function findSongs(username) {
-      return function (done) {
+        return function (done) {
         Song.find({
                     $and: [
                       songFields(query),
@@ -188,7 +188,7 @@ router.get('/search', function(req, res, next) {
         if (err) {
             res.status(500).send('Internal error' + err);
         } else {
-            res.render('search', {
+            res.render('songs/search', {
                 songs: songs,
                 inLibrary: inLibrary || [],
                 playlists: playlists || []
@@ -205,7 +205,7 @@ router.get('/search', function(req, res, next) {
             async.waterfall([findSongs()], finalize);
         }
     } else {
-        res.render('search', {
+        res.render('songs/search', {
             songs: [],
             inLibrary: [],
             playlists: []

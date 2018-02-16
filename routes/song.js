@@ -29,13 +29,13 @@ router.route('/:song_id')
         if (song.copyright === copyrightTypes.private) {
             if (!req.isAuthenticated()) {
                 //if the user is not logged in, dont show the song
-                res.render('noaccess');
+                res.render('messages/noaccess');
             } else if (song.contributor === req.user.username || passportFunction.isAdmin) {
                 // if the user is the song contributor or the admin, then show the song
                 findSong();
             } else {
                 //otherwise dont show the song
-                res.render('noaccess');
+                res.render('messages/noaccess');
             }
         } else {
             //if it is not a private song then show the song
@@ -152,12 +152,12 @@ router.route('/:song_id/add-translation')
     .get(function(req, res, next) {
         if (req.isAuthenticated()) {
             if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
-                res.render('noaccess');
+                res.render('messages/noaccess');
             } else {
                 Language.find(function(err, languages) {
                     if (err) next(err);
                     createDefaultSong(function(defaultSong) {
-                        res.render('addTranslation', {
+                        res.render('songs/addTranslation', {
                             song: song,
                             availableLanguages: languages,
                             defaultSongObj: defaultSong,
@@ -265,11 +265,11 @@ router.route('/:song_id/edit')
     })
     .get(function(req, res, next) {
         if (song.contributor !== req.user.username && !passportFunction.isAdmin) {
-            res.render('noaccess');
+            res.render('messages/noaccess');
         } else {
             Language.find(function(err, languages) {
                 if (err) next(err);
-                res.render('edit', {
+                res.render('songs/edit', {
                     availableLanguages: languages,
                     song: song,
                     copyrightTypes: _.values(copyrightTypes)

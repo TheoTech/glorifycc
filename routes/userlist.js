@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
         if (err) {
             res.status(400).send('error getting user list ' + err)
         } else {
-            res.render('userlist', {
+            res.render('account/userlist', {
                 users: users
             })
         }

@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
   .container
@@ -9,10 +9,10 @@ block content
 
         div.form-group
           label Username
-          input.form-control(value="#{user.username}" disabled=true)
+          input.form-control(value=`${user.username}` disabled=true)
         div.form-group
           label Email
-          input.form-control(value="#{user.email}" disabled=true)
+          input.form-control(value=`${user.email}` disabled=true)
         div
           a(href="#") Change password
         hr
@@ -29,4 +29,4 @@ block content
           td #{counts.playlists}
 
   hr
-  include footer
+  include ../footer
