@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import $ from "jquery";
-import m from "mithril";
-import prop from "mithril/stream";
-import { isEmpty, remove } from "lodash";
+import $ from 'jquery';
+import m from 'mithril';
+import prop from 'mithril/stream';
+import { isEmpty, remove } from 'lodash';
 
 let playlists = [];
 // HACK
@@ -15,39 +15,39 @@ let currentPlaylists = prop(window.playlists);
 let playlistTable = {
   view: () => {
     if (isEmpty(playlists)) {
-      return m("h4", "You have no playlists yet.");
+      return m('h4', 'You have no playlists yet.');
     } else {
-      return m("table.table", [
-        m("thead", [
+      return m('table.table', [
+        m('thead', [
           m(
-            "th",
+            'th',
             {
               style: {
-                "font-size": "18px",
-                padding: "10px"
+                'font-size': '18px',
+                padding: '10px'
               }
             },
-            "Playlist Name"
+            'Playlist Name'
           )
         ]),
-        m("tbody", [
+        m('tbody', [
           playlists.map(function(pl) {
-            return m("tr", [
-              m("td", [
+            return m('tr', [
+              m('td', [
                 m(
-                  "a",
+                  'a',
                   {
-                    href: "/user/playlist/" + encodeURIComponent(pl.name)
+                    href: '/user/playlist/' + encodeURIComponent(pl.name)
                   },
                   pl.name
                 )
               ]),
-              m("td", [
+              m('td', [
                 m(
-                  "button.btn.btn-default.pull-right",
+                  'button.btn.btn-default.pull-right',
                   {
                     onclick: function() {
-                      if (confirm("Do you want to delete this playlist?")) {
+                      if (confirm('Do you want to delete this playlist?')) {
                         deletePlaylist(pl.name);
                         remove(playlists, function(n) {
                           return n.name === pl.name;
@@ -55,7 +55,7 @@ let playlistTable = {
                       }
                     }
                   },
-                  "Delete Playlist"
+                  'Delete Playlist'
                 )
               ])
             ]);
@@ -68,8 +68,8 @@ let playlistTable = {
 
 function deletePlaylist(name) {
   return m.request({
-    method: "PUT",
-    url: "/user/playlist",
+    method: 'PUT',
+    url: '/user/playlist',
     data: {
       name: name,
       redirect: false
@@ -80,8 +80,8 @@ function deletePlaylist(name) {
 function addPlaylist(name, url) {
   return m
     .request({
-      method: "PUT",
-      url: "/user/library",
+      method: 'PUT',
+      url: '/user/library',
       data: {
         name: name,
         url: url
@@ -99,65 +99,65 @@ function addPlaylist(name, url) {
 function enter(elem) {
   $(elem).keyup(function(e) {
     if (e.keyCode == 13) {
-      $("#create").click();
+      $('#create').click();
     }
   });
 }
 
-let playlistName = prop("New Playlist");
+let playlistName = prop('New Playlist');
 
 let addNewPlaylist = {
   view: () => {
     return [
       m(
-        "button.btn.btn-default",
+        'button.btn.btn-default',
         {
-          "data-toggle": "modal",
-          "data-target": "#newPlaylist"
+          'data-toggle': 'modal',
+          'data-target': '#newPlaylist'
         },
-        [m("i.glyphicon.glyphicon-plus")],
-        " Add New Playlist"
+        [m('i.glyphicon.glyphicon-plus')],
+        ' Add New Playlist'
       ),
-      m("#newPlaylist.modal.fade[role=dialog]", [
-        m(".modal-dialog.modal-sm", [
-          m(".modal-content", [
-            m(".modal-header", [
-              m(".modal-title", [
-                m("h4", [
-                  "Create Playlist",
+      m('#newPlaylist.modal.fade[role=dialog]', [
+        m('.modal-dialog.modal-sm', [
+          m('.modal-content', [
+            m('.modal-header', [
+              m('.modal-title', [
+                m('h4', [
+                  'Create Playlist',
                   m(
                     'button.close[data-dismiss="modal"]',
                     {
                       style: {
-                        color: "white"
+                        color: 'white'
                       }
                     },
-                    [m("span", m.trust("&times;"))]
+                    [m('span', m.trust('&times;'))]
                   )
                 ])
               ])
             ]),
-            m(".modal-body", [
-              m("label", "Enter Playlist Name"),
-              m("input.form-control[name=playlist type=text]", {
+            m('.modal-body', [
+              m('label', 'Enter Playlist Name'),
+              m('input.form-control[name=playlist type=text]', {
                 value: playlistName(),
-                onchange: m.withAttr("value", playlistName),
+                onchange: m.withAttr('value', playlistName),
                 oninit: vnode => {
                   enter(vnode.dom);
                 }
               }),
-              m("br"),
+              m('br'),
               m(
-                "button.btn.btn-default#create",
+                'button.btn.btn-default#create',
                 {
-                  "data-dismiss": "modal",
-                  onclick: function onclick() {
+                  'data-dismiss': 'modal',
+                  onclick: () => {
                     addPlaylist(playlistName());
                     window.location.href =
-                      "/discover?playlist=" + playlistName();
+                      '/discover?playlist=' + playlistName();
                   }
                 },
-                "Create"
+                'Create'
               )
             ])
           ])

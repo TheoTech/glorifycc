@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import search from "./search";
-import playlist from "./playlist";
-import library from "./library";
-import m from "mithril";
+import search from './search';
+import playlist from './playlist';
+import library from './library';
+import m from 'mithril';
 
 const Application = {
   search,
@@ -15,7 +15,7 @@ const Application = {
 window.glorifyApp = Application;
 
 let loadHandlers = [];
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
   loadHandlers.forEach(h => {
     h();
   });
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 glorifyApp.initSearchBoxHome = function(elemId) {
   if (!elemId) {
-    elemId = "searchBox";
+    elemId = 'searchBox';
   }
   loadHandlers.push(() => {
     m.mount(document.getElementById(elemId), search.searchBoxHome);
@@ -32,15 +32,15 @@ glorifyApp.initSearchBoxHome = function(elemId) {
 
 glorifyApp.initSearchPage = function() {
   loadHandlers.push(() => {
-    search.searchPage.init(document.getElementById("songlistTable"));
+    search.searchPage.init(document.getElementById('songlistTable'));
   });
 };
 
 glorifyApp.initPlaylistTable = function() {
   loadHandlers.push(() => {
-    m.mount(document.getElementById("playlist"), playlist.playlistTable);
+    m.mount(document.getElementById('playlist'), playlist.playlistTable);
     m.mount(
-      document.getElementById("addNewPlaylistButton"),
+      document.getElementById('addNewPlaylistButton'),
       playlist.addNewPlaylist
     );
   });
