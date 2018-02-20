@@ -35,3 +35,13 @@ glorifyApp.initSearchPage = function() {
     search.searchPage.init(document.getElementById('songlistTable'));
   });
 };
+
+glorifyApp.initPlaylistTable = function() {
+  loadHandlers.push(() => {
+    m.mount(document.getElementById('playlist'), playlist.playlistTable);
+    m.mount(
+      document.getElementById('addNewPlaylistButton'),
+      playlist.addNewPlaylist
+    );
+  });
+};
