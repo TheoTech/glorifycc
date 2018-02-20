@@ -11,8 +11,6 @@ block content
     script.
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/deleteButton.js')
-    script(src='/dist/javascripts/searchBox.js')
-    script(src='/dist/javascripts/playlistTable.js')
+    script(src='/dist/js/index.js')
     script.
-        m.mount(document.getElementById('playlist'), playlistTableComponent.playlistTable)
-        m.mount(document.getElementById('addNewPlaylistButton'), playlistTableComponent.addNewPlaylist)
+        window.glorifyApp.initPlaylistTable()
