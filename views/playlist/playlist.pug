@@ -10,7 +10,6 @@ block content
 
     script.
         var playlistsRaw = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/deleteButton.js')
     script(src='/dist/js/index.js')
     script.
         window.glorifyApp.initPlaylistTable()

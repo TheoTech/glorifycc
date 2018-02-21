@@ -4,9 +4,8 @@ block content
     #playlistClicked
 
     script.
-        var songs = m.prop(!{JSON.stringify(songs).replace(/<\//g, "<\\/")})
-        var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
-    script(src='/dist/javascripts/deleteButton.js')
-    script(src='/dist/javascripts/playlistClicked.js')
+        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
+    script(src='/dist/js/index.js')
     script.
-      m.mount(document.getElementById('playlistClicked'), playlistClickedComponent.playlistClicked)
+      glorifyApp.initPlaylistClicked(songs, playlistName);

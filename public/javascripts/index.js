@@ -4,6 +4,7 @@ import search from './search';
 import * as playlist from './playlist';
 import library from './library';
 import m from 'mithril';
+import prop from 'mithril/stream';
 
 const Application = {
   search,
@@ -49,5 +50,20 @@ glorifyApp.initPlaylistTable = function() {
 glorifyApp.initLibraryTable = function() {
   loadHandlers.push(() => {
     m.mount(document.getElementById('library'), library.libraryTable);
+  });
+};
+
+glorifyApp.initPlaylistClicked = function(s, p) {
+  loadHandlers.push(() => {
+    let songs = prop(s);
+    let playlistName = prop(p);
+    m.mount(document.getElementById('playlistClicked'), {
+      view: () => {
+        return m(playlistClicked, {
+          songs,
+          playlistName
+        });
+      }
+    });
   });
 };
