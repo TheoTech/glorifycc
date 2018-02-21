@@ -96,7 +96,7 @@ function addPlaylist(name, url) {
 }
 
 function enter(elem) {
-  $(elem).keyup(function(e) {
+  $(elem).keyup(e => {
     if (e.keyCode == 13) {
       $('#create').click();
     }
@@ -141,7 +141,7 @@ let addNewPlaylist = {
               m('input.form-control[name=playlist type=text]', {
                 value: playlistName(),
                 onchange: m.withAttr('value', playlistName),
-                oninit: vnode => {
+                oncreate: vnode => {
                   enter(vnode.dom);
                 }
               }),

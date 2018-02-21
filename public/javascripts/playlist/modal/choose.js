@@ -34,7 +34,7 @@ export default function choosePlaylist(args) {
                 'data-toggle': 'tooltip',
                 'data-placement': 'right',
                 title: 'Add New Playlist',
-                oninit: vnode => {
+                oncreate: vnode => {
                   $(vnode.dom).tooltip();
                 },
                 onclick: function() {

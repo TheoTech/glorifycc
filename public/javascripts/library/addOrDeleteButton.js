@@ -78,7 +78,7 @@ let addOrDeleteButton = {
               }, 2000);
             }
           },
-          oninit: vnode => {
+          oncreate: vnode => {
             $(vnode.dom).tooltip({
               trigger: 'manual'
             });

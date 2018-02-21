@@ -5,13 +5,14 @@ import m from 'mithril';
 import prop from 'mithril/stream';
 
 let searchString = prop('');
-const enter = function(elem, checkboxClass) {
-  $(elem).keyup(function(e) {
+const enter = elem => {
+  $(elem).keyup(e => {
     if (e.keyCode === 13) {
       $('#search-button').click();
     }
   });
 };
+
 const searchBoxHome = {
   view: function() {
     return m(
@@ -25,7 +26,7 @@ const searchBoxHome = {
         m('input.form-control[type=text]', {
           placeholder: 'Search by title, lyrics or author',
           onchange: m.withAttr('value', searchString),
-          oninit: vnode => {
+          oncreate: vnode => {
             enter(vnode.dom);
           }
         }),

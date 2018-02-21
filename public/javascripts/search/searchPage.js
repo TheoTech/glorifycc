@@ -16,14 +16,7 @@ let displayedSongs = prop([]);
 let playlistName = prop('');
 let searchString = prop('');
 let addButtonDOM = prop();
-let inLibrary = false;
-let enter = (elem, checkboxClass) => {
-  $(elem).keyup(e => {
-    if (e.keyCode === 13) {
-      $('#search-button').click();
-    }
-  });
-};
+let inLibrary = prop();
 
 let searchResultComponent = {
   view: () => {
@@ -93,8 +86,7 @@ let searchResultComponent = {
 const searchPage = {
   init: (dom, opts) => {
     displayedSongs(opts.songs);
-    inLibrary = opts.inLibrary;
-    console.log(opts);
+    inLibrary(opts.inLibrary);
     m.mount(dom, searchResultComponent);
   }
 };

@@ -68,7 +68,7 @@ const searchBox = {
         m('input.form-control[type=text]', {
           placeholder: 'Search by title, lyrics or author',
           onchange: m.withAttr('value', args.searchString),
-          oninit: vnode => {
+          oncreate: vnode => {
             enter(vnode.dom);
           }
         }),

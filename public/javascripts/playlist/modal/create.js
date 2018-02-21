@@ -3,8 +3,8 @@
 import m from 'mithril';
 
 export default function createNewPlaylist(args) {
-  let enter = function(elem) {
-    $(elem).keyup(function(e) {
+  let enter = elem => {
+    $(elem).keyup(e => {
       if (e.keyCode == 13) {
         $('#create').click();
       }
@@ -40,7 +40,7 @@ export default function createNewPlaylist(args) {
             m('label', 'Enter Playlist Name'),
             m('input#newPlaylistInput.form-control[name=playlist type=text]', {
               value: 'New Playlist',
-              oninit: vnode => {
+              oncreate: vnode => {
                 enter(vnode.dom);
               }
             }),
