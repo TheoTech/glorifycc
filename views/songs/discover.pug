@@ -21,14 +21,14 @@ html
             var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
             var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
             var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
-            var playlistName = m.prop(!{JSON.stringify(playlistName).replace(/<\//g, "<\\/")})
-        script(src='/dist/javascripts/addOrDeleteButton.js')
-        script(src='/dist/javascripts/playlistModal.js')
-        script(src='/dist/javascripts/addToPlaylistButton.js')
-        script(src='/dist/javascripts/showSongsIn.js')
-        script(src='/dist/javascripts/searchBox.js')
-        script(src='/dist/javascripts/songlistTable.js')
-        script(src='/dist/javascripts/songsNotFound.js')
-        script(src='/dist/javascripts/discover.js')
+            var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
+        script(src='/dist/js/index.js')
         script.
-            discover.init()
+          glorifyApp.initDiscover({
+            songs: songs,
+            currentInLibrary: currentInLibrary,
+            playlists: playlists,
+            isLoggedIn: isLoggedIn,
+            langsExist: langsExist,
+            playlistName: playlistName
+          });

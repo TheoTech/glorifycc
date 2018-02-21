@@ -4,6 +4,7 @@ import search from './search';
 import * as playlist from './playlist';
 import library from './library';
 import * as song from './song';
+import discover from './discover';
 import m from 'mithril';
 import prop from 'mithril/stream';
 
@@ -72,5 +73,11 @@ glorifyApp.initPlaylistClicked = function(s, p) {
 glorifyApp.initSongClicked = function(ls, rs, rse) {
   loadHandlers.push(() => {
     song.songClicked.init(ls, rs, rse);
+  });
+};
+
+glorifyApp.initDiscover = function(opts) {
+  loadHandlers.push(() => {
+    discover.init(opts);
   });
 };

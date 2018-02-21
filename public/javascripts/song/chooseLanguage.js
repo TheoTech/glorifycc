@@ -31,7 +31,7 @@ function languageList(songPosition, rightSongExists) {
             );
           }
         },
-        oninit: function(vnode) {
+        oninit: vnode => {
           /*
                       getting the startIndex for langcode, +1 because of '='
                       example: if songPosition is left then search the index of string 'left' + the length of the string 'left' + 1

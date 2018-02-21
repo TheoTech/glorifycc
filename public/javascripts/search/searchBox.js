@@ -4,7 +4,7 @@ import $ from 'jquery';
 import m from 'mithril';
 
 let enter = function(elem, checkboxClass) {
-  $(elem).keyup(function(e) {
+  $(elem).keyup(e => {
     if (e.keyCode == 13) {
       $('#search-button').click();
     }

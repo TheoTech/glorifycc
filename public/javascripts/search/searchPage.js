@@ -4,6 +4,7 @@ import $ from 'jquery';
 import m from 'mithril';
 import prop from 'mithril/stream';
 import songsNotFound from './notfound';
+
 import {
   selectPlaylist,
   addToPlaylistButton,
@@ -21,7 +22,7 @@ let searchString = prop('');
 let addButtonDOM = prop();
 let enter = (elem, checkboxClass) => {
   $(elem).keyup(e => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       $('#search-button').click();
     }
   });
@@ -30,7 +31,7 @@ let enter = (elem, checkboxClass) => {
 let searchResultComponent = {
   view: () => {
     if (displayedSongs().length === 0) {
-      return songsNotFound();
+      return songsNotFound;
     } else {
       return m('div', [
         m('.table-responsive', [

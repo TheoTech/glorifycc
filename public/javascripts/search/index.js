@@ -3,5 +3,6 @@
 import searchBox from './searchBox';
 import searchBoxHome from './searchBoxHome';
 import searchPage from './searchPage';
+import songsNotFound from './notfound';
 
-export default { searchBox, searchBoxHome, searchPage };
+export { searchBox, searchBoxHome, searchPage, songsNotFound };
