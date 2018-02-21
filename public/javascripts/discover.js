@@ -6,7 +6,11 @@ import prop from 'mithril/stream';
 import { searchBox } from './search';
 import { songlistTable } from './song';
 
-let inLibrary = prop(currentInLibrary);
+let inLibrary = prop();
+if (window.currentInLibrary) {
+  prop(currentInLibrary);
+}
+
 let displayedSongs = prop(songs);
 let numberOfSongsToShow = 20;
 

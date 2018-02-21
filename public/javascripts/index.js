@@ -1,17 +1,19 @@
 'use strict';
 
-import search from './search';
+import * as search from './search';
 import * as playlist from './playlist';
 import library from './library';
 import * as song from './song';
 import discover from './discover';
 import m from 'mithril';
 import prop from 'mithril/stream';
+import * as bootstrap from 'bootstrap';
 
 const Application = {
   search,
   playlist,
-  library
+  library,
+  song
 };
 
 // HACK expose this to the window
@@ -79,5 +81,12 @@ glorifyApp.initSongClicked = function(ls, rs, rse) {
 glorifyApp.initDiscover = function(opts) {
   loadHandlers.push(() => {
     discover.init(opts);
+  });
+};
+
+glorifyApp.initSongForm = function(elemId, obj) {
+  loadHandlers.push(() => {
+    let form = song.songForm(obj);
+    m.mount(document.getElementById(elemId), form);
   });
 };

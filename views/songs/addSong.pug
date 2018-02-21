@@ -14,7 +14,7 @@ block content
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
         var copyrightTypes = !{JSON.stringify(copyrightTypes).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/songForm.js')
+    script(src='/dist/js/index.js')
     script.
         //to show one stanza box on the form
         song.lyrics.push([''])
@@ -23,10 +23,12 @@ block content
             url: '/songlist-db/add',
             readonly: false,
             submitButton: true,
+            availableLanguages: availableLanguages,
+            copyrightTypes: copyrightTypes,
             /*
               formID is for differentiating the stanza boxes in add translation because we have stanza boxes for song and translation.
               in the case of add a song, we only have one stanza boxes so we left it blank
             */
             formID: ''
         }
-        m.mount(document.getElementById('addSong'), songForm(obj).songFormComponent)
+        glorifyApp.initSongForm('addSong', obj);

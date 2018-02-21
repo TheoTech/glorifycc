@@ -15,7 +15,7 @@ block content
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
         var defaultSongObj = !{JSON.stringify(defaultSongObj).replace(/<\//g, "<\\/")}
         var copyrightTypes = !{JSON.stringify(copyrightTypes).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/songForm.js')
+    script(src='/dist/js/index.js')
     script.
         var translationObject = defaultSongObj
         //to show multiple stanza boxes on the form
@@ -27,14 +27,18 @@ block content
             url: '', 
             readonly: true, 
             submitButton: false, 
-            formID: 'song'
+            formID: 'song',
+            availableLanguages: availableLanguages,
+            copyrightTypes: copyrightTypes
         }
         var translationObj = {
             song: translationObject, 
             url: '/song/' + song._id + '/add-translation', 
             readonly: false, 
             submitButton: true, 
-            formID: 'translation'
+            formID: 'translation',
+            availableLanguages: availableLanguages,
+            copyrightTypes: copyrightTypes
         }
-        m.mount(document.getElementById('original'), songForm(songObj).songFormComponent)
-        m.mount(document.getElementById('translation'), songForm(translationObj).songFormComponent)
+        glorifyApp.initSongForm('original', songObj);
+        glorifyApp.initSongForm('translation', translationObj);

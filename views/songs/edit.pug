@@ -11,7 +11,7 @@ block content
         var song = !{JSON.stringify(song).replace(/<\//g, "<\\/")}
         var availableLanguages = !{JSON.stringify(availableLanguages).replace(/<\//g, "<\\/")}
         var copyrightTypes = !{JSON.stringify(copyrightTypes).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/songForm.js')
+    script(src='/dist/js/index.js')
     script.
         var obj = {
             song: song, 
@@ -20,4 +20,4 @@ block content
             submitButton: true, 
             formID: ''
         }
-        m.mount(document.getElementById('editSong'), songForm(obj).songFormComponent)
+        glorifyApp.initSongForm('editSong', obj);
