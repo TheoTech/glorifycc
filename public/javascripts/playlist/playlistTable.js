@@ -5,16 +5,15 @@ import m from 'mithril';
 import prop from 'mithril/stream';
 import { isEmpty, remove } from 'lodash';
 
-let playlists = [];
+let currentPlaylists = prop([]);
 // HACK
 if (window.playlistRaw) {
-  window.playlists = playlistRaw;
+  currentPlaylists(playlistRaw);
 }
-let currentPlaylists = prop(window.playlists);
 
 let playlistTable = {
   view: () => {
-    if (isEmpty(playlists)) {
+    if (isEmpty(currentPlaylists())) {
       return m('h4', 'You have no playlists yet.');
     } else {
       return m('table.table', [
@@ -31,7 +30,7 @@ let playlistTable = {
           )
         ]),
         m('tbody', [
-          playlists.map(function(pl) {
+          currentPlaylists().map(function(pl) {
             return m('tr', [
               m('td', [
                 m(
@@ -49,7 +48,7 @@ let playlistTable = {
                     onclick: function() {
                       if (confirm('Do you want to delete this playlist?')) {
                         deletePlaylist(pl.name);
-                        remove(playlists, function(n) {
+                        remove(currentPlaylists(), function(n) {
                           return n.name === pl.name;
                         });
                       }

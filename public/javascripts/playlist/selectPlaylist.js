@@ -1,13 +1,14 @@
 'use strict';
 
 import m from 'mithril';
+import $ from 'jquery';
 
 function button(args) {
   return m(
     'button.btn.btn-default',
     {
       onclick: function() {
-        //isLoggedIn is defined on the index.pug
+        // HACK isLoggedIn is defined on index.pug
         if (!isLoggedIn) {
           window.location.href = '/user/login';
         } else {
@@ -22,10 +23,10 @@ function button(args) {
   );
 }
 
-export default function selectPlaylist() {
-  return {
-    view: function(vnode) {
-      return button(vnode.attrs);
-    }
-  };
-}
+const selectPlaylist = {
+  view: function(vnode) {
+    return button(vnode.attrs);
+  }
+};
+
+export default selectPlaylist;

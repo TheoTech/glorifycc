@@ -4,18 +4,19 @@ import prop from 'mithril/stream';
 import choosePlaylist from './modal/choose';
 import createNewPlaylist from './modal/create';
 
-let playlistModalComponent = {
-  view: function(vnode) {
-    let args = vnode.attrs;
-    return m('div', [choosePlaylist(args), createNewPlaylist(args)]);
-  }
-};
 let playlists = [];
 // HACK
 if (window.playlistRaw) {
   window.playlists = playlistRaw;
 }
 let currentPlaylists = prop(window.playlists);
+
+let playlistModalComponent = {
+  view: function(vnode) {
+    let args = { ...vnode.attrs, currentPlaylists };
+    return m('div', [choosePlaylist(args), createNewPlaylist(args)]);
+  }
+};
 
 let addPlaylist = function(name, args) {
   m
@@ -63,4 +64,4 @@ let addToPlaylist = args => {
     });
 };
 
-export { playlistModalComponent, addToPlaylist };
+export default { playlistModalComponent, addToPlaylist };

@@ -40,7 +40,7 @@ let searchResultComponent = {
               m('th', 'Title'),
               m('th', 'Author'),
               m('th.text-center', [
-                m(selectPlaylist(), {
+                m(selectPlaylist, {
                   playlistName: playlistName,
                   addButtonDOM: addButtonDOM
                 })
@@ -69,7 +69,7 @@ let searchResultComponent = {
                   ]),
                   m('td.alignWithTitle', s.author),
                   m('td.text-center', [
-                    m(addToPlaylistButton(), {
+                    m(addToPlaylistButton, {
                       playlistName: playlistName,
                       songID: s._id,
                       label: s.label,

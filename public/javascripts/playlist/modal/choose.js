@@ -44,7 +44,7 @@ export default function choosePlaylist(args) {
               },
               [m('span.glyphicon.glyphicon-plus')]
             ),
-            currentPlaylists().map(pl => {
+            args.currentPlaylists().map(pl => {
               return [
                 m('p', [
                   m(

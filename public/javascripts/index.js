@@ -1,7 +1,7 @@
 'use strict';
 
 import search from './search';
-import playlist from './playlist';
+import * as playlist from './playlist';
 import library from './library';
 import m from 'mithril';
 
@@ -43,5 +43,11 @@ glorifyApp.initPlaylistTable = function() {
       document.getElementById('addNewPlaylistButton'),
       playlist.addNewPlaylist
     );
+  });
+};
+
+glorifyApp.initLibraryTable = function() {
+  loadHandlers.push(() => {
+    m.mount(document.getElementById('library'), library.libraryTable);
   });
 };

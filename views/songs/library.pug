@@ -12,15 +12,9 @@ block content
         #library
 
     script.
-        var songs = m.prop(!{JSON.stringify(songs).replace(/<\//g, "<\\/")})
+        var songsRaw = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/selectPlaylist.js')
-    script(src='/dist/javascripts/playlistModal.js')
-    script(src='/dist/javascripts/addToPlaylistButton.js')
-    script(src='/dist/javascripts/deleteButton.js')
-    //- script(src='/dist/javascripts/searchBox.js')
-    script(src='/dist/javascripts/libraryTable.js')
+    script(src='/dist/js/index.js')
     script.
-        libraryTableComponent.init(document.getElementById('library'))
-        //- m.mount(document.getElementById('searchBox'), m(searchBoxComponent.searchBox, {url: '/user/library'}))
+        glorifyApp.initLibraryTable();

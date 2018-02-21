@@ -1,14 +1,16 @@
 'use strict';
 
-import selectPlaylist from './select';
 import addToPlaylistButton from './addToPlaylistButton';
 import playlistModal from './playlistModal';
+import deleteButton from './deleteButton';
+import selectPlaylist from './selectPlaylist';
 import { playlistTable, addNewPlaylist } from './playlistTable';
 
-export default {
-  selectPlaylist,
+export {
   addToPlaylistButton,
   playlistModal,
   playlistTable,
-  addNewPlaylist
+  addNewPlaylist,
+  deleteButton,
+  selectPlaylist
 };
