@@ -12,15 +12,11 @@ import {
 } from '../playlist';
 import { addOrDeleteButton } from '../library';
 
-let displayedSongs = prop();
-// HACK
-if (window.songsRaw) {
-  displayedSongs(songsRaw);
-}
-
+let displayedSongs = prop([]);
 let playlistName = prop('');
 let searchString = prop('');
 let addButtonDOM = prop();
+let inLibrary = false;
 let enter = (elem, checkboxClass) => {
   $(elem).keyup(e => {
     if (e.keyCode === 13) {
@@ -95,7 +91,10 @@ let searchResultComponent = {
 };
 
 const searchPage = {
-  init: dom => {
+  init: (dom, opts) => {
+    displayedSongs(opts.songs);
+    inLibrary = opts.inLibrary;
+    console.log(opts);
     m.mount(dom, searchResultComponent);
   }
 };

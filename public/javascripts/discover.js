@@ -7,11 +7,7 @@ import { searchBox } from './search';
 import { songlistTable } from './song';
 
 let inLibrary = prop();
-if (window.currentInLibrary) {
-  prop(currentInLibrary);
-}
-
-let displayedSongs = prop(songs);
+let displayedSongs = prop([]);
 let numberOfSongsToShow = 20;
 
 //langShown store the language id. it is for showing the songs title in 'langShown'
@@ -90,18 +86,18 @@ function init(opts) {
   m.mount(document.getElementById('songlistTable'), {
     view: () => {
       return m(songlistTable, {
-        langShown: langShown,
-        langFilter: langFilter,
-        loadMoreAndApplyFilter: loadMoreAndApplyFilter,
+        langShown,
+        langFilter,
+        loadMoreAndApplyFilter,
         initial: numberOfSongsToShow,
-        displayedSongs: displayedSongs,
-        playlistName: playlistName,
-        inLibrary: inLibrary,
-        langsExist: langsExist,
-        searchString: searchString,
-        isLoggedIn: isLoggedIn,
-        addButtonDOM: addButtonDOM,
-        langShownLabel: langShownLabel
+        displayedSongs,
+        playlistName,
+        inLibrary,
+        langsExist,
+        searchString,
+        isLoggedIn,
+        addButtonDOM,
+        langShownLabel
       });
     }
   });

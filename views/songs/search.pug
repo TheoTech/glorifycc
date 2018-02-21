@@ -8,12 +8,17 @@ block content
     #songlistTable
 
     script.
-        var songsRaw = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
-        var inLibraryRaw = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
-        var playlistsRaw = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
+        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var inLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+        var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
 
     script(src='/dist/js/index.js')
     script.
-      glorifyApp.initSearchPage();
+      glorifyApp.initSearchPage({
+        songs: songs,
+        inLibrary: inLibrary,
+        playlists: playlists,
+        isLoggedIn: isLoggedIn
+      });
         

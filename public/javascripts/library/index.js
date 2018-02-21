@@ -9,4 +9,4 @@ if (window.inLibraryRaw) {
   window.inLibrary = prop(window.inLibraryRaw);
 }
 
-export default { addOrDeleteButton, libraryTable };
+export { addOrDeleteButton, libraryTable };

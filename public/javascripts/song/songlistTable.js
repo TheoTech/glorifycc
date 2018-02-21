@@ -4,11 +4,15 @@ import m from 'mithril';
 import prop from 'mithril/stream';
 import showSongsIn from './showSongsIn';
 import { songsNotFound } from '../search';
-import { addToPlaylistButton, selectPlaylist } from '../playlist';
+import {
+  addToPlaylistButton,
+  selectPlaylist,
+  playlistModal
+} from '../playlist';
 import { addOrDeleteButton } from '../library';
 
 const songlistTable = {
-  view: function(vnode) {
+  view: vnode => {
     let args = vnode.attrs;
     if (args.displayedSongs().length === 0) {
       return songsNotFound;

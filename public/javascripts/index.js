@@ -35,9 +35,9 @@ glorifyApp.initSearchBoxHome = function(elemId) {
   });
 };
 
-glorifyApp.initSearchPage = function() {
+glorifyApp.initSearchPage = function(opts) {
   loadHandlers.push(() => {
-    search.searchPage.init(document.getElementById('songlistTable'));
+    search.searchPage.init(document.getElementById('songlistTable'), opts);
   });
 };
 
