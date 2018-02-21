@@ -12,11 +12,12 @@ import {
 } from '../playlist';
 import { addOrDeleteButton } from '../library';
 
-window.songs = [];
+let displayedSongs = prop();
+// HACK
 if (window.songsRaw) {
-  window.songs = songsRaw;
+  displayedSongs(songsRaw);
 }
-let displayedSongs = prop(window.songsRaw);
+
 let playlistName = prop('');
 let searchString = prop('');
 let addButtonDOM = prop();

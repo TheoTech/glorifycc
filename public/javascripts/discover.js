@@ -69,8 +69,8 @@ $(window).scroll(function() {
 
 function init(opts) {
   let playlistName = prop(opts.playlistName);
-  inLibrary(currentInLibrary);
-  displayedSongs(songs);
+  inLibrary(opts.currentInLibrary);
+  displayedSongs(opts.songs);
   let { playlists, isLoggedIn, langsExist } = opts;
 
   m.mount(document.getElementById('discoverBox'), {
