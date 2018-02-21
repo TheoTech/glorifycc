@@ -1,9 +1,9 @@
 'use strict';
 
 import m from 'mithril';
-import $ from 'jquery';
+import { includes } from 'lodash';
 
-let addSong = (id, url, inLibrary) => {
+function addSong(id, url, inLibrary) {
   m
     .request({
       method: 'POST',
@@ -15,9 +15,9 @@ let addSong = (id, url, inLibrary) => {
     .then(function(res) {
       inLibrary(res.inLibrary);
     });
-};
+}
 
-let deleteSong = (id, url, inLibrary) => {
+function deleteSong(id, url, inLibrary) {
   m
     .request({
       method: 'DELETE',
@@ -29,54 +29,45 @@ let deleteSong = (id, url, inLibrary) => {
     .then(function(res) {
       inLibrary(res.inLibrary);
     });
-};
-
-/*
-args = {songID: args._id,
-        url: '/',
-        inLibrary: inLibrary
 }
-*/
 
-let ctrl = {
-  buttonTitle: args => {
-    let isInLibrary = _.includes(args.inLibrary(), args.songID);
-    return isInLibrary
-      ? 'Removing from Favorites...'
-      : 'Adding to Favorites...';
-  },
-  buttonTxt: args => {
-    let isInLibrary = _.includes(args.inLibrary(), args.songID);
-    return m(
-      isInLibrary
-        ? 'i.glyphicon.glyphicon-heart'
-        : 'i.glyphicon.glyphicon-heart-empty'
-    );
-  },
-  addOrDelete: args => {
-    let isInLibrary = _.includes(args.inLibrary(), args.songID);
-    if (isInLibrary) {
-      deleteSong(args.songID, args.url, args.inLibrary);
-    } else {
-      addSong(args.songID, args.url, args.inLibrary);
-    }
+function buttonTitle(args) {
+  let isInLibrary = includes(args.inLibrary(), args.songID);
+  return isInLibrary ? 'Removing from Favorites...' : 'Adding to Favorites...';
+}
+
+function buttonTxt(args) {
+  let isInLibrary = includes(args.inLibrary(), args.songID);
+  return m(
+    isInLibrary
+      ? 'i.glyphicon.glyphicon-heart'
+      : 'i.glyphicon.glyphicon-heart-empty'
+  );
+}
+
+function addOrDelete(args) {
+  var isInLibrary = includes(args.inLibrary(), args.songID);
+  if (isInLibrary) {
+    deleteSong(args.songID, args.url, args.inLibrary);
+  } else {
+    addSong(args.songID, args.url, args.inLibrary);
   }
-};
+}
 
 let addOrDeleteButton = {
-  view: vnode => {
+  view: function(vnode) {
     let args = vnode.attrs;
     return m('div', [
       m(
         'button.btn.btn-default',
         {
           className: args.className,
-          title: ctrl.buttonTitle(),
-          onclick: function(e) {
+          title: buttonTitle(args),
+          onclick: function() {
             if (!isLoggedIn) {
               window.location.href = '/user/login';
             } else {
-              ctrl.addOrDelete();
+              addOrDelete(args);
 
               //we set the trigger to be manual so we need to
               //manually show and hide the tooltip
@@ -87,13 +78,13 @@ let addOrDeleteButton = {
               }, 2000);
             }
           },
-          oninit: vnode => {
+          oninit: function(vnode) {
             $(vnode.dom).tooltip({
               trigger: 'manual'
             });
           }
         },
-        [ctrl.buttonTxt()]
+        [buttonTxt(args)]
       ),
       m('p', {
         id: args.songID,
@@ -106,4 +97,5 @@ let addOrDeleteButton = {
     ]);
   }
 };
+
 export default addOrDeleteButton;

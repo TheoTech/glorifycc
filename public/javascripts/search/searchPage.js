@@ -52,7 +52,7 @@ let searchResultComponent = {
                 s.disabled = s.disabled || prop(false);
                 return m('tr', [
                   m('td', [
-                    m(addOrDeleteButtonComponent.addOrDeleteButton, {
+                    m(addOrDeleteButton, {
                       songID: s._id,
                       url: '/',
                       inLibrary: inLibrary
