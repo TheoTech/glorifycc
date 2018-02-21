@@ -6,8 +6,9 @@ import chooseLanguage from './chooseLanguage';
 import addOrDeleteButton from '../library/addOrDeleteButton';
 import actionButtons from './actionButtons';
 
-function init(leftSong, rightSong, rightSongExists, inLibraryRaw) {
-  let inLibrary = prop(inLibraryRaw);
+function init(opts) {
+  let { leftSong, rightSong, rightSongExists } = opts;
+  let inLibrary = prop(opts.inLibrary);
   //this is mithril component for buttons in the song clicked page
   let songPlaylistName = prop();
   let translationPlaylistName = prop();

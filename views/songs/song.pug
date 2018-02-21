@@ -45,12 +45,20 @@ block content
         var rightSong = !{JSON.stringify(rightSong).replace(/<\//g, "<\\/")}
         var rightSongExists = !{JSON.stringify(rightSongExists).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
-        var inLibraryRaw = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
+        var inLibrary = !{JSON.stringify(inLibrary).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
         var translations = !{JSON.stringify(translations).replace(/<\//g, "<\\/")}
         
     script(src='/dist/js/index.js')
     script.
-      glorifyApp.initSongClicked(leftSong, rightSong, rightSongExists, inLibraryRaw);
+      glorifyApp.initSongClicked({
+        leftSong: leftSong, 
+        rightSong: rightSong, 
+        rightSongExists: rightSongExists, 
+        playlists: playlists,
+        inLibrary: inLibrary,
+        isLoggedIn: isLoggedIn,
+        translations: translations
+      });
   
     
