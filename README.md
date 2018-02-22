@@ -25,5 +25,5 @@ To run this on your local machine:
 
 4. Start `mongod` which must run separately
 5. From the glorifycc directory, run `gulp` to start up the server.  (If for some reason step 2 didn't properly install gulp, run `npm install -g gulp` to install gulp.)
-6. Run `node bin/dev-setup` to populate your local database
+6. Run `node bin/dev-setup` to populate your local database (Note: If you already ran this once, running this again could create duplicate songs in your database)
 7. Go to http://localhost:8000 to test the webapp
