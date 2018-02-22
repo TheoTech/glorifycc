@@ -7,9 +7,9 @@ import createNewPlaylist from './modal/create';
 let playlists = [];
 // HACK
 if (window.playlistRaw) {
-  window.playlists = playlistRaw;
+  playlists = playlistRaw;
 }
-let currentPlaylists = prop(window.playlists);
+let currentPlaylists = prop(playlists);
 
 let playlistModalComponent = {
   view: function(vnode) {

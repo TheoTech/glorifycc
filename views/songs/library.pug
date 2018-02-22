@@ -12,7 +12,7 @@ block content
         #library
 
     script.
-        var songsRaw = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        //- var songsRaw = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
         var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
     script(src='/dist/js/index.js')

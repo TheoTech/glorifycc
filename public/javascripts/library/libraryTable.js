@@ -14,10 +14,6 @@ let songID = prop();
 let playlistName = prop();
 let addButtonDOM = prop();
 let songs = prop();
-// HACK
-if (window.songsRaw) {
-  songs(songsRaw);
-}
 
 const libraryTable = {
   view: () => {

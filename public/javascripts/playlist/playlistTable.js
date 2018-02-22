@@ -5,15 +5,10 @@ import m from 'mithril';
 import prop from 'mithril/stream';
 import { isEmpty, remove } from 'lodash';
 
-let currentPlaylists = prop([]);
-// HACK
-if (window.playlistRaw) {
-  currentPlaylists(playlistRaw);
-}
-
 let playlistTable = {
-  view: () => {
-    if (isEmpty(currentPlaylists())) {
+  view: (vnode) => {
+    let args = vnode.attrs;
+    if (isEmpty(args.currentPlaylists())) {
       return m('h4', 'You have no playlists yet.');
     } else {
       return m('table.table', [
@@ -30,7 +25,7 @@ let playlistTable = {
           )
         ]),
         m('tbody', [
-          currentPlaylists().map(function(pl) {
+          args.currentPlaylists().map(function(pl) {
             return m('tr', [
               m('td', [
                 m(
@@ -48,7 +43,7 @@ let playlistTable = {
                     onclick: function() {
                       if (confirm('Do you want to delete this playlist?')) {
                         deletePlaylist(pl.name);
-                        remove(currentPlaylists(), function(n) {
+                        remove(args.currentPlaylists(), function(n) {
                           return n.name === pl.name;
                         });
                       }
@@ -76,7 +71,7 @@ function deletePlaylist(name) {
   });
 }
 
-function addPlaylist(name, url) {
+function addPlaylist(args, name, url) {
   return m
     .request({
       method: 'PUT',
@@ -90,7 +85,7 @@ function addPlaylist(name, url) {
       if (res.url) {
         window.location.href = res.url;
       } else {
-        currentPlaylists(res.playlists);
+        args.currentPlaylists(res.playlists);
       }
     });
 }
@@ -106,7 +101,8 @@ function enter(elem) {
 let playlistName = prop('New Playlist');
 
 let addNewPlaylist = {
-  view: () => {
+  view: (vnode) => {
+    let args = vnode.attrs;
     return [
       m(
         'button.btn.btn-default',
@@ -151,7 +147,7 @@ let addNewPlaylist = {
                 {
                   'data-dismiss': 'modal',
                   onclick: () => {
-                    addPlaylist(playlistName());
+                    addPlaylist(args, playlistName());
                     window.location.href =
                       '/discover?playlist=' + playlistName();
                   }

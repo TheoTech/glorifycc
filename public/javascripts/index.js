@@ -2,7 +2,7 @@
 
 import * as search from './search';
 import * as playlist from './playlist';
-import library from './library';
+import * as library from './library';
 import * as song from './song';
 import discover from './discover';
 import m from 'mithril';
@@ -41,13 +41,23 @@ glorifyApp.initSearchPage = function(opts) {
   });
 };
 
-glorifyApp.initPlaylistTable = function() {
+glorifyApp.initPlaylistTable = function(playlists) {
   loadHandlers.push(() => {
-    m.mount(document.getElementById('playlist'), playlist.playlistTable);
-    m.mount(
-      document.getElementById('addNewPlaylistButton'),
-      playlist.addNewPlaylist
-    );
+    let currentPlaylists = prop(playlists);
+    m.mount(document.getElementById('playlist'), {
+      view: () => {
+        return m(playlist.playlistTable, {
+          currentPlaylists
+        });
+      }
+    });
+    m.mount(document.getElementById('addNewPlaylistButton'), {
+      view: () => {
+        return m(playlist.addNewPlaylist, {
+          currentPlaylists
+        });
+      }
+    });
   });
 };
 
