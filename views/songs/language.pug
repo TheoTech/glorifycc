@@ -16,7 +16,7 @@ block content
         each language in languages
             li(id=`${language.code}`)
               span.display
-                a(href="#" onclick=`editLanguage('${languages.length}','${language.code}')`) #{language.label}
+                a(href="#" onclick=`editLanguage('${language.code}')`) #{language.label}
                 span &nbsp; (#{language.code})
               form.editor(style="display:none" method="post" action="/language")
                 input(type="hidden" name="code" value=`${language.code}`)
@@ -35,7 +35,7 @@ block content
 
     script(type="text/javascript").
         var permit = true;
-        function editLanguage (length, code) {
+        function editLanguage (code) {
           if (permit){
             permit = false;
             $('#' + code + ' .display').hide();
