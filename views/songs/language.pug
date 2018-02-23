@@ -52,8 +52,8 @@ block content
         }
 
         function deleteItem (code) {
-          //- here deleting module needed
-
+          // TODO: actural deleting module needed here
+          
           permit = true;
           $('#' + code + ' .display').show();
           $('.add').show();
@@ -62,7 +62,7 @@ block content
 
         $(document).ready(function() {
           setTimeout(function() {
-            $(".alert").alert('close');
+            $('.alert').alert('close');
           }, 2500);
         });
 
