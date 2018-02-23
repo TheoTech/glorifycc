@@ -1,7 +1,6 @@
 extends ../layout
 
 block content
-    -var permit = true
 
     h2 Available Language:
     if success_messages[0]
@@ -12,13 +11,6 @@ block content
         .alert.alert-danger
             each error_msg in error_messages
                 p #{error_msg}  
-
-    script(type="text/javascript").
-        $(document).ready(function() {
-            setTimeout(function() {
-                $(".alert").alert('close');
-            }, 3000);
-        });
 
     ol
         each language in languages
@@ -33,7 +25,7 @@ block content
                 a(href="#").btn.btn-default(onclick=`deleteItem('${language.code}')`) Delete
                 a(href="#").btn.btn-default(onclick=`cancelEdit('${language.code}')`) Cancel
 
-    form(method='post')
+    form.add(method='post')
         .col-xs-3.form-group
             label Language label:
             input.form-control(name='label')
@@ -42,28 +34,35 @@ block content
             button.btn.btn-default Add
 
     script(type="text/javascript").
+        var permit = true;
         function editLanguage (length, code) {
-          let count = 0;
-          let x = document.getElementsByClassName('editor');
-          [].forEach.call(x, function (el) {
-            if (el.style.display === 'none') {
-              count += 1;
-            }
-          });
-          if (count == length) {
+          if (permit){
+            permit = false;
             $('#' + code + ' .display').hide();
+            $('.add').hide();
             $('#' + code + ' .editor').show();
           }
         }
 
         function cancelEdit (code) {
+          permit = true;
           $('#' + code + ' .display').show();
+          $('.add').show();
           $('.editor').hide();
         }
 
         function deleteItem (code) {
           //- here deleting module needed
 
+          permit = true;
           $('#' + code + ' .display').show();
+          $('.add').show();
           $('.editor').hide();          
         }
+
+        $(document).ready(function() {
+          setTimeout(function() {
+            $(".alert").alert('close');
+          }, 2500);
+        });
+
