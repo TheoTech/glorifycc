@@ -11,9 +11,14 @@ var playlistSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Song'
     },
-    translationsChecked: [{type: Schema.Types.ObjectId, ref: 'Song'}],
-    availableTranslations: [{type: Schema.Types.ObjectId, ref: 'Song'}]
-
+    translationsChecked: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Song'
+    }],
+    availableTranslations: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Song'
+    }]
 })
 
 module.exports = mongoose.model('Playlist', playlistSchema)
