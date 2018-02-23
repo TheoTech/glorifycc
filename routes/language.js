@@ -44,16 +44,16 @@ router
             } else {
                 Language.update(
                     {
-                    code: code
+                        code: code
                     },
                     {
-                    label: label
+                        label: label
                     },
                     {},
                     function(err, updated) {
-                    if (err) next(err);
-                    req.flash('success_messages', 'Updated successfully!!!');
-                    res.redirect('/language');
+                        if (err) next(err);
+                        req.flash('success_messages', 'Updated successfully!!!');
+                        res.redirect('/language');
                     }
                 );
             }
