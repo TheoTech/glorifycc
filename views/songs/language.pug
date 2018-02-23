@@ -1,19 +1,37 @@
 extends ../layout
 
 block content
+    -var permit = true
+
     h2 Available Language:
+    if success_messages[0]
+        .alert.alert-success
+            each success_message in success_messages
+                p #{success_message}
+    if error_messages[0]
+        .alert.alert-danger
+            each error_msg in error_messages
+                p #{error_msg}  
+
+    script(type="text/javascript").
+        $(document).ready(function() {
+            setTimeout(function() {
+                $(".alert").alert('close');
+            }, 3000);
+        });
+
     ol
         each language in languages
             li(id=`${language.code}`)
               span.display
-                a(href="#" onclick=`editLanguage('${language.code}')`) #{language.label}
+                a(href="#" onclick=`editLanguage('${languages.length}','${language.code}')`) #{language.label}
                 span &nbsp; (#{language.code})
               form.editor(style="display:none" method="post" action="/language")
                 input(type="hidden" name="code" value=`${language.code}`)
                 input.form-control(name="label" value=`${language.label}`)
                 button(type="submit").btn.btn-primary Save
+                a(href="#").btn.btn-default(onclick=`deleteItem('${language.code}')`) Delete
                 a(href="#").btn.btn-default(onclick=`cancelEdit('${language.code}')`) Cancel
-
 
     form(method='post')
         .col-xs-3.form-group
@@ -24,12 +42,28 @@ block content
             button.btn.btn-default Add
 
     script(type="text/javascript").
-        function editLanguage (code) {
-          $('#' + code + ' .display').hide();
-          $('#' + code + ' .editor').show();
+        function editLanguage (length, code) {
+          let count = 0;
+          let x = document.getElementsByClassName('editor');
+          [].forEach.call(x, function (el) {
+            if (el.style.display === 'none') {
+              count += 1;
+            }
+          });
+          if (count == length) {
+            $('#' + code + ' .display').hide();
+            $('#' + code + ' .editor').show();
+          }
         }
 
         function cancelEdit (code) {
           $('#' + code + ' .display').show();
           $('.editor').hide();
+        }
+
+        function deleteItem (code) {
+          //- here deleting module needed
+
+          $('#' + code + ' .display').show();
+          $('.editor').hide();          
         }
