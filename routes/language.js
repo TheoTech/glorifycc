@@ -24,41 +24,50 @@ router
     var code = req.body.code;
     var errors = req.validationErrors();
     if (errors) {
-        req.flash('error_messages', 'Invalid data entry');
-        res.redirect('/language');
+      req.flash('error_messages', 'Invalid data entry');
+      res.redirect('/language');
     } else {
-        Language.findOne(
-        {  code: code  },
-        function(err, language) {
+      Language.findOne({ code: code }, function(err, language) {
+        if (err) next(err);
+        if (!language) {
+          var newLanguage = new Language({
+            label: label,
+            code: code
+          });
+          newLanguage.save(function(err) {
             if (err) next(err);
-            if (!language) {
-                var newLanguage = new Language({
-                    label: label,
-                    code: code
-                });
-                newLanguage.save(function(err) {
-                    if (err) next(err);
-                    req.flash('success_messages', 'Saved successfully!!!');
-                    res.redirect('/language');
-                });
-            } else {
-                Language.update(
-                    {
-                        code: code
-                    },
-                    {
-                        label: label
-                    },
-                    {},
-                    function(err, updated) {
-                        if (err) next(err);
-                        req.flash('success_messages', 'Updated successfully!!!');
-                        res.redirect('/language');
-                    }
-                );
+            req.flash('success_messages', 'Saved successfully!!!');
+            res.redirect('/language');
+          });
+        } else {
+          Language.update(
+            {
+              code: code
+            },
+            {
+              label: label
+            },
+            {},
+            function(err, updated) {
+              if (err) next(err);
+              req.flash('success_messages', 'Updated successfully!!!');
+              res.redirect('/language');
             }
-        });
+          );
+        }
+      });
     }
+  })
+  .delete(function(req, res, next) {
+    Language.remove(
+      {
+        code: req.body.code
+      },
+      function(err) {
+        if (err) return next(err);
+        res.json({ deleted: true });
+      }
+    );
   });
 
 module.exports = router;

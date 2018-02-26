@@ -62,7 +62,9 @@ app.use(
 app.use(cookieParser());
 app.use(
   session({
-    secret: process.env.SESSION_KEY || config.get('Session.key')
+    secret: process.env.SESSION_KEY || config.get('Session.key'),
+    saveUninitialized: false,
+    resave: true
   })
 );
 app.use(flash());
