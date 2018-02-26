@@ -35,6 +35,7 @@ block content
 
     script(type="text/javascript").
         var permit = true;
+        
         function editLanguage (code) {
           if (permit){
             permit = false;
@@ -52,7 +53,6 @@ block content
         }
 
         function deleteItem (code) {
-          // TODO: actural deleting module needed here
           permit = true;
           $('#' + code + ' .display').show();
           $('.add').show();
@@ -66,11 +66,13 @@ block content
               }
             })
             .then(function(result) {
-              document.getElementById(code).remove()
+              document.getElementById(code).remove();
             })
           }
         }
 
+        //- show the result what is done.
+        //- let the message show for 2.5 seconds and then refresh
         $(document).ready(function() {
           setTimeout(function() {
             $('.alert').alert('close');

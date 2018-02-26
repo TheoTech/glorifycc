@@ -38,11 +38,9 @@ block content
         $('#delete').on('click', function(e) {
             e.preventDefault();
 
-            if (confirm('Do you want to delete this language?')) {
+            if (confirm('Do you want to delete these songs?')) {
                 $('input:checked').each(function(index, value) {
                     var val = $(this).attr('id');
-                    console.log(val)
-                    console.log($(this));
                     var $thisInput = $(this);
 
                     $.ajax({
@@ -52,5 +50,10 @@ block content
                         $thisInput.parents('tr').remove();
                     });
                 });
+            } else {
+                $('input:checked').each(function(index, value) {
+                    var val = $(this).attr('id');
+                    document.getElementById(val).checked = false;
+                })
             }
         });
