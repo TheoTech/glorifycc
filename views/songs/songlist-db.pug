@@ -38,17 +38,21 @@ block content
         $('#delete').on('click', function(e) {
             e.preventDefault();
 
-            $('input:checked').each(function(index, value) {
-                var val = $(this).attr('id');
-                console.log(val)
-                console.log($(this));
-                var $thisInput = $(this);
+            if (confirm('Do you want to delete these songs?')) {
+                $('input:checked').each(function(index, value) {
+                    var val = $(this).attr('id');
+                    var $thisInput = $(this);
 
-                $.ajax({
-                    url: '/songlist-db/' + val,
-                    type: 'DELETE'
-                }).done(function() {
-                    $thisInput.parents('tr').remove();
+                    $.ajax({
+                        url: '/songlist-db/' + val,
+                        type: 'DELETE'
+                    }).done(function() {
+                        $thisInput.parents('tr').remove();
+                    });
                 });
-            });
+            } else {
+                $('input:checked').each(function(index, value) {
+                    $(this).prop('checked', false);
+                })
+            }
         });

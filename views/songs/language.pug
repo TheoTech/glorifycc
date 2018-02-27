@@ -35,6 +35,7 @@ block content
 
     script(type="text/javascript").
         var permit = true;
+        
         function editLanguage (code) {
           if (permit){
             permit = false;
@@ -52,17 +53,27 @@ block content
         }
 
         function deleteItem (code) {
-          // TODO: actural deleting module needed here
-          
           permit = true;
           $('#' + code + ' .display').show();
           $('.add').show();
           $('.editor').hide();          
+          if (confirm('Do you want to delete this language?')) {
+            m.request({
+              method: 'DELETE',
+              url: '/language',
+              data: {
+                code: code
+              }
+            })
+            .then(function(result) {
+              document.getElementById(code).remove();
+            })
+          }
         }
 
-        $(document).ready(function() {
-          setTimeout(function() {
-            $('.alert').alert('close');
-          }, 2500);
-        });
+        //- "Automatically hide any error or success messages after 2.5 seconds"        $(document).ready(function() {
+        setTimeout(function() {
+          $('.alert').alert('close');
+        }, 2500);
+      });
 
