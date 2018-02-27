@@ -71,11 +71,9 @@ block content
           }
         }
 
-        //- show the result what is done.
-        //- let the message show for 2.5 seconds and then refresh
-        $(document).ready(function() {
-          setTimeout(function() {
-            $('.alert').alert('close');
-          }, 2500);
-        });
+        //- "Automatically hide any error or success messages after 2.5 seconds"        $(document).ready(function() {
+        setTimeout(function() {
+          $('.alert').alert('close');
+        }, 2500);
+      });
 

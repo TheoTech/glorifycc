@@ -52,8 +52,7 @@ block content
                 });
             } else {
                 $('input:checked').each(function(index, value) {
-                    var val = $(this).attr('id');
-                    document.getElementById(val).checked = false;
+                    $(this).prop('checked', false);
                 })
             }
         });
