@@ -9,6 +9,6 @@ block content
         var uniqueLanguages = !{JSON.stringify(uniqueLanguages).replace(/<\//g, "<\\/")}
         var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/export1Table.js')
+    script(src='/dist/js/index.js')
     script.
-        export1TableComponent.init(document.getElementById('export1Table'))
+        glorifyApp.initExport1Table(document.getElementById('export1Table'))

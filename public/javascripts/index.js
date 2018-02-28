@@ -8,6 +8,7 @@ import discover from './discover';
 import m from 'mithril';
 import prop from 'mithril/stream';
 import * as bootstrap from 'bootstrap';
+import * as export1Table from './exportFile/export1Table';
 
 const Application = {
   search,
@@ -98,5 +99,11 @@ glorifyApp.initSongForm = function(elemId, obj) {
   loadHandlers.push(() => {
     let form = song.songForm(obj);
     m.mount(document.getElementById(elemId), form);
+  });
+};
+
+glorifyApp.initExport1Table = function(dom) {
+  loadHandlers.push(() => {
+    export1Table.init(dom);
   });
 };
