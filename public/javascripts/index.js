@@ -67,13 +67,13 @@ glorifyApp.initLibraryTable = function() {
   });
 };
 
-glorifyApp.initPlaylistClicked = function(s, p) {
+glorifyApp.initPlaylistDetails = function(s, p) {
   loadHandlers.push(() => {
     let songs = prop(s);
     let playlistName = prop(p);
-    m.mount(document.getElementById('playlistClicked'), {
+    m.mount(document.getElementById('playlistDetails'), {
       view: () => {
-        return m(playlist.playlistClicked, {
+        return m(playlist.playlistDetails, {
           songs,
           playlistName
         });

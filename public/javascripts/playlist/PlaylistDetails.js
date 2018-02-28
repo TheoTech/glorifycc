@@ -30,11 +30,12 @@ function noSongsPlaceholder(songs) {
   }
 }
 
-const playlistClicked = {
+const playlistDetails = {
   view: vnode => {
     let { playlistName, songs } = vnode.attrs;
-    return [
-      m('h1', playlistName()),
+    window.m = m;
+    return;
+    m('h1', playlistName()),
       noSongsPlaceholder(songs()),
       m('table.table', [
         m('tbody', [
@@ -79,16 +80,15 @@ const playlistClicked = {
           'button.btn.btn-default.pull-right',
           {
             onclick: function() {
-              if (confirm('Do you want to delete this playlist?')) {
+              if (confirm('Are you sure to delete this playlist?')) {
                 deletePlaylist(playlistName());
               }
             }
           },
           'Delete Playlist'
         )
-      ])
-    ];
+      ]);
   }
 };
 
-export default playlistClicked;
+export default playlistDetails;

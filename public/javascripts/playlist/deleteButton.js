@@ -23,7 +23,7 @@ const deleteButtonComponent = {
     return m(
       'button.btn.btn-default',
       {
-        onclick: function() {
+        onclick: () => {
           deleteSong(args.songID, args.url, args.songs, args.name);
         }
       },
