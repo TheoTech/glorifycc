@@ -1,11 +1,11 @@
 extends ../layout
 
 block content
-    #playlistClicked
+    #playlistDetails
 
     script.
-        var songs = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
+        var songsRaw = !{JSON.stringify(songs).replace(/<\//g, "<\\/")}
         var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
     script(src='/dist/js/index.js')
     script.
-      glorifyApp.initPlaylistClicked(songs, playlistName);
+      glorifyApp.initPlaylistDetails(songsRaw, playlistName);

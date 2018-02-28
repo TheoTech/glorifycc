@@ -1,4 +1,5 @@
 'use strict';
+import m from 'mithril';
 
 const showSongsIn = {
   view: function(vnode) {

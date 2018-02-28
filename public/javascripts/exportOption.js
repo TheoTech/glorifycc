@@ -1,3 +1,5 @@
+import m from 'mithril';
+
 function exportOption(defaultLanguagePerSlide, maxNumberOfSongs) {
     var queryString = '';
     var languagePerSlide = defaultLanguagePerSlide;

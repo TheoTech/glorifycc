@@ -2,6 +2,10 @@ extends ../layout
 
 block content
     h1 Playlists
+    if error_messages[0]
+        .alert.alert-danger
+            each message in error_messages
+                p #{message}    
     #searchBox
     br
     #addNewPlaylistButton

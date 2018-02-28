@@ -30,10 +30,10 @@ function noSongsPlaceholder(songs) {
   }
 }
 
-const playlistClicked = {
+const playlistDetails = {
   view: vnode => {
     let { playlistName, songs } = vnode.attrs;
-    return [
+    return m('div', [
       m('h1', playlistName()),
       noSongsPlaceholder(songs()),
       m('table.table', [
@@ -87,8 +87,8 @@ const playlistClicked = {
           'Delete Playlist'
         )
       ])
-    ];
+    ]);
   }
 };
 
-export default playlistClicked;
+export default playlistDetails;
