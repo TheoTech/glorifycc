@@ -1,3 +1,5 @@
+import m from 'mithril';
+
 var export1TableComponent = (function() {
   //Note: var uniqueLanguages, var songs, var playlistName are defined on export1.pug
   var errorMsg = m.prop('');

@@ -1,7 +1,8 @@
 'use strict';
+import m from 'mithril';
 
 function deleteSong(id, url, songs, name) {
-  //'name' parameter is only for delete button in the playlist page 
+  //'name' parameter is only for delete button in the playlist page
   // because in this case, we need to know in what playlist the song will be deleted
   m
     .request({

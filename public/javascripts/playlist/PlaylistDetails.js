@@ -33,9 +33,8 @@ function noSongsPlaceholder(songs) {
 const playlistDetails = {
   view: vnode => {
     let { playlistName, songs } = vnode.attrs;
-    window.m = m;
-    return;
-    m('h1', playlistName()),
+    return m('div', [
+      m('h1', playlistName()),
       noSongsPlaceholder(songs()),
       m('table.table', [
         m('tbody', [
@@ -87,7 +86,8 @@ const playlistDetails = {
           },
           'Delete Playlist'
         )
-      ]);
+      ])
+    ]);
   }
 };
 

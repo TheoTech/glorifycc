@@ -38,4 +38,5 @@ block content
         var maxNumberOfSongs = !{JSON.stringify(maxNumberOfSongs).replace(/<\//g, "<\\/")}
     script(src='/dist/javascripts/exportOption.js')
     script.
+        import m from 'mithril';
         m.mount(document.getElementById('exportOption'), exportOption(0, maxNumberOfSongs))
