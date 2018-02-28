@@ -79,7 +79,7 @@ const playlistDetails = {
           'button.btn.btn-default.pull-right',
           {
             onclick: function() {
-              if (confirm('Are you sure to delete this playlist?')) {
+              if (confirm('Do you want to delete this playlist?')) {
                 deletePlaylist(playlistName());
               }
             }
