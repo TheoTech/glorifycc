@@ -24,17 +24,18 @@ let searchString = prop();
 let addButtonDOM = prop();
 
 let loadMoreAndApplyFilter = function(
-  totalSongsDisplayed,
-  langShown,
-  langFilter,
-  searchString
-) {
-  console.log({
-    totalSongsDisplayed: totalSongsDisplayed,
-    langShown: langShown,
-    langFilter: langFilter,
-    searchString: searchString
-  });
+            totalSongsDisplayed,
+            langShown,
+            langFilter,
+            searchString
+  ) 
+{
+  // console.log({
+  //   totalSongsDisplayed: totalSongsDisplayed,
+  //   langShown: langShown,
+  //   langFilter: langFilter,
+  //   searchString: searchString
+  // });
   m
     .request({
       method: 'PUT',
