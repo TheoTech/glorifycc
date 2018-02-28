@@ -31,8 +31,8 @@ function noSongsPlaceholder(songs) {
 }
 
 const playlistClicked = {
-  view: function(vnode) {
-    let { playlistName, songs } = vnode.attrs.playlistName;
+  view: vnode => {
+    let { playlistName, songs } = vnode.attrs;
     return [
       m('h1', playlistName()),
       noSongsPlaceholder(songs()),
@@ -90,3 +90,5 @@ const playlistClicked = {
     ];
   }
 };
+
+export default playlistClicked;

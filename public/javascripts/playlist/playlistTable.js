@@ -98,7 +98,7 @@ function enter(elem) {
   });
 }
 
-let playlistName = prop('New Playlist');
+let playlistName = prop('');
 
 let addNewPlaylist = {
   view: (vnode) => {
@@ -134,7 +134,8 @@ let addNewPlaylist = {
             ]),
             m('.modal-body', [
               m('label', 'Enter Playlist Name'),
-              m('input.form-control[name=playlist type=text]', {
+              m('input.form-control[type=text]', {
+                placeholder: 'New playlist',
                 value: playlistName(),
                 onchange: m.withAttr('value', playlistName),
                 oncreate: vnode => {

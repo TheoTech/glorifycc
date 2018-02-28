@@ -73,7 +73,7 @@ glorifyApp.initPlaylistClicked = function(s, p) {
     let playlistName = prop(p);
     m.mount(document.getElementById('playlistClicked'), {
       view: () => {
-        return m(playlistClicked, {
+        return m(playlist.playlistClicked, {
           songs,
           playlistName
         });

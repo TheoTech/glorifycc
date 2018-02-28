@@ -4,6 +4,7 @@ import addToPlaylistButton from './addToPlaylistButton';
 import playlistModal from './playlistModal';
 import deleteButton from './deleteButton';
 import selectPlaylist from './selectPlaylist';
+import playlistClicked from './playlistClicked';
 import { playlistTable, addNewPlaylist } from './playlistTable';
 
 export {
@@ -12,5 +13,6 @@ export {
   playlistTable,
   addNewPlaylist,
   deleteButton,
-  selectPlaylist
+  selectPlaylist,
+  playlistClicked
 };
