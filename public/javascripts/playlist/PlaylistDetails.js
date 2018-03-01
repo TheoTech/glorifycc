@@ -18,8 +18,8 @@ function deletePlaylist(name) {
     });
 }
 
-function noSongsPlaceholder(songs) {
-  if (songs.length === 0) {
+function noSongsPlaceholder(songlist) {
+  if (songlist.length === 0) {
     return m('div', [
       'There are no songs in this playlist.',
       m('br'),
@@ -71,7 +71,8 @@ const playlistDetails = {
             href:
               '/user/playlist/' +
               encodeURIComponent(playlistName()) +
-              '/export1'
+              '/export1',
+            class: songs().length === 0 ? 'disabled' : ''
           },
           'Export Playlist'
         ),
