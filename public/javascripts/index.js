@@ -9,6 +9,7 @@ import m from 'mithril';
 import prop from 'mithril/stream';
 import * as bootstrap from 'bootstrap';
 import * as export1Table from './exportFile/export1Table';
+import exportOption from './exportFile/exportOption';
 
 const Application = {
   search,
@@ -105,5 +106,11 @@ glorifyApp.initSongForm = function(elemId, obj) {
 glorifyApp.initExport1Table = function(dom) {
   loadHandlers.push(() => {
     export1Table.init(dom);
+  });
+};
+
+glorifyApp.initExportOption = function(dom, count, maxNumberOfSongs) {
+  loadHandlers.push(() => {
+    m.mount(dom, exportOption(count, maxNumberOfSongs));
   });
 };

@@ -21,14 +21,14 @@ block content
                         tr
                             td
                                 -for(var x = 0; x < songs[j].lyrics[index].length; x++)
-                                    !{songs[j].lyrics[index][x]}
-                                    br
+                                  span !{songs[j].lyrics[index][x]}
+                                  br
                                 br
                             -j++
                             -while(j % 3 !== 0 && j < songs.length)
                                 td
                                     -for(var x = 0; x < songs[j].lyrics[index].length; x++)
-                                        !{songs[j].lyrics[index][x]}
+                                        span !{songs[j].lyrics[index][x]}
                                         br
                                 -j++
                             -j = 0
@@ -36,7 +36,6 @@ block content
 
     script.
         var maxNumberOfSongs = !{JSON.stringify(maxNumberOfSongs).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/exportOption.js')
+    script(src='/dist/js/index.js')
     script.
-        import m from 'mithril';
-        m.mount(document.getElementById('exportOption'), exportOption(0, maxNumberOfSongs))
+      glorifyApp.initExportOption(document.getElementById('exportOption'), 0, maxNumberOfSongs);

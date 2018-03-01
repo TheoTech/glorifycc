@@ -19,7 +19,6 @@ block content
 
     script.
         var maxNumberOfSongs = !{JSON.stringify(maxNumberOfSongs).replace(/<\//g, "<\\/")}
-    script(src='/dist/javascripts/exportOption.js')
+    script(src='/dist/js/index.js')
     script.
-        import m from 'mithril';
-        m.mount(document.getElementById('exportOption'), exportOption(1, maxNumberOfSongs))
+      glorifyApp.initExportOption(document.getElementById('exportOption'), 1, maxNumberOfSongs);
