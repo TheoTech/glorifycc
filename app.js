@@ -64,7 +64,8 @@ app.use(
   session({
     secret: process.env.SESSION_KEY || config.get('Session.key'),
     saveUninitialized: false,
-    resave: true
+    resave: true,
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
   })
 );
 app.use(flash());

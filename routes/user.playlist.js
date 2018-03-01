@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
-var Playlist = require('../models/playlist')
+var Playlist = require('../models/playlist');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var Song = require('../models/song');
@@ -18,303 +18,353 @@ var passportFunction = require('../lib/passport');
 router.use('/', passportFunction.loggedIn);
 
 router.get('/', function(req, res, next) {
-    Playlist.find({
-        owner: req.user._id,
-        song: {
-            $exists: false
-        }
-    }, function(err, playlists) {
-        if (err) return next(err);
-        res.render('playlist/playlist', {
-            playlists: playlists
-        });
-    });
+  Playlist.find(
+    {
+      owner: req.user._id,
+      song: {
+        $exists: false
+      }
+    },
+    function(err, playlists) {
+      if (err) return next(err);
+      res.render('playlist/playlist', {
+        playlists: playlists
+      });
+    }
+  );
 });
-
 
 //delete song from playlist
 router.delete('/', function(req, res, next) {
-    var songID = req.body.id;
-    var playlistName = req.body.name;
-    Playlist.findOne({
+  var songID = req.body.id;
+  var playlistName = req.body.name;
+  Playlist.findOne(
+    {
+      owner: req.user._id,
+      name: playlistName,
+      song: songID
+    },
+    function(err, playlist) {
+      if (err) return next(err);
+      playlist.remove();
+      Playlist.find({
         owner: req.user._id,
         name: playlistName,
-        song: songID
-    }, function(err, playlist) {
-        if (err) return next(err);
-        playlist.remove();
-        Playlist.find({
-                owner: req.user._id,
-                name: playlistName,
-                song: {
-                    $exists: true
-                }
-            })
-            .populate('song')
-            .exec(function(err, playlists) {
-                res.send({
-                    songs: playlists.map((pl) => pl.song)
-                });
-            });
-    });
+        song: {
+          $exists: true
+        }
+      })
+        .populate('song')
+        .exec(function(err, playlists) {
+          res.send({
+            songs: playlists.map(pl => pl.song)
+          });
+        });
+    }
+  );
 });
-
 
 //delete playlist
 router.put('/', function(req, res, next) {
-    var playlistName = req.body.name;
-    var redirect = req.body.redirect;
-    Playlist.remove({
-        owner: req.user._id,
-        name: playlistName
-    }, function(err) {
-        if (err) return next(err);
-        if (redirect) {
-            res.send({
-                url: '/user/playlist'
-            });
-        } else {
-            res.send({});
-        }
-    });
-});
-
-router.get('/:playlist_name', function(req, res, next) {
-    var playlistName = req.params.playlist_name;
-    Playlist.find({
-            owner: req.user._id,
-            name: playlistName,
-            song: {
-                $exists: true
-            }
-        })
-        .populate('song')
-        .exec(function(err, playlists) {
-            if (err) return next(err);
-            var task = playlists.map((playlist, i, arr) => {
-                return function(done) {
-                    Song.find({
-                            $or: [{
-                                $and: [{
-                                    source: playlist.song.source
-                                }, {
-                                    source: {
-                                        $exists: true
-                                    }
-                                }, {
-                                    lang: {
-                                        $ne: playlist.song.lang
-                                    }
-                                }]
-                            }, {
-                                _id: playlist.song.source
-                            }, {
-                                source: playlist.song._id
-                            }, {
-                                _id: playlist.song._id
-                            }]
-                        }, function(err, translations) {
-                            playlist.availableTranslations = translations.map((t) => t._id);
-                            playlist.save(function(err) {
-                                if (err) {
-                                    res.status(400).send('failed ' + err);
-                                } else if (i === arr.length - 1) {
-                                    done(null);
-                                } else {
-                                    done();
-                                }
-                            });
-                        })
-                        .sort({
-                            lang: 1
-                        });
-                }
-            });
-            async.waterfall(task, function(err) {
-                res.render('playlist/details', {
-                    //pass the array of songs in the playlist
-                    songs: playlists.map((pl) => pl.song),
-                    playlistName: playlistName
-                });
-            });
-
+  var playlistName = req.body.name;
+  var redirect = req.body.redirect;
+  Playlist.remove(
+    {
+      owner: req.user._id,
+      name: playlistName
+    },
+    function(err) {
+      if (err) return next(err);
+      if (redirect) {
+        res.send({
+          url: '/user/playlist'
         });
+      } else {
+        res.send({});
+      }
+    }
+  );
 });
 
+// get the playlist details and render to a page
+router.get('/:playlist_name', async function(req, res, next) {
+  let playlistName = req.params.playlist_name;
+  let owner = req.user._id;
+  try {
+    let count = await Playlist.count({
+      owner: owner,
+      name: playlistName
+    }).exec();
+
+    if (count > 0) {
+      let playlists = await Playlist.find({
+        owner: req.user._id,
+        name: playlistName,
+        song: {
+          $exists: true
+        }
+      })
+        .populate('song')
+        .exec();
+
+      let task = playlists.map((playlist, i, arr) => {
+        return function(done) {
+          Song.find(
+            {
+              $or: [
+                {
+                  $and: [
+                    {
+                      source: playlist.song.source
+                    },
+                    {
+                      source: {
+                        $exists: true
+                      }
+                    },
+                    {
+                      lang: {
+                        $ne: playlist.song.lang
+                      }
+                    }
+                  ]
+                },
+                {
+                  _id: playlist.song.source
+                },
+                {
+                  source: playlist.song._id
+                },
+                {
+                  _id: playlist.song._id
+                }
+              ]
+            },
+            function(err, translations) {
+              playlist.availableTranslations = translations.map(t => t._id);
+              playlist.save(function(err) {
+                if (err) {
+                  res.status(400).send('failed ' + err);
+                } else if (i === arr.length - 1) {
+                  done(null);
+                } else {
+                  done();
+                }
+              });
+            }
+          ).sort({
+            lang: 1
+          });
+        };
+      });
+
+      async.waterfall(task, function(err) {
+        res.render('playlist/details', {
+          //pass the array of songs in the playlist
+          songs: playlists.map(pl => pl.song),
+          playlistName: playlistName
+        });
+      });
+    } else {
+      res.redirect('/user/playlist');
+    }
+  } catch (e) {
+    console.log('Error', e);
+    next(e);
+  }
+});
 
 //this route is for step one of exporting playlist
 router.get('/:playlist_name/export1', function(req, res, next) {
-    var playlistName = req.params.playlist_name;
-    var uniqueLanguages; //this is for the labels on the table for picking translations
-    var songs; //Content: {song: Song, availableTranslations: [Song]}
-    Playlist.find({
-            owner: req.user._id,
-            name: playlistName,
-            song: {
-                $exists: true
-            }
-        })
-        .populate({
-            path: 'song availableTranslations',
-            populate: {
-                path: 'lang'
-            }
-        })
-        .exec(function(err, playlists) {
-            if (err) return next(err);
-            uniqueLanguages =
-                //get 2d array of songs' languages, turn it to 1d array, get the unique languages, sort it by alphabet
-                (_.uniq(playlists.map((pl) =>
-                        pl.availableTranslations.map((translation) => {
-                            return translation.lang
-                        }))
-                    .reduce((prev, curr) => _.concat(prev, curr)))).sort();
+  var playlistName = req.params.playlist_name;
+  var uniqueLanguages; //this is for the labels on the table for picking translations
+  var songs; //Content: {song: Song, availableTranslations: [Song]}
+  Playlist.find({
+    owner: req.user._id,
+    name: playlistName,
+    song: {
+      $exists: true
+    }
+  })
+    .populate({
+      path: 'song availableTranslations',
+      populate: {
+        path: 'lang'
+      }
+    })
+    .exec(function(err, playlists) {
+      if (err) return next(err);
+      uniqueLanguages =
+        //get 2d array of songs' languages, turn it to 1d array, get the unique languages, sort it by alphabet
+        _.uniq(
+          playlists
+            .map(pl =>
+              pl.availableTranslations.map(translation => {
+                return translation.lang;
+              })
+            )
+            .reduce((prev, curr) => _.concat(prev, curr))
+        ).sort();
 
-            songs =
-                //get the songs object useful for client side
-                playlists.map((playlist) => {
-                    return {
-                        song: playlist.song,
-                        availableTranslations: playlist.availableTranslations.map((availableTranslation) => {
-                            return {
-                                _id: availableTranslation._id,
-                                lang: availableTranslation.lang
-                            }
-                        }),
-                        translationsChecked: playlist.translationsChecked
-                    }
-                });
-            res.render('export/selectTranslation', {
-                uniqueLanguages: uniqueLanguages,
-                songs: songs,
-                playlistName: playlistName
-            });
+      songs =
+        //get the songs object useful for client side
+        playlists.map(playlist => {
+          return {
+            song: playlist.song,
+            availableTranslations: playlist.availableTranslations.map(
+              availableTranslation => {
+                return {
+                  _id: availableTranslation._id,
+                  lang: availableTranslation.lang
+                };
+              }
+            ),
+            translationsChecked: playlist.translationsChecked
+          };
         });
+      res.render('export/selectTranslation', {
+        uniqueLanguages: uniqueLanguages,
+        songs: songs,
+        playlistName: playlistName
+      });
+    });
 });
-
 
 //adding translationsChecked to Playlist
 router.post('/:playlist_name/export1', function(req, res, next) {
-    var playlistName = req.params.playlist_name;
-    var songs = req.body;
-    async.waterfall(songs.map((song, i, arr) => {
-        return function(done) {
-            Playlist.findOne({
-                owner: req.user._id,
-                name: playlistName,
-                song: song.song
-            }, function(err, playlist) {
-                playlist.translationsChecked = song.translationsChecked;
-                playlist.save();
-                done();
-            });
-        }
-    }), function(err) {
-        if (err) return next(err);
-        res.send({
-            url: true
-        });
-    });
+  var playlistName = req.params.playlist_name;
+  var songs = req.body;
+  async.waterfall(
+    songs.map((song, i, arr) => {
+      return function(done) {
+        Playlist.findOne(
+          {
+            owner: req.user._id,
+            name: playlistName,
+            song: song.song
+          },
+          function(err, playlist) {
+            playlist.translationsChecked = song.translationsChecked;
+            playlist.save();
+            done();
+          }
+        );
+      };
+    }),
+    function(err) {
+      if (err) return next(err);
+      res.send({
+        url: true
+      });
+    }
+  );
 });
 
 //this route is for step 2 of exporting playlist
 router.get('/:playlist_name/export2', function(req, res, next) {
-    res.render('songs/export2', {
-        playlistName: req.params.playlist_name
-    });
+  res.render('songs/export2', {
+    playlistName: req.params.playlist_name
+  });
 });
 
-router.route('/:playlist_name/export3')
-    .all(function(req, res, next) {
-        playlistName = req.params.playlist_name;
-        languagePerSlide = req.query.language;
-        songs2d = [];
-        maxNumberOfSongs = 0;
-        Playlist.find({
-                owner: req.user._id,
-                name: playlistName,
-                song: {
-                    $exists: true
-                },
-                translationsChecked: {
-                    $exists: true,
-                    $ne: []
-                }
-            })
-            .populate({
-                path: 'translationsChecked',
-                populate: {
-                    path: 'lang'
-                }
-            })
-            .exec(function(err, playlists) {
-                if (err) return next(err)
-                songs2d = playlists.map((playlist) => {
-                        return playlist.translationsChecked
-                    });
-                    //this var is to check whether we should disable the export option on the ui
-                maxNumberOfSongs = songs2d.reduce((prev, curr) => {
-                    if (prev.length > curr.length) {
-                        return prev.length;
-                    } else {
-                        return curr.length;
-                    }
-                });
-                next();
-            });
+router
+  .route('/:playlist_name/export3')
+  .all(function(req, res, next) {
+    playlistName = req.params.playlist_name;
+    languagePerSlide = req.query.language;
+    songs2d = [];
+    maxNumberOfSongs = 0;
+    Playlist.find({
+      owner: req.user._id,
+      name: playlistName,
+      song: {
+        $exists: true
+      },
+      translationsChecked: {
+        $exists: true,
+        $ne: []
+      }
     })
-    .get(function(req, res, next) {
-        if (languagePerSlide == 1) {
-            var newSongsArr = create2dArrayOfOneSong(songs2d);
-            res.render('export/preview-ppt1', {
-                songs2d: newSongsArr,
-                maxNumberOfSongs: maxNumberOfSongs
-            });
-        } else if (languagePerSlide == 2) {
-            var newSongsArr = create2dArrayOfTwoSongs(songs2d);
-            res.render('export/preview-ppt2', {
-                songs2d: newSongsArr,
-                maxNumberOfSongs: maxNumberOfSongs
-            });
-        } else if (languagePerSlide == 3) {
-            res.render('export/preview-ppt3', {
-                songs2d: songs2d,
-                maxNumberOfSongs: maxNumberOfSongs
-            });
-        } else {
-            res.render('export/preview-pdf', {
-                songs2d: songs2d,
-                maxNumberOfSongs: maxNumberOfSongs
-            });
+      .populate({
+        path: 'translationsChecked',
+        populate: {
+          path: 'lang'
         }
-    })
-    .post(function(req, res, next) {
-        var filename;
-        if (languagePerSlide == 1) {
-            var newSongsArr = create2dArrayOfOneSong(songs2d);
-            generateSlideByStanza(res, newSongsArr, playlistName, 1);
-        } else if (languagePerSlide == 2) {
-            var newSongsArr = create2dArrayOfTwoSongs(songs2d);
-            generateSlideByStanza(res, newSongsArr, playlistName, 2);
-        } else if (languagePerSlide == 3) {
-            // var newSongsArr = create2dArrayOfTwoSongs(songs2d)
-            // generateSlideByStanza(res, newSongsArr, playlistName, 2)
-        } else {
-            filename = Date.now();
-            app.render('export/handout', {
-                songs2d: songs2d
-            }, function(err, html) {
-                pdf.create(html).toStream(function(err, stream) {
-                    res.setHeader('Content-Type', 'application/pdf')
-                    res.setHeader('Content-Disposition', 'attachment; filename=' + filename + '.pdf')
-                    stream.pipe(res)
-                });
-            });
+      })
+      .exec(function(err, playlists) {
+        if (err) return next(err);
+        songs2d = playlists.map(playlist => {
+          return playlist.translationsChecked;
+        });
+        //this var is to check whether we should disable the export option on the ui
+        maxNumberOfSongs = songs2d.reduce((prev, curr) => {
+          if (prev.length > curr.length) {
+            return prev.length;
+          } else {
+            return curr.length;
+          }
+        });
+        next();
+      });
+  })
+  .get(function(req, res, next) {
+    if (languagePerSlide == 1) {
+      var newSongsArr = create2dArrayOfOneSong(songs2d);
+      res.render('export/preview-ppt1', {
+        songs2d: newSongsArr,
+        maxNumberOfSongs: maxNumberOfSongs
+      });
+    } else if (languagePerSlide == 2) {
+      var newSongsArr = create2dArrayOfTwoSongs(songs2d);
+      res.render('export/preview-ppt2', {
+        songs2d: newSongsArr,
+        maxNumberOfSongs: maxNumberOfSongs
+      });
+    } else if (languagePerSlide == 3) {
+      res.render('export/preview-ppt3', {
+        songs2d: songs2d,
+        maxNumberOfSongs: maxNumberOfSongs
+      });
+    } else {
+      res.render('export/preview-pdf', {
+        songs2d: songs2d,
+        maxNumberOfSongs: maxNumberOfSongs
+      });
+    }
+  })
+  .post(function(req, res, next) {
+    var filename;
+    if (languagePerSlide == 1) {
+      var newSongsArr = create2dArrayOfOneSong(songs2d);
+      generateSlideByStanza(res, newSongsArr, playlistName, 1);
+    } else if (languagePerSlide == 2) {
+      var newSongsArr = create2dArrayOfTwoSongs(songs2d);
+      generateSlideByStanza(res, newSongsArr, playlistName, 2);
+    } else if (languagePerSlide == 3) {
+      // var newSongsArr = create2dArrayOfTwoSongs(songs2d)
+      // generateSlideByStanza(res, newSongsArr, playlistName, 2)
+    } else {
+      filename = Date.now();
+      app.render(
+        'export/handout',
+        {
+          songs2d: songs2d
+        },
+        function(err, html) {
+          pdf.create(html).toStream(function(err, stream) {
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader(
+              'Content-Disposition',
+              'attachment; filename=' + filename + '.pdf'
+            );
+            stream.pipe(res);
+          });
         }
-    });
+      );
+    }
+  });
 
 module.exports = router;
-
 
 //this function will generate multiple pptx files, compressed it to zip, and pipe it to client
 /*
@@ -324,92 +374,111 @@ module.exports = router;
 */
 //stanzasPerSlide will determine the y positiong of the lyric on the slide
 function generateSlideByStanza(res, songs2d, playlistName, stanzasPerSlide) {
-    //files is an array to store the filename for each pptx file
-    var files = [];
-    var watermark = 'Powered by Glorify.cc';
-    songs2d.forEach((songs, index, arr) => {
-        var pptx = officegen('pptx');
-        filename = '';
-        var slide;
-        var pObj;
-        pptx.setDocTitle('');
-        slide = pptx.makeNewSlide(); //create a new slide
-        slide.back = {
-            type: 'solid',
-            color: '000000' //background color black
-        };
-        var titleMargin = 175; //y position
-        songs.forEach((song) => {
-            filename += song.title;
-            //add text with white color, and center horizontally
-            pObj = addTextToSlide(slide, song.title, titleMargin, 50, 50, 'ffffff');
-            titleMargin += 70; //add y space for the second title
-            pObj = addTextToSlide(slide, '(' + song.lang.label + ')', titleMargin, 20, 30, 'ffffff');
-            titleMargin += 100;
-        })
-        pObj = addTextToSlide(slide, watermark, 630, 20, 20, '8cb4cd');
-        titleMargin += 100;
-        for (var i = 0; i < songs[0].lyrics.length; i++) {
-            //make new slide for every new stanza with background color black
-            slide = pptx.makeNewSlide();
-            slide.back = {
-                type: 'solid',
-                color: '000000'
-            };
-            var margin = stanzasPerSlide === 1 ? 175 : 50;
-            for (var x = 0; x < songs.length; x++) {
-                for (var j = 0; j < songs[x].lyrics[i].length; j++) {
-                    //print stanza
-                    pObj = addTextToSlide(slide, songs[x].lyrics[i][j], margin, 40, 40, 'ffffff');
-                    margin += 50;
-                }
-                margin += 150;
-            }
-            pObj = addTextToSlide(slide, watermark, 630, 20, 30, '8cb4cd');
-        }
-        var out = fs.createWriteStream(filename + '.pptx');
-        pptx.generate(out, {
-            'finalize': function(written) {
-                //callback function after it finishes generating ppt
-                console.log('Finish to create a PowerPoint file.\nTotal bytes created: ' + written + '\n');
-                files.push(filename);
-                if (index === arr.length - 1) {
-                    setTimeout(() => {
-                        var zip = archiver('zip');
-                        files.forEach((file) => {
-                            //zip it
-                            zip.file(file + '.pptx');
-                        })
-                        zip.finalize();
-                        res.writeHead(200, {
-                            'Content-Type': 'application/zip',
-                            'Content-disposition': 'attachment; filename=' + playlistName + '.zip'
-                        });
-                        //pipe it to client
-                        zip.pipe(res);
-                    }, 1000);
-                }
-            },
-            'error': function(err) {
-                console.log(err);
-            }
-        });
+  //files is an array to store the filename for each pptx file
+  var files = [];
+  var watermark = 'Powered by Glorify.cc';
+  songs2d.forEach((songs, index, arr) => {
+    var pptx = officegen('pptx');
+    filename = '';
+    var slide;
+    var pObj;
+    pptx.setDocTitle('');
+    slide = pptx.makeNewSlide(); //create a new slide
+    slide.back = {
+      type: 'solid',
+      color: '000000' //background color black
+    };
+    var titleMargin = 175; //y position
+    songs.forEach(song => {
+      filename += song.title;
+      //add text with white color, and center horizontally
+      pObj = addTextToSlide(slide, song.title, titleMargin, 50, 50, 'ffffff');
+      titleMargin += 70; //add y space for the second title
+      pObj = addTextToSlide(
+        slide,
+        '(' + song.lang.label + ')',
+        titleMargin,
+        20,
+        30,
+        'ffffff'
+      );
+      titleMargin += 100;
     });
+    pObj = addTextToSlide(slide, watermark, 630, 20, 20, '8cb4cd');
+    titleMargin += 100;
+    for (var i = 0; i < songs[0].lyrics.length; i++) {
+      //make new slide for every new stanza with background color black
+      slide = pptx.makeNewSlide();
+      slide.back = {
+        type: 'solid',
+        color: '000000'
+      };
+      var margin = stanzasPerSlide === 1 ? 175 : 50;
+      for (var x = 0; x < songs.length; x++) {
+        for (var j = 0; j < songs[x].lyrics[i].length; j++) {
+          //print stanza
+          pObj = addTextToSlide(
+            slide,
+            songs[x].lyrics[i][j],
+            margin,
+            40,
+            40,
+            'ffffff'
+          );
+          margin += 50;
+        }
+        margin += 150;
+      }
+      pObj = addTextToSlide(slide, watermark, 630, 20, 30, '8cb4cd');
+    }
+    var out = fs.createWriteStream(filename + '.pptx');
+    pptx.generate(out, {
+      finalize: function(written) {
+        //callback function after it finishes generating ppt
+        console.log(
+          'Finish to create a PowerPoint file.\nTotal bytes created: ' +
+            written +
+            '\n'
+        );
+        files.push(filename);
+        if (index === arr.length - 1) {
+          setTimeout(() => {
+            var zip = archiver('zip');
+            files.forEach(file => {
+              //zip it
+              zip.file(file + '.pptx');
+            });
+            zip.finalize();
+            res.writeHead(200, {
+              'Content-Type': 'application/zip',
+              'Content-disposition':
+                'attachment; filename=' + playlistName + '.zip'
+            });
+            //pipe it to client
+            zip.pipe(res);
+          }, 1000);
+        }
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    });
+  });
 }
 
 function addTextToSlide(slide, text, y, cy, fontsize, color) {
-    return slide.addText(text, {
-        x: 'c', //x position
-        y: y, //y position
-        cx: '100%', //width
-        cy: cy,
-        font_size: fontsize,
-        align: 'center',
-        color: {
-            type: 'solid',
-            color: color
-        }
-    });
+  return slide.addText(text, {
+    x: 'c', //x position
+    y: y, //y position
+    cx: '100%', //width
+    cy: cy,
+    font_size: fontsize,
+    align: 'center',
+    color: {
+      type: 'solid',
+      color: color
+    }
+  });
 }
 
 // function generateSlideByLine(res, songs2d, playlistName) {
@@ -519,35 +588,36 @@ function addTextToSlide(slide, text, y, cy, fontsize, color) {
 //     })
 // }
 
-
 //this function map the original 2darray to be 2d array of exactly two songs
 //takes the original 2darray and return the new mapped 2darray
 function create2dArrayOfTwoSongs(songs2d) {
-    var newSongsArr = [];
-    var temp;
-    songs2d.forEach((songs) => {
+  var newSongsArr = [];
+  var temp;
+  songs2d.forEach(songs => {
+    temp = [];
+    songs.forEach((song, i, arr) => {
+      temp.push(song);
+      if (i === arr.length - 1) {
+        newSongsArr.push(temp);
+      } else if ((i + 1) % 2 === 0) {
+        newSongsArr.push(temp);
         temp = [];
-        songs.forEach((song, i, arr) => {
-            temp.push(song);
-            if (i === arr.length - 1) {
-                newSongsArr.push(temp);
-            } else if ((i + 1) % 2 === 0) {
-                newSongsArr.push(temp);
-                temp = [];
-            }
-        })
-    })
-    return newSongsArr;
+      }
+    });
+  });
+  return newSongsArr;
 }
 
 //this function map the original 2darray to be 2d array of exactly one song
 //takes the original 2darray and return the new mapped 2darray
 function create2dArrayOfOneSong(songs2d) {
-    var temp;
-    return songs2d.map((songs) => {
-        return songs.map((song) => [song]);
-    }).reduce((prev, curr) => {
-        return prev.concat(curr);
+  var temp;
+  return songs2d
+    .map(songs => {
+      return songs.map(song => [song]);
+    })
+    .reduce((prev, curr) => {
+      return prev.concat(curr);
     });
 }
 
