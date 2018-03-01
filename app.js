@@ -20,6 +20,7 @@ const _ = require('lodash');
 const app = (module.exports = express());
 const helmet = require('helmet');
 app.use(helmet());
+app.use(helmet.noCache()); // resolving back button UX issues for now.
 
 const index = require('./routes/index');
 const songlistdb = require('./routes/songlist-db');
