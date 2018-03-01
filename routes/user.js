@@ -105,7 +105,6 @@ router
       function(err, playlist) {
         if (err) return next(err);
         if (playlist) {
-
           var newPlaylistSong = new Playlist({
             owner: playlistOwner,
             name: name,
@@ -178,7 +177,6 @@ router
   );
 
 router.get('/logout', passportFunction.loggedIn, function(req, res, next) {
-  passportFunction.adminLogout();
   req.logout();
   res.redirect('/');
 });
