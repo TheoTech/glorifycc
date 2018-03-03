@@ -5,8 +5,10 @@ import m from 'mithril';
 import prop from 'mithril/stream';
 import { isEmpty, remove } from 'lodash';
 
+let playlistName = prop('');
+
 let playlistTable = {
-  view: (vnode) => {
+  view: vnode => {
     let args = vnode.attrs;
     if (isEmpty(args.currentPlaylists())) {
       return m('h4', 'You have no playlists yet.');
@@ -36,22 +38,37 @@ let playlistTable = {
                   pl.name
                 )
               ]),
-              m('td', [
+              m(
+                'td',
                 m(
-                  'button.btn.btn-default.pull-right',
-                  {
-                    onclick: function() {
-                      if (confirm('Do you want to delete this playlist?')) {
-                        deletePlaylist(pl.name);
-                        remove(args.currentPlaylists(), function(n) {
-                          return n.name === pl.name;
-                        });
-                      }
-                    }
-                  },
-                  'Delete Playlist'
+                  '.row',
+                  m('.col-xs-12', [
+                    m(
+                      'button.btn.btn-default.pull-right',
+                      {
+                        onclick: () => {
+                          if (confirm('Do you want to delete this playlist?')) {
+                            deletePlaylist(pl.name);
+                            remove(args.currentPlaylists(), function(n) {
+                              return n.name === pl.name;
+                            });
+                          }
+                        }
+                      },
+                      ' Delete Name '
+                    ),
+                    m(
+                      'button.btn.btn-default.pull-right',
+                      {
+                        onclick: () => {
+                          editPlaylist(pl.name, pl._id);
+                        }
+                      },
+                      '  Edit Name  '
+                    )
+                  ])
                 )
-              ])
+              )
             ]);
           })
         ])
@@ -59,6 +76,59 @@ let playlistTable = {
     }
   }
 };
+
+function editPlaylist(name, id) {
+  // TODO
+  playlistName(name);
+  return [
+    m('#editPlaylist.modal.fade[role=dialog]', [
+      m('.modal-dialog.modal-sm', [
+        m('.modal-content', [
+          m('.modal-header', [
+            m('.modal-title', [
+              m('h4', [
+                'Edit Playlist',
+                m(
+                  'button.close[data-dismiss="modal"]',
+                  {
+                    style: {
+                      color: 'white'
+                    }
+                  },
+                  [m('span', m.trust('&times;'))]
+                )
+              ])
+            ])
+          ]),
+          m('.modal-body', [
+            m('label', 'Current Playlist Name'),
+            m('label', name),
+            m('label', 'Enter New Name'),
+            m('input.form-control[type=text]', {
+              placeholder: 'New playlist',
+              value: playlistName(),
+              onchange: m.withAttr('value', playlistName),
+              oncreate: vnode => {
+                enter(args, vnode.dom);
+              }
+            }),
+            m('br'),
+            m(
+              'button.btn.btn-default#create',
+              {
+                'data-dismiss': 'modal',
+                onclick: () => {
+                  addPlaylist(args, playlistName());
+                }
+              },
+              'Create'
+            )
+          ])
+        ])
+      ])
+    ])
+  ];
+}
 
 function deletePlaylist(name) {
   return m.request({
@@ -71,37 +141,53 @@ function deletePlaylist(name) {
   });
 }
 
-function addPlaylist(args, name, url) {
-  return m
-    .request({
-      method: 'PUT',
-      url: '/user/library',
-      data: {
-        name: name,
-        url: url
-      }
-    })
-    .then(function(res) {
-      if (res.url) {
-        window.location.href = res.url;
-      } else {
+function saveAfterConfirm(args, name) {
+  return new Promise((resolve, reject) => {
+    if (name.indexOf('#') > -1) {
+      return reject('# is not allowed for playlist name.');
+    }
+    if (name.trim().length === 0) {
+      return reject('Blank is not allowed for playlist name.');
+    }
+
+    m
+      .request({
+        method: 'PUT',
+        url: '/user/library',
+        data: {
+          name: name
+        }
+      })
+      .then(res => {
         args.currentPlaylists(res.playlists);
-      }
-    });
+        resolve(res.id);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
 }
 
-function enter(elem) {
+function enter(args, elem) {
   $(elem).keyup(e => {
     if (e.keyCode == 13) {
-      $('#create').click();
+      AddPlaylist(args, playlistName());
     }
   });
 }
 
-let playlistName = prop('');
+function addPlaylist(args, playlistName) {
+  saveAfterConfirm(args, playlistName)
+    .then(playlistId => {
+      window.location.href = '/discover?playlistId=' + playlistId;
+    })
+    .catch(err => {
+      alert(err);
+    });
+}
 
 let addNewPlaylist = {
-  view: (vnode) => {
+  view: vnode => {
     let args = vnode.attrs;
     return [
       m(
@@ -139,7 +225,7 @@ let addNewPlaylist = {
                 value: playlistName(),
                 onchange: m.withAttr('value', playlistName),
                 oncreate: vnode => {
-                  enter(vnode.dom);
+                  enter(args, vnode.dom);
                 }
               }),
               m('br'),
@@ -149,8 +235,6 @@ let addNewPlaylist = {
                   'data-dismiss': 'modal',
                   onclick: () => {
                     addPlaylist(args, playlistName());
-                    window.location.href =
-                      '/discover?playlist=' + playlistName();
                   }
                 },
                 'Create'

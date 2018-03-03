@@ -49,48 +49,44 @@ router
   //adding new playlist
   .put(function(req, res, next) {
     var name = req.body.name;
-    if (req.isAuthenticated()) {
-      var owner = req.user._id;
-      Playlist.findOne(
-        {
-          owner: owner,
-          name: name
-        },
-        function(err, playlist) {
-          if (err) return next(err);
-          if (playlist) {
-            res.send({
-              playlistExists: true
-            });
-          } else {
-            var newPlaylist = new Playlist({
-              owner: owner,
-              name: name
-            });
-            newPlaylist.save(function(err) {
-              if (err) return next(err);
-              Playlist.find(
-                {
-                  owner: owner,
-                  song: {
-                    $exists: false
-                  }
-                },
-                function(err, playlists) {
-                  res.send({
-                    playlists: playlists
-                  });
+    var owner = req.user._id;
+    Playlist.findOne(
+      {
+        owner: owner,
+        name: name
+      },
+      function(err, playlist) {
+        if (err) return next(err);
+        if (playlist) {
+          res.send({
+            playlistExists: true,
+            id: playlist._id
+          });
+        } else {
+          var newPlaylist = new Playlist({
+            owner: owner,
+            name: name
+          });
+          newPlaylist.save(function(err) {
+            if (err) return next(err);
+            Playlist.find(
+              {
+                owner: owner,
+                song: {
+                  $exists: false
                 }
-              );
-            });
-          }
+              },
+              function(err, playlists) {
+                res.send({
+                  playlists: playlists,
+                  id: newPlaylist._id
+                });
+              }
+            );
+          });
         }
-      );
-    } else {
-      res.send({
-        url: '/user/login'
-      });
-    }
+      }
+    );
   })
   //adding song to playlist
   .post(function(req, res, next) {
