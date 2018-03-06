@@ -86,7 +86,7 @@ glorifyApp.initPlaylistDetails = function(s, p) {
 
 glorifyApp.initSongClicked = function(ls, rs, rse) {
   loadHandlers.push(() => {
-    song.songClicked.init(ls, rs, rse);
+    song.songDetail.init(ls, rs, rse);
   });
 };
 

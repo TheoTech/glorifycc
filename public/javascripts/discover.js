@@ -3,6 +3,7 @@
 import m from 'mithril';
 import $ from 'jquery';
 import prop from 'mithril/stream';
+import { find } from 'lodash';
 import { searchBox } from './search';
 import { songlistTable } from './song';
 
@@ -24,18 +25,12 @@ let searchString = prop();
 let addButtonDOM = prop();
 
 let loadMoreAndApplyFilter = function(
-            totalSongsDisplayed,
-            langShown,
-            langFilter,
-            searchString
-  ) 
+  totalSongsDisplayed,
+  langShown,
+  langFilter,
+  searchString
+)
 {
-  // console.log({
-  //   totalSongsDisplayed: totalSongsDisplayed,
-  //   langShown: langShown,
-  //   langFilter: langFilter,
-  //   searchString: searchString
-  // });
   m
     .request({
       method: 'PUT',
@@ -65,11 +60,12 @@ $(window).scroll(function() {
 });
 
 function init(opts) {
-  let playlistName = prop(opts.playlistName);
+  let selectedPlaylistId = opts.selectedPlaylistId;
   inLibrary(opts.currentInLibrary);
   displayedSongs(opts.songs);
   let { playlists, isLoggedIn, langsExist } = opts;
-
+  let selectedPlaylist = find(playlists, { _id: selectedPlaylistId });
+  let playlistName = selectedPlaylist ? prop(selectedPlaylist.name) : prop('');
   m.mount(document.getElementById('discoverBox'), {
     view: () => {
       return m(searchBox, {
@@ -92,6 +88,7 @@ function init(opts) {
         loadMoreAndApplyFilter,
         initial: numberOfSongsToShow,
         displayedSongs,
+        playlists,
         playlistName,
         inLibrary,
         langsExist,

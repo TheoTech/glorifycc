@@ -79,55 +79,6 @@ let playlistTable = {
 
 function editPlaylist(name, id) {
   // TODO
-  playlistName(name);
-  return [
-    m('#editPlaylist.modal.fade[role=dialog]', [
-      m('.modal-dialog.modal-sm', [
-        m('.modal-content', [
-          m('.modal-header', [
-            m('.modal-title', [
-              m('h4', [
-                'Edit Playlist',
-                m(
-                  'button.close[data-dismiss="modal"]',
-                  {
-                    style: {
-                      color: 'white'
-                    }
-                  },
-                  [m('span', m.trust('&times;'))]
-                )
-              ])
-            ])
-          ]),
-          m('.modal-body', [
-            m('label', 'Current Playlist Name'),
-            m('label', name),
-            m('label', 'Enter New Name'),
-            m('input.form-control[type=text]', {
-              placeholder: 'New playlist',
-              value: playlistName(),
-              onchange: m.withAttr('value', playlistName),
-              oncreate: vnode => {
-                enter(args, vnode.dom);
-              }
-            }),
-            m('br'),
-            m(
-              'button.btn.btn-default#create',
-              {
-                'data-dismiss': 'modal',
-                onclick: () => {
-                  addPlaylist(args, playlistName());
-                }
-              },
-              'Create'
-            )
-          ])
-        ])
-      ])
-    ])
-  ];
 }
 
 function deletePlaylist(name) {
@@ -171,7 +122,7 @@ function saveAfterConfirm(args, name) {
 function enter(args, elem) {
   $(elem).keyup(e => {
     if (e.keyCode == 13) {
-      AddPlaylist(args, playlistName());
+      addPlaylist(args, playlistName());
     }
   });
 }

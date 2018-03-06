@@ -6,7 +6,7 @@ html
         //this var is to omit the searchbox on topbar
         -var withoutSearchbox = true;
         include ../importJS
-        include ../topnav
+        include ../header
         .container-fluid
             h1 Discover Songs
             p.lead Find Public Domain and CC0 Worship Songs in Many Languages
@@ -21,7 +21,7 @@ html
             var playlists = !{JSON.stringify(playlists).replace(/<\//g, "<\\/")}
             var isLoggedIn = !{JSON.stringify(login).replace(/<\//g, "<\\/")}
             var langsExist = !{JSON.stringify(langsExist).replace(/<\//g, "<\\/")}
-            var playlistName = !{JSON.stringify(playlistName).replace(/<\//g, "<\\/")}
+            var selectedPlaylistId = !{JSON.stringify(selectedPlaylistId).replace(/<\//g, "<\\/")}
         script(src='/dist/js/index.js')
         script.
           glorifyApp.initDiscover({
@@ -30,5 +30,5 @@ html
             playlists: playlists,
             isLoggedIn: isLoggedIn,
             langsExist: langsExist,
-            playlistName: playlistName
+            selectedPlaylistId: selectedPlaylistId
           });
