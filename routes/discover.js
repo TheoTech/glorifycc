@@ -8,7 +8,7 @@ var async = require('async');
 var copyrightTypes = require('../lib/copyrightTypes');
 
 router.get('/', function(req, res, next) {
-    var playlistName = req.query.playlist || '';
+    var playlistId = req.query.playlistId || '';
     var messages = req.flash();
     var langsExist;
     var messages = req.flash();
@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
                             playlists: playlists,
                             messages: messages,
                             langsExist: langsExist,
-                            playlistName: playlistName
+                            selectedPlaylistId: playlistId
                         });
                     })
                 })
@@ -57,7 +57,7 @@ router.get('/', function(req, res, next) {
                     playlists: [],
                     messages: messages,
                     langsExist: langsExist,
-                    playlistName: playlistName
+                    selectedPlaylistId: playlistId
                 });
             }
         });
