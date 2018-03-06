@@ -61,7 +61,7 @@ let playlistTable = {
                       'button.btn.btn-default.pull-right',
                       {
                         onclick: () => {
-                          editPlaylist(pl.name, pl._id);
+                          editPlaylistName(pl.name, pl._id);
                         }
                       },
                       '  Edit Name  '
@@ -77,7 +77,7 @@ let playlistTable = {
   }
 };
 
-function editPlaylist(name, id) {
+function editPlaylistName(name, id) {
   // TODO
 }
 
@@ -94,9 +94,6 @@ function deletePlaylist(name) {
 
 function saveAfterConfirm(args, name) {
   return new Promise((resolve, reject) => {
-    if (name.indexOf('#') > -1) {
-      return reject('# is not allowed for playlist name.');
-    }
     if (name.trim().length === 0) {
       return reject('Blank is not allowed for playlist name.');
     }
